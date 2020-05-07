@@ -1,29 +1,14 @@
-- [基于 hexo 以及 volantis 主题的个人博客项目](#%e5%9f%ba%e4%ba%8e-hexo-%e4%bb%a5%e5%8f%8a-volantis-%e4%b8%bb%e9%a2%98%e7%9a%84%e4%b8%aa%e4%ba%ba%e5%8d%9a%e5%ae%a2%e9%a1%b9%e7%9b%ae)
-  - [什么是 Hexo？](#%e4%bb%80%e4%b9%88%e6%98%af-hexo)
-  - [安装](#%e5%ae%89%e8%a3%85)
-    - [安装前提](#%e5%ae%89%e8%a3%85%e5%89%8d%e6%8f%90)
-    - [安装 Hexo](#%e5%ae%89%e8%a3%85-hexo)
-  - [建站](#%e5%bb%ba%e7%ab%99)
-    - [\_config.yml](#configyml)
-    - [scaffolds](#scaffolds)
-    - [source](#source)
-    - [themes](#themes)
-  - [常用命令](#%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4)
-    - [new](#new)
-    - [generate](#generate)
-    - [publish](#publish)
-    - [server](#server)
-    - [deploy](#deploy)
-    - [clean](#clean)
-    - [list](#list)
-  - [部署 GitHub pages](#%e9%83%a8%e7%bd%b2-github-pages)
-    - [新建 GitHub 项目](#%e6%96%b0%e5%bb%ba-github-%e9%a1%b9%e7%9b%ae)
-    - [安装 hexo-deployer-git。](#%e5%ae%89%e8%a3%85-hexo-deployer-git)
-    - [修改\_config.yml 配置](#%e4%bf%ae%e6%94%b9configyml-%e9%85%8d%e7%bd%ae)
-    - [执行命令](#%e6%89%a7%e8%a1%8c%e5%91%bd%e4%bb%a4)
-    - [效果图](#%e6%95%88%e6%9e%9c%e5%9b%be)
+---
+title: hexo操作实录
+date: 2019-04-03 19:18:05
+tags:
+  - Hexo
+categories:
+  - Hexo
+excerpt: "Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。本文记录了使用 Hexo 创建个人博客并发布到 GitHub pages 上的全过程。"
+---
 
-## 基于 hexo 以及 volantis 主题的个人博客项目
+<!-- ## hexo 操作实录 -->
 
 ### 什么是 Hexo？
 
