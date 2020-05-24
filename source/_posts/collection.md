@@ -37,3 +37,4 @@ categories:
 [大公司如何部署前端代码](https://github.com/fouber/blog/issues/6)
 
 [Vuex、Flux、Redux、Redux-saga、Dva、MobX](https://zhuanlan.zhihu.com/p/53599723)
+[累死累活做业务，绩效还不怎么样，我只能帮你到这了……](https://juejin.im/post/5eb3cab66fb9a043856f3987?utm_source=gold_browser_extension)

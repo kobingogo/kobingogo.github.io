@@ -103,6 +103,12 @@ $ npm install
 $ hexo new [layout] <title>
 ```
 
+新建到指定目录
+
+```
+$ hexo new [layout] <title> --path /path/title
+```
+
 #### generate
 
 生成静态文件。
