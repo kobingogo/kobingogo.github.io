@@ -38,6 +38,8 @@ jobs:
 
       - name: Install and publish
         run: |
+          git config --global user.email "jiangawait@163.com"
+          git config --global user.name "jiangawait"
           npm install
           npm run pub
 
