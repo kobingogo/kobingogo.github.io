@@ -1,0 +1,52 @@
+name: Hexo build and deploy
+
+on:
+  push:
+    branches:
+      - blog
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 切换分支
+      - name: Checkout
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+          # checkout到你的hexo代码分支
+          ref: blog
+          # hexo需要加载内部子模块
+          submodules: true
+          # 下载 git submodule
+      # - name: update theme from submodule
+      #   uses: srt32/git-actions@v0.0.3
+      #   with:
+      #     args: git submodule update --init --recursive
+      # 使用 node:10
+      - name: use Node.js 10
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install and publish
+        run: |
+          npm install
+          npm run pub
+
+      # 切换分支到master分支，生成的静态资源在此分支
+      - name: Checkout
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+          ref: master
+
+      - name: Deploy to aliyun server
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SERVER_ACCESS_TOKEN }}
+          ARGS: "-avz --delete"
+          SOURCE: ""
+          REMOTE_HOST: ${{ secrets.ALIYUN_SERVER_HOST }}
+          REMOTE_USER: "root"
+          TARGET: "/code/hexo-blog"
