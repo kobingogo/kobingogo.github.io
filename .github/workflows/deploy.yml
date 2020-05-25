@@ -33,6 +33,8 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v1
         with:
           token: "${{ secrets.ACCESS_TOKEN }}"
+          name: "jiangawait"
+          email: "jiangawait@163.com"
 
       - name: Install and publish
         run: |
