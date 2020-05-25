@@ -29,10 +29,13 @@ jobs:
         with:
           node-version: 10
 
+      # publish to a branch in current repo using GITHUB_TOKEN and other default settings
+      - uses: oleksiyrudenko/gha-git-credentials@v1
+        with:
+          token: "${{ secrets.ACCESS_TOKEN }}"
+
       - name: Install and publish
         run: |
-          git config --global user.email ${{ secrets.USER_EMAIL }}
-          git config --global user.name ${{ secrets.USER_NAME }}
           npm install
           npm run pub
 
