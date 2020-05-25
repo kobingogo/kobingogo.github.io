@@ -29,33 +29,17 @@ jobs:
         with:
           node-version: 10
 
-      # publish to a branch in current repo using GITHUB_TOKEN and other default settings
-      - uses: oleksiyrudenko/gha-git-credentials@v1
-        with:
-          token: "${{ secrets.ACCESS_TOKEN }}"
-          name: "jiangawait"
-          email: "jiangawait@163.com"
-
       - name: Install and publish
         run: |
-          git config --global user.email "jiangawait@163.com"
-          git config --global user.name "jiangawait"
           npm install
-          npm run pub
-
-      # 切换分支到master分支，生成的静态资源在此分支
-      - name: Checkout
-        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
-        with:
-          persist-credentials: false
-          ref: master
+          npm run build
 
       - name: Deploy to aliyun server
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
           SSH_PRIVATE_KEY: ${{ secrets.ALIYUN_SERVER_ACCESS_TOKEN }}
           ARGS: "-avz --delete"
-          SOURCE: ""
+          SOURCE: "public"
           REMOTE_HOST: ${{ secrets.ALIYUN_SERVER_HOST }}
           REMOTE_USER: "root"
           TARGET: "/code/hexo-blog"
