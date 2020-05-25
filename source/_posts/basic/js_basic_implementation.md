@@ -4,7 +4,8 @@ date: 2020-05-06 22:40:35
 tags:
   - JavaScript
   - 基础
-categories: 基础
+categories:
+  - 基础
 ---
 
 在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
