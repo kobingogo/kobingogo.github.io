@@ -48,6 +48,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@master
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BASE_BRANCH: blog
           BRANCH: master
           FOLDER: public
           BUILD_SCRIPT: npm install && npm run build
