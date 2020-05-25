@@ -45,8 +45,8 @@ jobs:
           TARGET: "/code/hexo-blog"
 
       - name: Deploy to Github Pages
-        uses: JamesIves/github-pages-deploy-action@master
+        uses: JamesIves/github-pages-deploy-action@releases/v3
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: master
+          BRANCH: gh-pages
           FOLDER: public
