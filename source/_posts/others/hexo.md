@@ -269,4 +269,6 @@ jobs:
 将整个仓库推送到GitHub，GitHub 发现了 workflow 文件以后，就会自动运行。
 ![UTOOLS1590676861621.png](http://yanxuan.nosdn.127.net/53b9c576fb663ef94679f0610525af11.png)
 
-至此，我们已经将博客部署到GitHub Actions和阿里云上了。阿里云上我们可以使用Nginx托管服务。一切大功告成！收工😄
+至此，我们已经将博客部署到GitHub Actions和阿里云上了。阿里云上我们可以使用Nginx托管服务。
+
+一切大功告成！收工😄
