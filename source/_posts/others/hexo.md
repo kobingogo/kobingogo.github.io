@@ -142,6 +142,8 @@ _注： 更多命令见[官网](https://hexo.io/zh-cn/docs/commands)_
 
 ### 部署 GitHub pages
 
+如果您只是想部署到GitHub Actions上，那么可以直接用这节的方法。如果还想部署到阿里云等私人服务器上，那么可以跳过这步，直接看下一节。
+
 #### 新建 GitHub 项目
 
 打开 GitHub 点击右上角的`new repository`
@@ -184,7 +186,7 @@ hexo clean && hexo deploy
 
 GitHub Actions 是 GitHub 于2018年10月推出的持续集成服务。功能非常强大，具体的基础用法不赘述，可以参阅[阮一峰老师的教程](http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html)。
 
-本文主要介绍如何配置GitHub Actions实现自动部署功能。
+这里主要介绍如何配置GitHub Actions实现自动部署功能。
 
 #### 创建workflow 文件
 GitHub Actions 的配置文件叫做 workflow 文件, 存放在代码仓库的.github/workflows目录。
@@ -233,7 +235,7 @@ jobs:
           SOURCE: "public"
           REMOTE_HOST: ${{ secrets.ALIYUN_SERVER_HOST }}
           REMOTE_USER: "root"
-          TARGET: "/code/hexo-blog"
+          TARGET: "/code/hexo-blog" # 静态资源存放目录
 
       # 将静态文件部署到github pages
       - name: Deploy to Github Pages
@@ -267,8 +269,19 @@ jobs:
 
 #### 构建结果
 将整个仓库推送到GitHub，GitHub 发现了 workflow 文件以后，就会自动运行。
-![UTOOLS1590676861621.png](http://yanxuan.nosdn.127.net/53b9c576fb663ef94679f0610525af11.png)
+![UTOOLS1590679294118.png](http://yanxuan.nosdn.127.net/afd80ff8efb75954b5ca1723d264e119.png)
 
-至此，我们已经将博客部署到GitHub Actions和阿里云上了。阿里云上我们可以使用Nginx托管服务。
+至此，我们已经将博客部署到GitHub Actions和阿里云上了。阿里云上我们可以使用Nginx托管静态资源：
+
+```bash
+server {
+    listen       80;
+    server_name  kobin.top;
+    location / {
+        root /code/hexo-blog/public; # 静态资源存放目录
+        index index.html;
+    }
+}
+```
 
 一切大功告成！收工😄
