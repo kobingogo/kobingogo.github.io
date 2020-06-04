@@ -2,9 +2,10 @@
 title: 通过iframe下载文件如何判断下载完成
 date: 2019-07-06 22:24:20
 tags:
-  - 基础
+  - iframe
+  - download
 categories:
-  - 基础
+  - JavaScript
 excerpt: "当使用 iframe 作为文件下载的载体时，如何知道文件已经下载完毕。现有的 iframe 的 onLoad 方法具有兼容性问题，在 chrome、IE 下无法监听 onLoad 事件监听文件下载完毕，因为 onLoad 事件本身也是对 iframe 中的 html 结构的加载进度监听。"
 ---
 

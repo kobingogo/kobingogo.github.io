@@ -3,9 +3,8 @@ title: typeof 实现原理
 date: 2020-05-06 23:11:22
 tags:
   - JavaScript
-  - 基础
 categories:
-  - 基础
+  - JavaScript
 ---
 
 `typeof` 一般被用于判断一个变量的类型，我们可以利用 `typeof` 来判断 `number`, `string`, `object`, `boolean`, `function`, `undefined`,`symbol` 这七种类型，这种判断能帮助我们搞定一些问题，比如在判断不是 `object` 类型的数据的时候，`typeof` 能比较清楚的告诉我们具体是哪一类的类型。但是，很遗憾的一点是，`typeof`在判断一个 `object` 的数据的时候只能告诉我们这个数据是 `object`, 而不能细致的具体到是哪一种 `object`, 比如

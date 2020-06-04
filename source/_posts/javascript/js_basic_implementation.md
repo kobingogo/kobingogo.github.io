@@ -3,9 +3,8 @@ title: 一些 JS 关键技术的底层实现汇总
 date: 2020-05-06 22:40:35
 tags:
   - JavaScript
-  - 基础
 categories:
-  - 基础
+  - JavaScript
 ---
 
 在这里汇总一些 JS 常用技术的源码实现，通过源码了解其内部原理，可以加深对其的理解。
@@ -15,18 +14,18 @@ categories:
 - [Function.prototype.call()](#functionprototypecall)
 - [Function.prototype.apply()](#functionprototypeapply)
 - [Function.prototype.bind()](#functionprototypebind)
-- [new 的原理](#new-%e7%9a%84%e5%8e%9f%e7%90%86)
-- [reduce 实现原理](#reduce-%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86)
-- [双向绑定](#%e5%8f%8c%e5%90%91%e7%bb%91%e5%ae%9a)
-- [继承](#%e7%bb%a7%e6%89%bf)
+- [new 的原理](#new-的原理)
+- [reduce 实现原理](#reduce-实现原理)
+- [双向绑定](#双向绑定)
+- [继承](#继承)
 - [Object.create](#objectcreate)
-- [instanceof 实现](#instanceof-%e5%ae%9e%e7%8e%b0)
-- [Array.isArray 实现](#arrayisarray-%e5%ae%9e%e7%8e%b0)
-- [getOwnPropertyNames 实现](#getownpropertynames-%e5%ae%9e%e7%8e%b0)
-- [Promise 实现](#promise-%e5%ae%9e%e7%8e%b0)
-- [防抖/节流](#%e9%98%b2%e6%8a%96%e8%8a%82%e6%b5%81)
-- [函数柯里化实现](#%e5%87%bd%e6%95%b0%e6%9f%af%e9%87%8c%e5%8c%96%e5%ae%9e%e7%8e%b0)
-- [实现简单深拷贝](#%e5%ae%9e%e7%8e%b0%e7%ae%80%e5%8d%95%e6%b7%b1%e6%8b%b7%e8%b4%9d)
+- [instanceof 实现](#instanceof-实现)
+- [Array.isArray 实现](#arrayisarray-实现)
+- [getOwnPropertyNames 实现](#getownpropertynames-实现)
+- [Promise 实现](#promise-实现)
+- [防抖/节流](#防抖节流)
+- [函数柯里化实现](#函数柯里化实现)
+- [实现简单深拷贝](#实现简单深拷贝)
 
 <!-- # 一些 JS 关键技术的底层实现汇总 -->
 
@@ -47,11 +46,12 @@ const getGlobal = function () {
 };
 Function.prototype.mcall = function (context) {
   context = context ? Object(context) : getGlobal();
-  context.fn = this;
+  const fn = Symbol("anything"); //创建一个不重复的常量
+  context[fn] = this;
   let args = [...arguments].slice(1);
 
-  let r = context.fn(...args);
-  delete context.fn;
+  let r = context[fn](...args);
+  delete context[fn];
   return r;
 };
 /**
@@ -89,17 +89,17 @@ const getGlobal = function () {
 Function.prototype.apply = function (context, arr) {
   context = context ? Object(context) : getGlobal();
   console.log("context", context);
-
-  context.fn = this;
+  const fn = Symbol("anything"); //创建一个不重复的常量
+  context[fn] = this;
   // let args = [...arguments][1];
 
   if (!arr) {
-    let r = context.fn();
-    delete context.fn;
+    let r = context[fn]();
+    delete context[fn];
     return r;
   }
-  let r = context.fn(...arr);
-  delete context.fn;
+  let r = context[fn](...arr);
+  delete context[fn];
   return r;
 };
 //使用例子
