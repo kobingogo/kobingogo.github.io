@@ -161,6 +161,7 @@ AbortController的浏览器兼容情况：
 
 ![](https://tva1.sinaimg.cn/large/007S8ZIlly1gfg4gbzyt9j30s70c5tax.jpg)
 
+核心代码如下：
 
 ```js
 function TimeoutFetch(params) {
