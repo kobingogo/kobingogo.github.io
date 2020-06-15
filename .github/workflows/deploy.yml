@@ -46,6 +46,17 @@ jobs:
           REMOTE_USER: "root"
           TARGET: "/code/hexo-blog"
 
+      # 将静态文件部署到Vultr VPS
+      - name: Deploy to Vultr VPS
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.NJ5_ACCESS_TOKEN }}
+          ARGS: "-avz --delete"
+          SOURCE: "public"
+          REMOTE_HOST: ${{ secrets.NJ5_SERVER_HOST }}
+          REMOTE_USER: "root"
+          TARGET: "/code/kobin-blog" # 静态资源存放目录
+
       # 将静态文件部署到github pages
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3

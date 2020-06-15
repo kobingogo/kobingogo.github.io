@@ -552,3 +552,102 @@ server {
 ### 十二、Nginx 与图片处理
 
 通过[ngx_http_image_filter_module](http://nginx.org/en/docs/http/ngx_http_image_filter_module.html)插件实现日常对图片的处理，包括缩放、裁剪、旋转、图片质量等的控制。
+
+
+### 十三、使用Let’s Encrypt配置ssl证书
+
+#### 安装certbot
+
+```bash
+yum install -y python3 && pip3 install certbot
+```
+
+查看certbot使用方法：
+
+```bash
+certbot --help
+```
+
+certbot 默认使用http方式对域名所有权进行验证，该操作需要绑定vps的80端口。如果80端口已被占用，请先停止占用的进程，例如停止Nginx：
+
+```bash
+killall nginx
+```
+
+为指定域名生成证书：
+
+```bash
+certbot certonly --standalone -d 域名1 -d 域名2
+```
+
+查看域名证书的路径和国旗时间
+
+```bash
+certbot certificates
+```
+
+生成的证文件位置：
+
+```bash
+/etc/letsencrypt/live/kobin.top/
+```
+
+#### 配置Nginx
+编辑/etc/nginx/conf.d/default.conf:
+
+```bash
+server {
+    listen 80;
+    server_name kobin.top;
+    rewrite ^(.*) https://$server_name$1 permanent;
+}
+
+server {
+    listen       443 ssl;
+    server_name  kobin.top;
+    charset utf-8;
+
+    ssl_certificate /etc/letsencrypt/live/kobin.top/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kobin.top/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3; # TLSv1.3需要nginx 1.13.0以上版本
+    # 如果nginx版本低，建议使用这种加密算法配置
+    # ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets off;
+    keepalive_timeout 70;
+
+    # 这里填写其他配置
+}
+```
+
+查看配置有无错误：
+
+```bash
+nginx -t
+```
+如果没有错误，则启动Nginx：
+
+```bash
+systemctl restart nginx.service
+```
+
+
+#### 证书自动更新
+
+Let’s Encrypt证书的有效期是三个月，超过期限则需要续签。证书续期可以手动完成，例如：
+
+```bash
+systemctl stop nginx
+certbot renew
+systemctl restart nginx
+```
+
+也可以配置crontab任务自动续签，在/etc/crontab文件末添加一行：
+
+```bash
+0 0 1 */2 0 root systemctl stop nginx; /usr/local/bin/certbot renew; systemctl restart nginx
+```
