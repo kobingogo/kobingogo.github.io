@@ -126,14 +126,13 @@ console.log(arr);
 
 ##### 3.2.2. 从后往前、自上而下式堆化建堆
 
-因为叶子节点没有子节点，不需要自上而下式堆化，所以从后往前并不是从序列的最后一个非叶子节点开始（即 n/2）。
+因为叶子节点没有子节点，不需要自上而下式堆化，所以从后往前是从序列的最后一个非叶子节点开始（即 n/2）。
 
 假设有个序列：
 ```js
 let arr = [,4,2,1,3,5,6];
 ```
-![](https://tva1.sinaimg.cn/large/007S8ZIlly1gfvf6pjl1tj30vy0armzw.jpg)
-
+![20200629110822](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200629110822.png)
 
 实现代码：
 ```js

@@ -12,7 +12,10 @@ excerpt: "汇集LeetCode题解思路，方便日后回忆"
   - [数组类](#数组类)
     - [常用方法总结：](#常用方法总结)
     - [两数之和](#两数之和)
+    - [15. 三数之和](#15-三数之和)
+    - [16. 最接近的三数之和](#16-最接近的三数之和)
     - [最大子序和](#最大子序和)
+    - [239. 滑动窗口最大值](#239-滑动窗口最大值)
     - [合并两个有序数组](#合并两个有序数组)
     - [14. 最长公共前缀](#14-最长公共前缀)
   - [链表类](#链表类)
@@ -90,6 +93,85 @@ var twoSum = function(nums, target) {
  - 时间复杂度：O(n)
  - 空间复杂度：o(n)
 
+
+### [15. 三数之和](https://leetcode-cn.com/problems/3sum)
+
+**解题思路：**
+
+  1. 首先对数组从大到小进行排序；
+  2. 遍历数组，设置左右俩指针初始位置在数组左右边界（first = i + 1,last = length -1）;
+  3. 如果i, first, last 三个数值大于0，则last左移，如果小于0，则first右移；
+  4. 使得最终三数之和等于0，则成功找出一组。重复步骤2。
+
+**实现代码:**
+
+```js
+
+var threeSum = function (nums) {
+  let res = [];
+  let length = nums.length;
+  nums.sort((a, b) => a - b); // 先排个队，最左边是最弱（小）的，最右边是最强(大)的
+  if (nums[0] > 0 || nums[length - 1] < 0) {
+    return res;
+  }
+  for (let i = 0; i < length - 2; i) {
+    if (nums[i] > 0) break;
+    let first = i + 1, last = length - 1, sum;
+    while (first < last) {
+      sum = nums[i] + nums[first] + nums[last];
+      if (sum === 0) {
+        res.push([nums[i], nums[first], nums[last]]);
+        while (first < last && nums[first] === nums[++first]) { }
+      } else if (sum < 0) {
+        while (first < last && nums[first] === nums[++first]) { }
+      } else {
+        while (first < last && nums[last] === nums[--last]) { }
+      }
+    }
+    while (nums[i] === nums[++i]) { }
+  }
+  return res;
+};
+
+```
+
+**复杂度分析**
+
+- 时间复杂度： O(n<sup>2</sup>)
+
+
+### [16. 最接近的三数之和](https://leetcode-cn.com/problems/3sum-closest/)
+
+**解题思路**
+
+思路同上一题类似，不同点在于此题是求最接近给定值的解。
+
+**实现代码**
+
+```js
+var threeSumClosest = function (nums, target) {
+  nums.sort((a, b) => a - b);
+  let length = nums.length;
+  let result = nums[0] + nums[1] + nums[length - 1];
+  for (let i = 0; i < length - 2; i++) {
+    let first = i + 1;
+    let last = length - 1;
+    let sum;
+    while (first < last) {
+      sum = nums[i] + nums[first] + nums[last];
+      sum > target ? last-- : first++;
+      if (Math.abs(target - result) > Math.abs(target - sum)) {
+        result = sum;
+      }
+    }
+  }
+  return result;
+};
+```
+**复杂度分析**
+
+- 时间复杂度： O(n<sup>2</sup>)
+
 ### 最大子序和
 算法：
 
@@ -125,6 +207,38 @@ var twoSum = function(nums, target) {
 
 - 空间复杂度：O(1)，使用了常数的空间。
 
+
+### [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+**解题思路**
+
+- 使用 队列 方式维护一个滑动窗口内的数值索引，并确保队列队首值是当前滑动窗口的最大值索引
+- 对应索引i来说，在i前面并且比i的值小的数值是没有价值的，可以剔除掉
+
+**实现代码**
+
+```js
+var maxSlidingWindow = function (nums, k) {
+  //queue保存 SlidingWindow 数据，其中首位是最大值的索引
+  const queue = [], result = [];
+  for (let i = 0; i < nums.length; i++) {
+    //剔除SlidingWindow外的数据
+    if (i - queue[0] >= k) {
+      queue.shift();
+    }
+    // 剔除queue元素，确保queue首位保存的是最大值的索引
+    while (nums[i] > nums[queue[queue.length - 1]]) {
+      queue.pop()
+    }
+    queue.push(i)
+    //从k-1开始输出结果
+    if (i >= k - 1) {
+      result.push(nums[queue[0]])
+    }
+  }
+  return result;
+}
+```
 
 ### [合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
 
