@@ -35,7 +35,7 @@ jobs:
           npm install
           npm run build
 
-      # 将静态文件部署到阿里云
+      # 将静态文件部署到阿里云服务器
       - name: Deploy to aliyun server
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
