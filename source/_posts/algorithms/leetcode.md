@@ -26,6 +26,10 @@ excerpt: "汇集LeetCode题解思路，方便日后回忆"
     - [反转链表](#反转链表)
     - [19. 删除链表的倒数第N个节点](#19-删除链表的倒数第n个节点)
     - [876. 链表的中间结点](#876-链表的中间结点)
+  - [动态规划类](#动态规划类)
+    - [309. 最佳买卖股票时机含冷冻期](#309-最佳买卖股票时机含冷冻期)
+    - [面试题 17.13. 恢复空格](#面试题-1713-恢复空格)
+    - [96. 不同的二叉搜索树](#96-不同的二叉搜索树)
 
 ## 数组类
 
@@ -713,3 +717,112 @@ var middleNode = function(head) {
 
   - 时间复杂度：O(n)
   - 空间复杂度：O(1)
+
+
+## 动态规划类
+
+### [309. 最佳买卖股票时机含冷冻期](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+
+分析：
+
+  第i天主要有三种情况，当天收益取三者最大值：
+  1. 当天持有此股票，那么股票可能是：
+   a. 前一天就持有的, 取值(dp[i - 1][0])，
+   b. 或者当天刚买的,取值(dp[i - 1][2] - prices[i]))，
+   这种情况的最大收益为： Math.max(dp[i - 1][0], dp[i - 1][2] - prices[i]);
+
+  2. 当天卖出股票，则收益为前一天的持有收益 + 当天的股票价格收益， 即： dp[i - 1][0] + prices[i];
+
+  3. 当天未持有，并且当天未卖出过，则有两种情况：
+   a. 前一天卖出过，dp[i-1][1]
+   b. 前一天未卖出， dp[i-1][2]。
+   这种情况的最大收益为： Math.max(dp[i - 1][1], dp[i - 1][2]);
+
+  第一天的初始值：dp[0] = [-prices[0], 0, 0];
+
+  代码实现：
+
+```js
+/*
+ * 最终的收益是当天的三种情况取最大
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+  const len = prices.length;
+  if (len < 2) return 0
+  const dp = [];
+  dp.push([-prices[0], 0, 0]);
+  let t0, t1, t2;
+  for (let i = 1; i < len; i++) {
+    t0 = Math.max(dp[i - 1][0], dp[i - 1][2] - prices[i]); // 当天持有此股票
+    t1 = dp[i - 1][0] + prices[i]; // 当天未持有，并且当天卖出
+    t2 = Math.max(dp[i - 1][1], dp[i - 1][2]); //当天未持有，并且不是当天卖出
+    dp.push([t0, t1, t2]);
+  }
+
+  return Math.max(...dp.pop())
+};
+```
+
+### [面试题 17.13. 恢复空格](https://leetcode-cn.com/problems/re-space-lcci/)
+
+分析：
+  遍历 sentence，如果i-1结尾的子字符串 等于 dictionary的某个word, 说明dp[i] 可以等于 dp[i - word.length]；
+
+代码实现：
+
+```js
+/**
+ * @param {Array} dictionary
+ * @param {String} sentence
+ * @return {number}
+ */
+
+const respace = (dictionary, sentence) => {
+  const len = sentence.length;
+  if (len === 0) return 0;
+  const dp = new Array(len + 1);
+  dp[0] = 0;
+  for (let i = 1; i <= len; i++) { //i代表 Length(sentence)
+    dp[i] = dp[i - 1] + 1;
+    for (const word of dictionary) {
+      if (word === sentence.substring(i - word.length, i)) {
+        dp[i] = Math.min(dp[i], dp[i - word.length])
+      }
+    }
+  }
+
+  return dp[len]
+};
+```
+
+
+### [96. 不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
+
+- 思路:
+标签：动态规划
+假设n个节点存在二叉排序树的个数是dp(n)，令f(i)为以i为根的二叉搜索树的个数，则
+dp(n) = f(1) + f(2) + f(3) + f(4) + ... + f(n)
+
+当i为根节点时，其左子树节点个数为i-1个，右子树节点为n-i，则
+f(i) = dp(i-1)*dp(n-i)
+
+综合两个公式可以得到 [卡特兰数](https://segmentfault.com/a/1190000021666634) 公式
+dp(n) = dp(0)*dp(n-1)+dp(1)*(n-2)+...+dp(n-1)*dp(0)
+
+- 代码实现：
+
+```js
+var numTrees = function (n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+  for (let i = 2; i <= n; i++) {
+    for (let j = 1; j <= i; j++) { //以j为顶点的个数计算
+      dp[i] += dp[j - 1] * dp[i - j];
+    }
+  }
+  return dp[n];
+}
+```
