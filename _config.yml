@@ -475,7 +475,7 @@ theme_config:
         url: https://github.com/jiangawait
       # - icon: fas fa-headphones-alt
       #   url: https://music.163.com/#/user/home?id=63035382
-    copyright: "[Copyright © 2017-2020 Mr. X](https://xaoxuu.com)"
+    copyright: "[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)"
     # You can add your own property here. (Support markdown, for example: br: '<br>')
     br: "<br>"
 
