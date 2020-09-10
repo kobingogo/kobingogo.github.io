@@ -1,6 +1,6 @@
 ---
 title: 如何让centOS7下全局安装的npm模块在环境变量中生效
-date: 2020-09-10 16:12:53
+date: 2017-09-10 16:12:53
 tags:
  - Linux
  - centOS
