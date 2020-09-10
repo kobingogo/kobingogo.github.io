@@ -14,10 +14,10 @@ categories: others
 
 ### 问题详述
 
-通过`npm i -g cnpm`安装的[goku-cli](https://www.npmjs.com/package/goku-cli)后，依然无法全局使用`goku`命令：
+通过`npm i -g cnpm`安装的cnpm后，依然无法全局使用`cnpm`命令：
 
 ```bash
--bash: goku: command not found
+-bash: cnpm: command not found
 ```
 
 > 解决方案： 需要将node路径关联到环境变量中
@@ -51,7 +51,6 @@ echo $PATH
 ```
 
 - 验证效果
-
-![20200910175837](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910175837.png)
+![20200910180852](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png)
 
 以后通过npm全局安装的模块会自动在环境变量中生效
