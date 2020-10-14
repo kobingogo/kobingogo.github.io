@@ -186,35 +186,35 @@ new SharedArrayBuffer(length)
 
 多个共享内存的线程能够同时读写同一位置上的数据。原子操作会确保正在读或写的数据的值是符合预期的，即下一个原子操作一定会在上一个原子操作结束后才会开始，其操作过程不会中断。
 
-| 方法名                                                                                                        | 说明                                                             |
-| :------------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------- |
-| [Atomics.add()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/add) | 将指定位置上的数组元素与给定的值相加，并返回相加前该元素的值     |
-| [Atomics.and()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/and) | 将指定位置上的数组元素与给定的值相与，并返回与操作前该元素的值。 |
-|[Atomics.compareExchange()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/compareExchange)|如果数组中指定的元素与给定的值相等，则将其更新为新的值，并返回该元素原先的值。|
-|[Atomics.exchange()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/exchange)|将数组中指定的元素更新为给定的值，并返回该元素更新前的值。|
-|[Atomics.load()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/load)|返回数组中指定元素的值。|
-|[Atomics.or()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/or)|将指定位置上的数组元素与给定的值相或，并返回或操作前该元素的值。|
-|[Atomics.store()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/store)|将数组中指定的元素设置为给定的值，并返回该值。|
-|[Atomics.sub()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/sub)|将指定位置上的数组元素与给定的值相减，并返回相减前该元素的值。|
-|[Atomics.xor()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/xor)|将指定位置上的数组元素与给定的值相异或，并返回异或操作前该元素的值。|
-|[Atomics.wait()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wait)|检测数组中某个指定位置上的值是否仍然是给定值，是则保持挂起直到被唤醒或超时。返回值为 "ok"、"not-equal" 或 "time-out"。调用时，如果当前线程不允许阻塞，则会抛出异常（大多数浏览器都不允许在主线程中调用 wait()）。|
-|[Atomics.wake()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wake)|唤醒等待队列中正在数组指定位置的元素上等待的线程。返回值为成功唤醒的线程数量。|
-|[Atomics.isLockFree(size)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/isLockFree)|可以用来检测当前系统是否支持硬件级的原子操作。对于指定大小的数组，如果当前系统支持硬件级的原子操作，则返回 true；否则就意味着对于该数组，Atomics 对象中的各原子操作都只能用锁来实现。此函数面向的是技术专家。|
+| 方法名                                                                                                                                | 说明                                                                                                                                                                                                              |
+| :------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Atomics.add()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/add)                         | 将指定位置上的数组元素与给定的值相加，并返回相加前该元素的值                                                                                                                                                      |
+| [Atomics.and()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/and)                         | 将指定位置上的数组元素与给定的值相与，并返回与操作前该元素的值。                                                                                                                                                  |
+| [Atomics.compareExchange()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/compareExchange) | 如果数组中指定的元素与给定的值相等，则将其更新为新的值，并返回该元素原先的值。                                                                                                                                    |
+| [Atomics.exchange()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/exchange)               | 将数组中指定的元素更新为给定的值，并返回该元素更新前的值。                                                                                                                                                        |
+| [Atomics.load()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/load)                       | 返回数组中指定元素的值。                                                                                                                                                                                          |
+| [Atomics.or()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/or)                           | 将指定位置上的数组元素与给定的值相或，并返回或操作前该元素的值。                                                                                                                                                  |
+| [Atomics.store()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/store)                     | 将数组中指定的元素设置为给定的值，并返回该值。                                                                                                                                                                    |
+| [Atomics.sub()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/sub)                         | 将指定位置上的数组元素与给定的值相减，并返回相减前该元素的值。                                                                                                                                                    |
+| [Atomics.xor()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/xor)                         | 将指定位置上的数组元素与给定的值相异或，并返回异或操作前该元素的值。                                                                                                                                              |
+| [Atomics.wait()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wait)                       | 检测数组中某个指定位置上的值是否仍然是给定值，是则保持挂起直到被唤醒或超时。返回值为 "ok"、"not-equal" 或 "time-out"。调用时，如果当前线程不允许阻塞，则会抛出异常（大多数浏览器都不允许在主线程中调用 wait()）。 |
+| [Atomics.wake()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/wake)                       | 唤醒等待队列中正在数组指定位置的元素上等待的线程。返回值为成功唤醒的线程数量。                                                                                                                                    |
+| [Atomics.isLockFree(size)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Atomics/isLockFree)       | 可以用来检测当前系统是否支持硬件级的原子操作。对于指定大小的数组，如果当前系统支持硬件级的原子操作，则返回 true；否则就意味着对于该数组，Atomics 对象中的各原子操作都只能用锁来实现。此函数面向的是技术专家。     |
 
 
 
 ## ES 9 新特性
 
-| 新特性 | 中文说明 |
-| :--- | :--- |
-| Asynchronous Iteration | 异步迭代器 |
-| `Promise.prototype.finally` |  |
-| Lifting template literal restriction | 重新修订了字面量的转义 |
-| Rest/Spread Properties | Rest/Spread 属性 |
-| `s` \(dotAll\) flag for regular expressions | 正则表达式dotAll模式 |
-| RegExp named capture groups | 正则表达式命名捕获组 |
-| RegExp Lookbehind Assertions | 正则表达式反向断言 |
-| RegExp Unicode Property Escapes | 正则表达式 Unicode 转义 |
+| 新特性                                      | 中文说明                |
+| :------------------------------------------ | :---------------------- |
+| Asynchronous Iteration                      | 异步迭代器              |
+| `Promise.prototype.finally`                 |                         |
+| Lifting template literal restriction        | 重新修订了字面量的转义  |
+| Rest/Spread Properties                      | Rest/Spread 属性        |
+| `s` \(dotAll\) flag for regular expressions | 正则表达式dotAll模式    |
+| RegExp named capture groups                 | 正则表达式命名捕获组    |
+| RegExp Lookbehind Assertions                | 正则表达式反向断言      |
+| RegExp Unicode Property Escapes             | 正则表达式 Unicode 转义 |
 
 ### 异步迭代器
 
@@ -420,16 +420,16 @@ console.log(regex.test('Σ')); //>> true
 
 ## ES 10 新特性
 
-| 新特性 | 中文说明 |
-| :--- | :--- |
-| Optional `catch` binding | 可选的 catch 变量绑定 |
-| JSON superset | JSON超集 |
-| `Symbol.prototype.description` | Symbol 对象的 description 属性 |
+| 新特性                                 | 中文说明                          |
+| :------------------------------------- | :-------------------------------- |
+| Optional `catch` binding               | 可选的 catch 变量绑定             |
+| JSON superset                          | JSON超集                          |
+| `Symbol.prototype.description`         | Symbol 对象的 description 属性    |
 | `Function.prototype.toString` revision | 修订`Function.prototype.toString` |
-| `Object.fromEntries` |  |
-| Well-formed `JSON.stringify` | 更加友好的JSON.stringify |
-| `String.prototype.{trimStart,trimEnd}` |  |
-| `Array.prototype.{flat,flatMap}` |  |
+| `Object.fromEntries`                   |                                   |
+| Well-formed `JSON.stringify`           | 更加友好的JSON.stringify          |
+| `String.prototype.{trimStart,trimEnd}` |                                   |
+| `Array.prototype.{flat,flatMap}`       |                                   |
 
 ### 可选的 catch 变量绑定
 
@@ -577,11 +577,11 @@ console.log(r); //>>[ 'I', 'love', 'coffe', '1891' ]
 
 ## ES 11 新特性一览
 
-| 新特性 | 中文说明 |
-| :--- | :--- |
-| `String.prototype.matchAll` |  |
-| `import()` | import\(\)函数 |
-| `Promise.allSettled` |  |
+| 新特性                      | 中文说明       |
+| :-------------------------- | :------------- |
+| `String.prototype.matchAll` |                |
+| `import()`                  | import\(\)函数 |
+| `Promise.allSettled`        |                |
 
 ### String.prototype.matchAll
 
