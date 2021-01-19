@@ -15,7 +15,7 @@ favicon: https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://kobin.top/
+url: http://blog.kobingo.xyz/
 root: /
 permalink: :title/
 # permalink: :year/:month/:day/:title/
@@ -459,7 +459,6 @@ theme_config:
       header:
         icon: fab fa-github
         title: 源码链接
-
 
     # You can add your own widget here or 'blog/source/_data/widget.yml'
     # class: text, list, grid, qrcode, page, ... see more at https://volantis.js.org/

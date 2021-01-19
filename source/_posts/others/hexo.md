@@ -276,7 +276,7 @@ jobs:
 ```bash
 server {
     listen       80;
-    server_name  kobin.top;
+    server_name  blog.kobingo.xyz;
     location / {
         root /code/hexo-blog/public; # 静态资源存放目录
         index index.html;

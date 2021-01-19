@@ -288,7 +288,7 @@ error_page 404  /404_error.html;
 - 把错误码换成一个地址
 
 ```bash
-error_page  404 http://kobin.top;
+error_page  404 http://blog.kobingo.xyz;
 ```
 
 - 简单实现访问控制
@@ -447,12 +447,12 @@ server{
 
 - 简单实现反向代理
 
-举个例子，我们访问 home.kobin.top 这个网站，然后反向代理到 baidu.com 上。可做如下配置：
+举个例子，我们访问 home.blog.kobingo.xyz 这个网站，然后反向代理到 baidu.com 上。可做如下配置：
 
 ```bash
 server{
         listen 80;
-        server_name home.kobin.top;
+        server_name home.blog.kobingo.xyz;
         location / {
                proxy_pass https://www.baidu.com;
         }
@@ -483,7 +483,7 @@ Nginx 通过内置变量`$http_user_agent`，可以获取到请求客户端的`u
 ```bash
 server {
 	listen 80;
-	server_name blog.kobin.top;
+	server_name blog.blog.kobingo.xyz;
 	location / {
 		root /yangling/app/pc; # 默认展示PC端页面
 		if ($http_user_agent ~* '(Android|webOS|iPhone|iPod|BlackBerry)') { # 如果匹配到mobile端的user_agent则展示mobile页面
@@ -589,7 +589,7 @@ certbot certificates
 生成的证文件位置：
 
 ```bash
-/etc/letsencrypt/live/kobin.top/
+/etc/letsencrypt/live/blog.kobingo.xyz/
 ```
 
 #### 配置Nginx
@@ -598,17 +598,17 @@ certbot certificates
 ```bash
 server {
     listen 80;
-    server_name kobin.top;
+    server_name blog.kobingo.xyz;
     rewrite ^(.*) https://$server_name$1 permanent;
 }
 
 server {
     listen       443 ssl;
-    server_name  kobin.top;
+    server_name  blog.kobingo.xyz;
     charset utf-8;
 
-    ssl_certificate /etc/letsencrypt/live/kobin.top/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/kobin.top/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/blog.kobingo.xyz/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/blog.kobingo.xyz/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3; # TLSv1.3需要nginx 1.13.0以上版本
     # 如果nginx版本低，建议使用这种加密算法配置
     # ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
