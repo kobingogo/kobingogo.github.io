@@ -356,11 +356,11 @@
       
         <tags>
             
+            <tag> java </tag>
+            
             <tag> Linux </tag>
             
             <tag> centOS </tag>
-            
-            <tag> java </tag>
             
         </tags>
       
@@ -523,9 +523,9 @@
       
         <tags>
             
-            <tag> 堆 </tag>
-            
             <tag> 栈 </tag>
+            
+            <tag> 堆 </tag>
             
         </tags>
       
@@ -930,33 +930,6 @@
     
     
     <entry>
-      <title>如何让centOS7下全局安装的npm模块在环境变量中生效</title>
-      <link href="/others-centOS7-npm/"/>
-      <url>/others-centOS7-npm/</url>
-      
-        <content type="html"><![CDATA[<p>记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案</p><a id="more"></a><h3 id="问题详述"><a href="#问题详述" class="headerlink" title="问题详述"></a>问题详述</h3><p>通过<code>npm i -g cnpm</code>安装的cnpm后，依然无法全局使用<code>cnpm</code>命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: cnpm: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure><blockquote><p>解决方案： 需要将node路径关联到环境变量中</p></blockquote><h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ul><li><p>使用<code>npm root -g</code>获取node目录,</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;nodejs&#x2F;lib&#x2F;node_modules</span><br></pre></td></tr></table></figure></li><li><p>通过vim编辑<code>/etc/profile</code>文件, 在文件最底下新增:</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Node所在路径</span></span><br><span class="line"><span class="built_in">export</span> NODE_HOME=/usr/sbin/nodejs</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;NODE_HOME&#125;</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure><blockquote><p>如果PATH有其他配置，通过<code>export PATH=&lt;path1&gt;:&lt;path2&gt;:&lt;path3&gt;:$PATH</code>方式配置</p></blockquote><ul><li>最后执行命令使环境变量生效</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure><ul><li>查看环境变量</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure><ul><li>验证效果<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20200910180852"></li></ul><p>以后通过npm全局安装的模块会自动在环境变量中生效</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> others </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> centOS </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>git设置代理</title>
       <link href="/others-git%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/"/>
       <url>/others-git%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/</url>
@@ -976,6 +949,33 @@
             <tag> git </tag>
             
             <tag> github </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>如何让centOS7下全局安装的npm模块在环境变量中生效</title>
+      <link href="/others-centOS7-npm/"/>
+      <url>/others-centOS7-npm/</url>
+      
+        <content type="html"><![CDATA[<p>记一次在centOS7下npm安装全局模块，依然无法使用相关全局命令的问题的解决方案</p><a id="more"></a><h3 id="问题详述"><a href="#问题详述" class="headerlink" title="问题详述"></a>问题详述</h3><p>通过<code>npm i -g cnpm</code>安装的cnpm后，依然无法全局使用<code>cnpm</code>命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: cnpm: <span class="built_in">command</span> not found</span><br></pre></td></tr></table></figure><blockquote><p>解决方案： 需要将node路径关联到环境变量中</p></blockquote><h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ul><li><p>使用<code>npm root -g</code>获取node目录,</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;sbin&#x2F;nodejs&#x2F;lib&#x2F;node_modules</span><br></pre></td></tr></table></figure></li><li><p>通过vim编辑<code>/etc/profile</code>文件, 在文件最底下新增:</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Node所在路径</span></span><br><span class="line"><span class="built_in">export</span> NODE_HOME=/usr/sbin/nodejs</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;NODE_HOME&#125;</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure><blockquote><p>如果PATH有其他配置，通过<code>export PATH=&lt;path1&gt;:&lt;path2&gt;:&lt;path3&gt;:$PATH</code>方式配置</p></blockquote><ul><li>最后执行命令使环境变量生效</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure><ul><li>查看环境变量</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure><ul><li>验证效果<br><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20200910180852.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20200910180852"></li></ul><p>以后通过npm全局安装的模块会自动在环境变量中生效</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> others </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> centOS </tag>
             
         </tags>
       
