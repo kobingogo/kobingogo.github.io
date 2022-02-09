@@ -1,29 +1,41 @@
 {
-  "name": "hexo-site",
-  "version": "0.0.0",
+  "name": "yangling-blog",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server",
-    "pub": "hexo clean && hexo deploy"
+    "pub": "hexo clean && hexo deploy",
+    "start": "hexo clean && hexo g && gulp",
+    "g": "hexo clean && hexo generate",
+    "c": "hexo clean",
+    "d": "hexo deploy",
+    "s": "hexo clean && hexo server"
   },
   "hexo": {
-    "version": "4.2.1"
+    "version": "6.0.0"
   },
   "dependencies": {
-    "hexo": "^4.0.0",
-    "hexo-deployer-git": "^2.1.0",
+    "hexo": "^6.0.0",
+    "hexo-autonofollow": "^1.0.1",
+    "hexo-autoprefixer": "^2.0.0",
+    "hexo-deployer-git": "^3.0.0",
     "hexo-generator-archive": "^1.0.0",
     "hexo-generator-category": "^1.0.0",
-    "hexo-generator-index": "^1.0.0",
+    "hexo-generator-feed": "^3.0.0",
+    "hexo-generator-index": "^2.0.0",
     "hexo-generator-json-content": "^4.2.3",
-    "hexo-generator-search": "^2.4.0",
+    "hexo-generator-seo-friendly-sitemap": "^0.2.1",
     "hexo-generator-tag": "^1.0.0",
     "hexo-renderer-ejs": "^1.0.0",
-    "hexo-renderer-marked": "^2.0.0",
-    "hexo-renderer-stylus": "^1.1.0",
-    "hexo-server": "^1.0.0"
+    "hexo-renderer-marked": "^4.0.0",
+    "hexo-renderer-stylus": "^2.0.1",
+    "hexo-server": "^3.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-html-minifier-terser": "^6.0.1",
+    "gulp-htmlclean": "^2.7.22",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-terser": "^2.0.1"
   }
 }
