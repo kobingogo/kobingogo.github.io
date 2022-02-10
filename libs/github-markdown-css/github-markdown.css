@@ -154,7 +154,8 @@
 
 .markdown-body abbr[title] {
   border-bottom: none;
-  text-decoration: underline dotted;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
 }
 
 .markdown-body b,
@@ -308,6 +309,8 @@
   border-spacing: 0;
   border-collapse: collapse;
   display: block;
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   max-width: 100%;
   overflow: auto;
@@ -434,6 +437,16 @@
   overflow: visible !important;
   vertical-align: text-bottom;
   fill: currentColor;
+}
+
+.markdown-body ::-moz-placeholder {
+  color: var(--color-fg-subtle);
+  opacity: 1;
+}
+
+.markdown-body :-ms-input-placeholder {
+  color: var(--color-fg-subtle);
+  opacity: 1;
 }
 
 .markdown-body ::placeholder {
