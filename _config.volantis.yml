@@ -4,8 +4,8 @@ use_cdn: false
 navbar:
   logo: # choose [img] or [icon + title]
     img:
-    icon: https://cdn.jsdelivr.net/gh/xaoxuu/assets@master/favicon/favicon.ico
-    title: 扬舲blog
+    icon: https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico
+    title: 扬舲の博客
   menu:
     # The following can be written in `blog/source/_data/menu.yml`
     - name: 博客
@@ -20,12 +20,12 @@ navbar:
     - name: 归档
       icon: fas fa-archive
       url: archives/
-    - name: 友链
-      icon: fas fa-link
-      url: friends/
-    - name: 关于
-      icon: fas fa-info-circle
-      url: about/
+    # - name: 友链
+    #   icon: fas fa-link
+    #   url: friends/
+    # - name: 关于
+    #   icon: fas fa-info-circle
+    #   url: about/
   search: Search... # Search bar placeholder
 
 cover:
@@ -35,7 +35,7 @@ cover:
     archive: true
     others: false # can be written in front-matter 'cover: true'
   logo: # https://cdn.jsdelivr.net/gh/xaoxuu/cdn-assets/logo/256/google_logo.png
-  title: 扬舲blog
+  title: 扬舲の博客
   # subtitle: "JavaScript信仰者"
   search: true # search bar placeholder
   features:
@@ -59,26 +59,28 @@ article:
   preview:
     scheme: landscape # landscape
     # pin icon for post
-    pin_icon: # https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg
+    pin_icon: https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg
     # auto generate title if not exist
-    auto_title: false # false, true
+    auto_title: true # false, true
     # auto generate excerpt if not exist
-    auto_excerpt: false # false, true
+    auto_excerpt: true # false, true
+     # show split line or not
+    line_style: solid # hidden, solid, dashed, dotted
     author: true
     # show readmore button
     readmore: auto # auto, always
   body:
     meta_library:
       author:
-        avatar: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/apple-touch-icon.png
-        name: Volantis Team
-        url: https://github.com/volantis-x/
+        avatar: https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png
+        name: 扬舲
+        url: https://github.com/kobingogo
       updated:
         title: '本页文档最后更新于：'
 
 
 comments:
-  service: giscus
+  service: valine
   giscus:
     repo: volantis-x/hexo-theme-volantis
     repo-id: MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=
@@ -89,10 +91,25 @@ comments:
   disqus:
     shortname: volantis
     path: /
+  # valine:
+  #   appId: FIKAgh6n0pUM08JXxhJHChVQ-MdYXbMMI
+  #   appKey: RJGiOYFc1fBvfox4frBPpRzU
+  #   path: /
   valine:
-    appId: FIKAgh6n0pUM08JXxhJHChVQ-MdYXbMMI
-    appKey: RJGiOYFc1fBvfox4frBPpRzU
-    path: /
+    appId: 5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz # your appId
+    appKey: bnpoUc3tr7wSd41wVcrc6Uzr # your appKey
+    # js: https://unpkg.com/valine@latest/dist/Valine.min.js
+    path: / # All pages use the same path (share the same comments data)
+    # meta: nick,mail,link # valine comment header info
+    # requiredFields: ["nick", "mail"]
+    # enableQQ: true # Unstable avatar link
+    # placeholder: 快来发表你的评论吧~ # valine comment input placeholder(like: Please leave your footprints )
+    # avatar: robohash # gravatar style https://valine.js.org/avatar
+    # pageSize: 10 # comment list page size
+    # lang: zh-cn
+    # highlight: true
+    # visitor: true
+    # mathJax: false
   utterances:
     repo: volantis-x/community
     issue-number: 115
@@ -142,7 +159,7 @@ sidebar:
       header:
         icon: fas fa-list
         title: 本文目录
-      list_number: true
+      list_number: false
       min_depth: 2
       max_depth: 5
     post:
@@ -267,7 +284,7 @@ sidebar:
         title: 文档导航 v5.0
 
 site_footer:
-  layout: [aplayer, social, source, analytics, copyright]
+  layout: [aplayer, social, copyright]
   copyright: "[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)"
   social:
     - icon: fas fa-rss
@@ -354,6 +371,9 @@ custom_css:
 rightmenu:
   enable: true
   faicon: fad PETERRIVE
+
+  layout: [home, hr, print, source_theme, darkmode, reading, music]
+
   print:
     icon: fad fa-print TURQUOISE
   darkmode:

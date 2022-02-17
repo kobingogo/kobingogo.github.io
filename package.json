@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "pub": "hexo clean && hexo deploy",
     "start": "hexo clean && hexo g && gulp",
     "g": "hexo clean && hexo generate",
     "c": "hexo clean",
-    "d": "hexo deploy",
+    "d": "hexo clean && hexo deploy",
     "s": "hexo clean && hexo server"
   },
   "hexo": {

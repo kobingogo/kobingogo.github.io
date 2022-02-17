@@ -2,7 +2,7 @@
 title: ES6全部特性汇总
 date: 2020-10-23 10:58:51
 tags: ES6
-categories: javascript
+categories: JavaScript
 ---
 
 本文的知识点完全是参考或摘录[《ES6》](https://es6.ruanyifeng.com/)里的语句，有部分语句为了方便理解和记忆，进行了相同意思的转义，同时对知识点进行归类划分。为了让大家能集中精力来记住这些特性，全文一句废话和题外话都没有，全部模块以笔记的形式进行书写，如果看得不是很惯建议对照[《ES6》](https://es6.ruanyifeng.com/)的内容来学习。
