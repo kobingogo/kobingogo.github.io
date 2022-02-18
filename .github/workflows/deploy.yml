@@ -24,10 +24,10 @@ jobs:
       #   with:
       #     args: git submodule update --init --recursive
       # 使用 node:10
-      - name: use Node.js 10
+      - name: use Node.js 12
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
 
       # 安装npm包 & 生成静态文件
       - name: Install and publish
