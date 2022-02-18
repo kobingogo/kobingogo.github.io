@@ -61,7 +61,7 @@ jobs:
       - name: Deploy to tencent cloud
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
-          # 本地.ssh文件下的私钥id_rsa，存在secrets的TOKEN中
+          # .ssh文件下的私钥id_rsa，存在github项目 => settings => secrets中
           SSH_PRIVATE_KEY: ${{ secrets.MY_PC_TOKEN }}
           # 复制操做的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
           ARGS: "-avz --delete"
