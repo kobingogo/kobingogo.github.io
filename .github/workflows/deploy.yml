@@ -33,7 +33,7 @@ jobs:
       - name: Install and publish
         run: |
           npm install
-          npm run build
+          npm run g
 
       # 将静态文件部署到阿里云服务器
       # - name: Deploy to aliyun server
