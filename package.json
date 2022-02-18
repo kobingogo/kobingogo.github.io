@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "hexo clean && hexo g && gulp",
-    "g": "hexo clean && hexo generate",
+    "g": "hexo generate",
     "c": "hexo clean",
     "d": "hexo clean && hexo deploy",
     "s": "hexo clean && hexo server"
