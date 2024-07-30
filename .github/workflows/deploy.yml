@@ -58,21 +58,21 @@ jobs:
       #     TARGET: "/code/kobin-blog" # 静态资源存放目录
 
       # 将静态文件部署到腾讯云服务器
-      - name: Deploy to tencent cloud
-        uses: easingthemes/ssh-deploy@v2.2.11
-        env:
-          # .ssh文件下的私钥id_rsa，存在github项目 => settings => secrets中
-          SSH_PRIVATE_KEY: ${{ secrets.MY_PC_TOKEN }}
-          # 复制操做的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
-          ARGS: "-avz --delete"
-          # 源目录，相对于$GITHUB_WORKSPACE根目录的路径
-          SOURCE: "public"
-          # 服务器域名
-          REMOTE_HOST: ${{ secrets.TENCENT_SERVER_HOST }}
-          # 腾讯云默认用户名为root
-          REMOTE_USER: "root"
-          # 目标目录
-          TARGET: "/code/hexo-blog"
+      # - name: Deploy to tencent cloud
+      #   uses: easingthemes/ssh-deploy@v2.2.11
+      #   env:
+      #     # .ssh文件下的私钥id_rsa，存在github项目 => settings => secrets中
+      #     SSH_PRIVATE_KEY: ${{ secrets.MY_PC_TOKEN }}
+      #     # 复制操做的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
+      #     ARGS: "-avz --delete"
+      #     # 源目录，相对于$GITHUB_WORKSPACE根目录的路径
+      #     SOURCE: "public"
+      #     # 服务器域名
+      #     REMOTE_HOST: ${{ secrets.TENCENT_SERVER_HOST }}
+      #     # 腾讯云默认用户名为root
+      #     REMOTE_USER: "root"
+      #     # 目标目录
+      #     TARGET: "/code/hexo-blog"
 
       # 将静态文件部署到github pages
       - name: Deploy to Github Pages
