@@ -1155,26 +1155,7 @@ svg.loading {
   -moz-animation: spin infinite 2s;
   -o-animation: spin infinite 2s;
   -ms-animation: spin infinite 2s;
-  -webkit-animation-timing-function: linear;
-          animation-timing-function: linear;
-}
-@-webkit-keyframes spin {
-  from {
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    -khtml-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-    -khtml-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-  }
+  animation-timing-function: linear;
 }
 @keyframes spin {
   from {
@@ -2435,7 +2416,6 @@ img.lazyload:not(.placeholder).loaded {
   overflow: hidden;
 }
 #l_side .widget.sticky {
-  position: -webkit-sticky;
   position: sticky;
   top: 80px;
   z-index: 1;
@@ -3064,7 +3044,6 @@ img.lazyload:not(.placeholder).loaded {
   overflow: hidden;
   border-radius: 8px;
   -webkit-border-radius: 8px;
-  position: -webkit-sticky;
   position: sticky;
   top: 80px;
   transition: all 0.28s ease;
@@ -3082,7 +3061,6 @@ img.lazyload:not(.placeholder).loaded {
   -ms-transition: all 0.28s ease;
 }
 #l_side .toc-wrapper header {
-  position: -webkit-sticky;
   position: sticky;
   width: 100%;
   top: 0;
@@ -6212,7 +6190,6 @@ pre {
 }
 .highlight figcaption {
   font-size: 13px;
-  position: -webkit-sticky;
   position: sticky;
   left: 0;
   padding: 4px 8px 4px 8px;
@@ -6272,7 +6249,6 @@ pre {
   text-align: right;
   border-width: 0;
   margin-left: 0;
-  position: -webkit-sticky;
   position: sticky;
   left: 0;
   z-index: 1;

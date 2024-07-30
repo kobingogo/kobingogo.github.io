@@ -309,7 +309,6 @@
   border-spacing: 0;
   border-collapse: collapse;
   display: block;
-  width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
   max-width: 100%;
@@ -440,11 +439,6 @@
 }
 
 .markdown-body ::-moz-placeholder {
-  color: var(--color-fg-subtle);
-  opacity: 1;
-}
-
-.markdown-body :-ms-input-placeholder {
   color: var(--color-fg-subtle);
   opacity: 1;
 }
