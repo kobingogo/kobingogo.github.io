@@ -48,7 +48,7 @@ http 的协议的发展也是经过了一个比较漫长的阶段，从最初的
 1.**那么首部压缩的原理是什么呢？**
 
 支持 http2.0 的浏览器和服务器会维护一个相同的静态表和一个动态表，以及内置一个霍夫曼编码表。静态表存储的是常见的一些头部，和一些很常见的头部键值对，例如 method：get 以及 cookie。动态表开始是空的，如果头部命中静态表中的名称，那么就回将这份键值对加入动态表中，例如 cookie：xxxx。这样做的原因在于，请求或则响应头命中了静态或者动态表的时候，只需要一个字节就能表示，可想而知，这个字节就是一个地址，指向表中的数据。来张大佬的图或许更加清晰。
-[![图片描述](https://img-blog.csdnimg.cn/20210820095502815.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70)](https://img-blog.csdnimg.cn/20210820095502815.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70)
+![20240730164317](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730164317.png)
 
 而且像 cookie 对应的值可以由霍夫曼编码，来压缩体积。本质上，还是基于二进制分帧的数据转换。
 
@@ -78,7 +78,7 @@ http 的协议的发展也是经过了一个比较漫长的阶段，从最初的
 
 简单来说，服务器可以对一个客户端请求发送多个响应，例如，浏览器向服务端请求 index.html，里面包含一张样式表和一张图片。传统的方法就是会向浏览器发送三次请求。而服务端推送，则可以在一次请求内将这三个文件全部发送给浏览器，减少了请求次数，提升了网页性能。下面是网上关于 http2.0 的性能提升的，比 1.0 里面的将资源内嵌到网页中都要高。
 
-![https://img-blog.csdnimg.cn/20210821100401627.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70](https://img-blog.csdnimg.cn/20210821100401627.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70)
+![20240730164405](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730164405.png)
 
 1**.不同域之间可以推送吗？**
 
@@ -96,7 +96,7 @@ http 的协议的发展也是经过了一个比较漫长的阶段，从最初的
 
 Google 率先推出的 QUIC(quick UDP Internet Connection)就是很好的实践。
 
-![https://img-blog.csdnimg.cn/20210821142149846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70](https://img-blog.csdnimg.cn/20210821142149846.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70)
+![20240730164437](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730164437.png)
 
 那么 Http3.0 具体有什么特性呢？
 
@@ -110,7 +110,7 @@ Google 率先推出的 QUIC(quick UDP Internet Connection)就是很好的实践�
 
 首先来看队头阻塞问题的的两层原因：
 
-![https://img-blog.csdnimg.cn/20210821143405244.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70](https://img-blog.csdnimg.cn/20210821143405244.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzYwMzYwMzIw,size_16,color_FFFFFF,t_70)
+![20240730164451](https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730164451.png)
 
 我们知道，http2.0 的多路复用正好解决了 http 层的队头阻塞，但是 tcp 的队头阻塞依然存在。因为当数据包超时确认或者丢失，会等待重传，因此会阻塞当前窗口向右滑动，造成阻塞。而 QUIC 是基于 udp 的，创新点在于 QUIC 依靠一个严格的单调递增的 packet 序列，一个数据包里面还会有 streamID 和 streamoffset 偏移量，即使中途发生丢包或者超时确认，后面的数据包不会等待，等到接收完之后根据 ID 和 offset 即可完成重新拼装，从而避免了这种问题。
 
