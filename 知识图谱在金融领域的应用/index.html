@@ -1,0 +1,4103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head hexo-theme="https://github.com/volantis-x/hexo-theme-volantis/tree/5.0.0-beta.2">
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+  <link rel="canonical" href="https://kobingogo.github.io/知识图谱在金融领域的应用/">
+  <!-- 渲染优化 -->
+  <!-- <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin> -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta content="扬舲の博客" name="application-name">
+  <meta content="扬舲の博客" name="apple-mobile-web-app-title">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <link rel="preload" href="/css/style.css?time=1722398331872" as="style">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <!-- 页面元数据 -->
+  <title>知识图谱在金融领域的应用 - 扬舲の博客</title>
+  <meta name="keywords" content="知识图谱,前端 技术 博客">
+  <meta name="description" content="知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Whe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知识图谱在金融领域的应用">
+<meta property="og:url" content="https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="扬舲の博客">
+<meta property="og:description" content="知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Whe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+<meta property="article:published_time" content="2023-02-10T20:43:53.000Z">
+<meta property="article:modified_time" content="2024-07-31T03:58:30.493Z">
+<meta property="article:author" content="yangling">
+<meta property="article:tag" content="知识图谱">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+  <!-- feed -->
+    <link rel="alternate" href="/atom.xml" title="扬舲の博客" type="application/atom+xml">
+  <!-- import meta -->
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml">
+      <meta name="theme-color" content="#ffffff">
+  <!-- link -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <!-- import link -->
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png">
+      <link rel="manifest" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest">
+      <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg" color="#5bbad5">
+      <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <style>
+    /* 首屏样式 */
+    #safearea {
+  display: none;
+}
+/* 
+  * Workaround for Chrome bug, part 1
+  * Chunk rendering for all but the first article.
+  * /layout/_partial/scripts/content-visibility-scroll-fix.ejs
+*/
+.post-story + .post-story,
+article + article,
+.post-wrapper + .post-wrapper {
+  content-visibility: auto;
+  contain-intrinsic-size: 10px 500px;
+}
+:root {
+  --color-site-body: #f4f4f4;
+  --color-site-bg: #f4f4f4;
+  --color-site-inner: #fff;
+  --color-site-footer: #666;
+  --color-card: #fff;
+  --color-text: #444;
+  --color-block: #f6f6f6;
+  --color-inlinecode: #c74f00;
+  --color-codeblock: #fff7ea;
+  --color-h1: #3a3a3a;
+  --color-h2: #3a3a3a;
+  --color-h3: #333;
+  --color-h4: #444;
+  --color-h5: #555;
+  --color-h6: #666;
+  --color-p: #444;
+  --color-list: #666;
+  --color-list-hl: #36ac91;
+  --color-meta: #888;
+  --color-read-bkg: #e0d8c8;
+  --color-read-post: #f8f1e2;
+}
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+html {
+  color: var(--color-text);
+  width: 100%;
+  height: 100%;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  font-size: 16px;
+}
+html >::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+html >::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+html >::-webkit-scrollbar-thumb {
+  background: #44d7b6;
+  cursor: pointer;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+html >::-webkit-scrollbar-thumb:hover {
+  background: #ff5722;
+}
+body {
+  background-color: var(--color-site-body);
+  text-rendering: optimizelegibility;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body.modal-active {
+  overflow: hidden;
+}
+@media screen and (max-width: 680px) {
+  body.modal-active {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+a {
+  color: #1b79c4;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+a:hover {
+  color: #ff5722;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+ul,
+ol {
+  padding-left: 0;
+}
+ul li,
+ol li {
+  list-style: none;
+}
+header {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+img {
+  border: 0;
+  background: none;
+  max-width: 100%;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 0;
+  border: 0;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  border-bottom: 1px solid rgba(68,68,68,0.1);
+}
+button,
+input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+@supports (backdrop-filter: blur(20px)) {
+  .blur {
+    background: rgba(255,255,255,0.9) !important;
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.shadow {
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.shadow.floatable {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.shadow.floatable:hover {
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+}
+#l_cover {
+  min-height: 64px;
+}
+.cover-wrapper {
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: 100vh;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  color: var(--color-site-inner);
+  padding: 0 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: -100px;
+}
+.cover-wrapper .cover-body {
+  z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.cover-wrapper#full {
+  height: calc(100vh + 100px);
+  padding-bottom: 100px;
+}
+.cover-wrapper#half {
+  max-height: 640px;
+  min-height: 400px;
+  height: calc(36vh - 64px + 200px);
+}
+.cover-wrapper #scroll-down {
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  bottom: 100px;
+  text-align: center;
+  cursor: pointer;
+}
+.cover-wrapper #scroll-down .scroll-down-effects {
+  color: #fff;
+  font-size: 24px;
+  line-height: 64px;
+  position: absolute;
+  width: 24px;
+  left: calc(50% - 12px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  animation: scroll-down-effect 1.5s infinite;
+  -webkit-animation: scroll-down-effect 1.5s infinite;
+  -khtml-animation: scroll-down-effect 1.5s infinite;
+  -moz-animation: scroll-down-effect 1.5s infinite;
+  -o-animation: scroll-down-effect 1.5s infinite;
+  -ms-animation: scroll-down-effect 1.5s infinite;
+}
+@-moz-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.cover-wrapper .cover-body {
+  margin-top: 64px;
+  margin-bottom: 100px;
+}
+.cover-wrapper .cover-body,
+.cover-wrapper .cover-body .top,
+.cover-wrapper .cover-body .bottom {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  max-width: 100%;
+}
+.cover-wrapper .cover-body .bottom {
+  margin-top: 32px;
+}
+.cover-wrapper .cover-body .title {
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+  font-size: 3.125rem;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.cover-wrapper .cover-body .subtitle {
+  font-size: 20px;
+}
+.cover-wrapper .cover-body .logo {
+  max-height: 120px;
+  max-width: calc(100% - 4 * 16px);
+}
+@media screen and (min-height: 1024px) {
+  .cover-wrapper .cover-body .title {
+    font-size: 3rem;
+  }
+  .cover-wrapper .cover-body .subtitle {
+    font-size: 1.05rem;
+  }
+  .cover-wrapper .cover-body .logo {
+    max-height: 150px;
+  }
+}
+.cover-wrapper .cover-body .m_search {
+  position: relative;
+  max-width: calc(100% - 16px);
+  width: 320px;
+  vertical-align: middle;
+}
+.cover-wrapper .cover-body .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  width: 100%;
+}
+.cover-wrapper .cover-body .m_search .icon,
+.cover-wrapper .cover-body .m_search .input {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.cover-wrapper .cover-body .m_search .icon {
+  position: absolute;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  line-height: 2.5rem;
+  width: 32px;
+  top: 0;
+  left: 5px;
+  color: rgba(68,68,68,0.75);
+}
+.cover-wrapper .cover-body .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  height: 2.5rem;
+  width: 100%;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-size: 0.875rem;
+  -webkit-appearance: none;
+  padding-left: 36px;
+  border-radius: 1.4rem;
+  -webkit-border-radius: 1.4rem;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border: none;
+  color: var(--color-text);
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .cover-body .m_search .input {
+    padding-left: 36px;
+  }
+}
+.cover-wrapper .cover-body .m_search .input:hover {
+  background: rgba(255,255,255,0.8);
+}
+.cover-wrapper .cover-body .m_search .input:focus {
+  background: #fff;
+}
+.cover-wrapper .list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -khtml-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  align-items: stretch;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cover-wrapper .list-h a {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 0;
+  -ms-flex: 1 0;
+  flex: 1 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  font-weight: 600;
+}
+.cover-wrapper .list-h a img {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  margin: 4px;
+  min-width: 40px;
+  max-width: 44px;
+}
+@media screen and (max-width: 768px) {
+  .cover-wrapper .list-h a img {
+    min-width: 36px;
+    max-width: 40px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .list-h a img {
+    margin: 2px 4px;
+    min-width: 32px;
+    max-width: 36px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .cover-wrapper .list-h a img {
+    min-width: 28px;
+    max-width: 32px;
+  }
+}
+.cover-wrapper {
+  max-width: 100%;
+}
+.cover-wrapper.search .bottom .menu {
+  margin-top: 16px;
+}
+.cover-wrapper.search .bottom .menu .list-h a {
+  white-space: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 2px;
+  margin: 4px;
+  color: var(--color-site-inner);
+  opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -moz-opacity: 0.75;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-bottom: 2px solid transparent;
+}
+.cover-wrapper.search .bottom .menu .list-h a i {
+  margin-right: 4px;
+}
+.cover-wrapper.search .bottom .menu .list-h a p {
+  font-size: 0.9375rem;
+}
+.cover-wrapper.search .bottom .menu .list-h a:hover,
+.cover-wrapper.search .bottom .menu .list-h a.active,
+.cover-wrapper.search .bottom .menu .list-h a:active {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  border-bottom: 2px solid var(--color-site-inner);
+}
+.cover-wrapper.dock .menu,
+.cover-wrapper.featured .menu,
+.cover-wrapper.focus .menu {
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+.cover-wrapper.dock .menu .list-h a,
+.cover-wrapper.featured .menu .list-h a,
+.cover-wrapper.focus .menu .list-h a {
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  line-height: 24px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-bottom: none;
+  text-align: center;
+  align-content: flex-end;
+  color: rgba(68,68,68,0.7);
+  font-size: 1.5rem;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h a,
+  .cover-wrapper.featured .menu .list-h a,
+  .cover-wrapper.focus .menu .list-h a {
+    padding: 12px 8px;
+  }
+}
+.cover-wrapper.dock .menu .list-h a i,
+.cover-wrapper.featured .menu .list-h a i,
+.cover-wrapper.focus .menu .list-h a i {
+  margin: 8px;
+}
+.cover-wrapper.dock .menu .list-h a p,
+.cover-wrapper.featured .menu .list-h a p,
+.cover-wrapper.focus .menu .list-h a p {
+  font-size: 0.875rem;
+}
+.cover-wrapper.dock .menu .list-h a.active,
+.cover-wrapper.featured .menu .list-h a.active,
+.cover-wrapper.focus .menu .list-h a.active {
+  background: var(--color-card);
+  backdrop-filter: none;
+}
+.cover-wrapper.dock .menu .list-h a.active i,
+.cover-wrapper.featured .menu .list-h a.active i,
+.cover-wrapper.focus .menu .list-h a.active i,
+.cover-wrapper.dock .menu .list-h a.active i+p,
+.cover-wrapper.featured .menu .list-h a.active i+p,
+.cover-wrapper.focus .menu .list-h a.active i+p {
+  color: #44d7b6;
+}
+.cover-wrapper.dock .menu .list-h a.active img+p,
+.cover-wrapper.featured .menu .list-h a.active img+p,
+.cover-wrapper.focus .menu .list-h a.active img+p {
+  color: var(--color-text);
+}
+.cover-wrapper.dock .menu .list-h a:hover,
+.cover-wrapper.featured .menu .list-h a:hover,
+.cover-wrapper.focus .menu .list-h a:hover {
+  background: var(--color-card);
+}
+.cover-wrapper.dock .top {
+  margin-bottom: 48px;
+}
+.cover-wrapper.dock .menu {
+  background: rgba(255,255,255,0.5);
+  position: absolute;
+  bottom: 0;
+  max-width: 100%;
+}
+.cover-wrapper.dock .menu .list-h {
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  margin: 4px;
+}
+.cover-wrapper.dock .menu .list-h a+a {
+  margin-left: 4px;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h {
+    overflow-x: scroll;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-track-piece {
+    background: transparent;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb {
+    background: #44d7b6;
+    cursor: pointer;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb:hover {
+    background: #ff5722;
+  }
+}
+@supports (backdrop-filter: blur(20px)) {
+  .cover-wrapper.dock .menu {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.cover-wrapper #parallax-window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.parallax-mirror {
+  animation-delay: 0s;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-name: fadeIn;
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-mode: 'dark';
+  }
+  :root:not([color-scheme]) {
+    --color-site-body: #000;
+    --color-read-bkg: #222;
+    --color-read-post: #333;
+    --color-site-bg: #222;
+    --color-site-inner: #eee;
+    --color-site-footer: #aaa;
+    --color-card: #333;
+    --color-text: #eee;
+    --color-block: #3a3a3a;
+    --color-codeblock: #343a3c;
+    --color-inlinecode: #d56d28;
+    --color-h1: #eee;
+    --color-h2: #eee;
+    --color-h3: #ddd;
+    --color-h4: #ddd;
+    --color-h5: #ddd;
+    --color-h6: #ddd;
+    --color-p: #bbb;
+    --color-list: #aaa;
+    --color-list-hl: #69dfc4;
+    --color-meta: #888;
+    --color-link: #888;
+  }
+  :root:not([color-scheme]) img {
+    filter: brightness(70%) !important;
+  }
+  :root:not([color-scheme]) #wrapper .title {
+    color: var(--color-meta) !important;
+  }
+  :root:not([color-scheme]) .l_header ul.nav-list-h>li>a,
+  :root:not([color-scheme]) ul.list-v >li>a {
+    color: var(--color-list) !important;
+  }
+  :root:not([color-scheme]) .blur {
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) .nav-main .u-search-input {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a:hover {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) .article blockquote {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .article-title a {
+    color: var(--color-h1) !important;
+  }
+  :root:not([color-scheme]) details>summary {
+    color: var(--color-p) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) details {
+    border: 1px solid var(--color-site-bg) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal,
+  :root:not([color-scheme]) #u-search .modal-header,
+  :root:not([color-scheme]) #u-search .modal-body {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal-body .modal-results .result:hover {
+    background: var(--color-block) !important;
+  }
+}
+[color-scheme='dark'] {
+  --color-site-body: #000;
+  --color-read-bkg: #222;
+  --color-read-post: #333;
+  --color-site-bg: #222;
+  --color-site-inner: #eee;
+  --color-site-footer: #aaa;
+  --color-card: #333;
+  --color-text: #eee;
+  --color-block: #3a3a3a;
+  --color-codeblock: #343a3c;
+  --color-inlinecode: #d56d28;
+  --color-h1: #eee;
+  --color-h2: #eee;
+  --color-h3: #ddd;
+  --color-h4: #ddd;
+  --color-h5: #ddd;
+  --color-h6: #ddd;
+  --color-p: #bbb;
+  --color-list: #aaa;
+  --color-list-hl: #69dfc4;
+  --color-meta: #888;
+  --color-link: #888;
+}
+[color-scheme='dark'] img {
+  filter: brightness(70%) !important;
+}
+[color-scheme='dark'] #wrapper .title {
+  color: var(--color-meta) !important;
+}
+[color-scheme='dark'] .l_header ul.nav-list-h>li>a,
+[color-scheme='dark'] ul.list-v >li>a {
+  color: var(--color-list) !important;
+}
+[color-scheme='dark'] .blur {
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] .nav-main .u-search-input {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a:hover {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] .article blockquote {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .article-title a {
+  color: var(--color-h1) !important;
+}
+[color-scheme='dark'] details>summary {
+  color: var(--color-p) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] details {
+  border: 1px solid var(--color-site-bg) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] #u-search .modal,
+[color-scheme='dark'] #u-search .modal-header,
+[color-scheme='dark'] #u-search .modal-body {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #u-search .modal-body .modal-results .result:hover {
+  background: var(--color-block) !important;
+}
+@media screen and (max-width: 500px) {
+  [color-scheme='dark'] .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+.l_header {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  width: 100%;
+  height: 64px;
+  background: var(--color-card);
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.l_header.auto {
+  transition: opacity 0.4s ease;
+  -webkit-transition: opacity 0.4s ease;
+  -khtml-transition: opacity 0.4s ease;
+  -moz-transition: opacity 0.4s ease;
+  -o-transition: opacity 0.4s ease;
+  -ms-transition: opacity 0.4s ease;
+  visibility: hidden;
+}
+.l_header.auto.show {
+  opacity: 1 !important;
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  visibility: visible;
+}
+.l_header .container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.l_header #wrapper {
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.l_header #wrapper .nav-main,
+.l_header #wrapper .nav-sub {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -khtml-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -o-justify-content: space-between;
+  -ms-justify-content: space-between;
+  align-items: center;
+}
+.l_header #wrapper .nav-main {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.l_header #wrapper.sub .nav-main {
+  transform: translateY(-64px);
+  -webkit-transform: translateY(-64px);
+  -khtml-transform: translateY(-64px);
+  -moz-transform: translateY(-64px);
+  -o-transform: translateY(-64px);
+  -ms-transform: translateY(-64px);
+}
+.l_header #wrapper .nav-sub {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  opacity: 0;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  height: 64px;
+  width: calc(100% - 2 * 16px);
+  position: absolute;
+}
+.l_header #wrapper .nav-sub ::-webkit-scrollbar {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (min-width: 2048px) {
+  .l_header #wrapper .nav-sub {
+    max-width: 55vw;
+    margin: auto;
+  }
+}
+.l_header #wrapper.sub .nav-sub {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+}
+.l_header #wrapper .title {
+  position: relative;
+  color: var(--color-text);
+  padding-left: 24px;
+  max-height: 64px;
+}
+.l_header #wrapper .nav-main .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  line-height: 64px;
+  padding: 0 24px;
+  font-size: 1.25rem;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+}
+.l_header #wrapper .nav-main .title img {
+  height: 64px;
+}
+.l_header .nav-sub {
+  max-width: 1080px;
+  margin: auto;
+}
+.l_header .nav-sub .title {
+  font-weight: bold;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  line-height: 1.2;
+  max-height: 64px;
+  white-space: normal;
+  flex-shrink: 1;
+}
+.l_header .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  line-height: 64px;
+  align-items: center;
+}
+.l_header .switcher .s-toc {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .l_header .switcher .s-toc {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+  }
+}
+.l_header .switcher >li {
+  height: 48px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  margin: 2px;
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li {
+    margin: 0 1px;
+    height: 48px;
+  }
+}
+.l_header .switcher >li >a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0.85em 1.1em;
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  color: #44d7b6;
+}
+.l_header .switcher >li >a:hover {
+  border: none;
+}
+.l_header .switcher >li >a.active,
+.l_header .switcher >li >a:active {
+  border: none;
+  background: var(--color-site-bg);
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li >a {
+    width: 36px;
+    height: 48px;
+  }
+}
+.l_header .nav-sub .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+}
+.l_header .m_search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  height: 64px;
+  width: 240px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (max-width: 1024px) {
+  .l_header .m_search {
+    width: 44px;
+    min-width: 44px;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+  }
+  .l_header .m_search:hover {
+    width: 240px;
+  }
+  .l_header .m_search:hover input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search:hover .input {
+    width: 100%;
+  }
+  .l_header .m_search:hover .input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search {
+    min-width: 0;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.l_header .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.l_header .m_search .icon {
+  position: absolute;
+  width: 36px;
+  left: 5px;
+  color: var(--color-meta);
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .icon {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+.l_header .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 1.3;
+  width: 100%;
+  color: var(--color-text);
+  background: #fafafa;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding-left: 40px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search .input:focus {
+    box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .input {
+    background: var(--color-block);
+    padding-left: 8px;
+    border: none;
+  }
+  .l_header .m_search .input:hover,
+  .l_header .m_search .input:focus {
+    border: none;
+  }
+}
+@media (max-width: 500px) {
+  .l_header .m_search {
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    background: #fff;
+    transition: all 0.28s ease;
+    -webkit-transition: all 0.28s ease;
+    -khtml-transition: all 0.28s ease;
+    -moz-transition: all 0.28s ease;
+    -o-transition: all 0.28s ease;
+    -ms-transition: all 0.28s ease;
+  }
+  .l_header .m_search .input {
+    border-radius: 32px;
+    -webkit-border-radius: 32px;
+    margin-left: 16px;
+    padding-left: 16px;
+  }
+  .l_header.z_search-open .m_search {
+    width: 100%;
+  }
+  .l_header.z_search-open .m_search .input {
+    width: calc(100% - 120px);
+  }
+}
+ul.m-pc >li>a {
+  color: inherit;
+  border-bottom: 2px solid transparent;
+}
+ul.m-pc >li>a:active,
+ul.m-pc >li>a.active {
+  border-bottom: 2px solid #44d7b6;
+}
+ul.m-pc li:hover >ul.list-v,
+ul.list-v li:hover >ul.list-v {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.nav-list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  align-items: stretch;
+}
+ul.nav-list-h>li {
+  position: relative;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  height: 100%;
+  line-height: 2.4;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+ul.nav-list-h>li >a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 600;
+}
+ul.list-v {
+  z-index: 1;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: absolute;
+  background: var(--color-card);
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  margin-top: -6px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding: 8px 0;
+}
+ul.list-v.show {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.list-v hr {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+ul.list-v >li {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+ul.list-v >li.header {
+  font-size: 0.78125rem;
+  font-weight: bold;
+  line-height: 2em;
+  color: var(--color-meta);
+  margin: 8px 16px 4px;
+}
+ul.list-v >li.header i {
+  margin-right: 8px;
+}
+ul.list-v >li ul {
+  margin-left: 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: -40px;
+}
+ul.list-v .aplayer-container {
+  min-height: 64px;
+  padding: 6px 16px;
+}
+ul.list-v >li>a {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  color: var(--color-list);
+  font-size: 0.875rem;
+  font-weight: bold;
+  line-height: 36px;
+  padding: 0 20px 0 16px;
+  text-overflow: ellipsis;
+  margin: 0 4px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+@media screen and (max-width: 1024px) {
+  ul.list-v >li>a {
+    line-height: 40px;
+  }
+}
+ul.list-v >li>a >i {
+  margin-right: 8px;
+}
+ul.list-v >li>a:active,
+ul.list-v >li>a.active {
+  color: var(--color-list-hl);
+}
+ul.list-v >li>a:hover {
+  color: var(--color-list-hl);
+  background: var(--color-site-bg);
+}
+.l_header .menu >ul>li>a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding: 0 8px;
+}
+.l_header .menu >ul>li>a >i {
+  margin-right: 4px;
+}
+.l_header ul.nav-list-h>li {
+  color: var(--color-list);
+  line-height: 64px;
+}
+.l_header ul.nav-list-h>li >a {
+  max-height: 64px;
+  overflow: hidden;
+  color: inherit;
+}
+.l_header ul.nav-list-h>li >a:active,
+.l_header ul.nav-list-h>li >a.active {
+  color: #44d7b6;
+}
+.l_header ul.nav-list-h>li:hover>a {
+  color: var(--color-list-hl);
+}
+.l_header ul.nav-list-h>li i.music {
+  animation: rotate-effect 1.5s linear infinite;
+  -webkit-animation: rotate-effect 1.5s linear infinite;
+  -khtml-animation: rotate-effect 1.5s linear infinite;
+  -moz-animation: rotate-effect 1.5s linear infinite;
+  -o-animation: rotate-effect 1.5s linear infinite;
+  -ms-animation: rotate-effect 1.5s linear infinite;
+}
+@-moz-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+.menu-phone li ul.list-v {
+  right: calc(100% - 0.5 * 16px);
+}
+.menu-phone li ul.list-v ul {
+  right: calc(100% - 0.5 * 16px);
+}
+#wrapper {
+  max-width: 1080px;
+  margin: auto;
+}
+@media screen and (min-width: 2048px) {
+  #wrapper {
+    max-width: 55vw;
+  }
+}
+#wrapper .menu {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  margin: 0 16px 0 0;
+}
+#wrapper .menu .list-v ul {
+  left: calc(100% - 0.5 * 16px);
+}
+.menu-phone {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: 16px;
+  right: 8px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.menu-phone ul {
+  right: calc(100% - 0.5 * 16px);
+}
+@media screen and (max-width: 500px) {
+  .menu-phone {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: block;
+  }
+}
+.l_header {
+  max-width: 65vw;
+  left: calc((100% - 65vw) * 0.5);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+@media screen and (max-width: 2048px) {
+  .l_header {
+    max-width: 1112px;
+    left: calc((100% - 1112px) * 0.5);
+  }
+}
+@media screen and (max-width: 1112px) {
+  .l_header {
+    left: 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    max-width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .l_header #wrapper .nav-main .title {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .l_header #wrapper .nav-sub {
+    width: 100%;
+  }
+  .l_header #wrapper .nav-sub .title {
+    overflow-y: scroll;
+    margin-top: 2px;
+    padding: 8px 16px;
+  }
+  .l_header #wrapper .switcher {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+    margin-right: 8px;
+  }
+  .l_header .menu {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+@media screen and (max-width: 500px) {
+  .list-v li {
+    max-width: 270px;
+  }
+}
+#u-search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 60px 20px;
+  z-index: 1001;
+}
+@media screen and (max-width: 680px) {
+  #u-search {
+    padding: 0px;
+  }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 500px) {
+  .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+
+  </style>
+  <link rel="stylesheet" href="/css/style.css?time=1722398331872" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1722398331872"></noscript>
+    <script>
+      let userColorScheme=localStorage.getItem("color-scheme")
+      if(userColorScheme){
+        document.documentElement.setAttribute("color-scheme", userColorScheme);
+      }
+    </script>
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+    '.kill-t{'+
+      'font-size: 2rem;'+
+    '}'+
+    '.kill-c{'+
+      'font-size: 1.2rem;'+
+    '}'+
+		'#l_header,#l_body{'+
+			'display: none;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        `<span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br/>`+
+        `<span class="kill-c">微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</span><br/>`+
+        `<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>`+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+    .kill-t{
+      font-size: 2rem;
+    }
+    .kill-c{
+      font-size: 1.2rem;
+    }
+		#l_header,#l_body{
+			display: none;
+		}
+	</style>
+    <div class="kill-noscript">
+        <span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br>
+        <span class="kill-c">本页面需要浏览器支持（启用）JavaScript</span><br>
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+
+  <script>
+  /************这个文件存放不需要重载的全局变量和全局函数*********/
+  window.volantis = {}; // volantis 全局变量
+  volantis.WEBCONFIG = {"title":"扬舲の博客","subtitle":"","description":"前端技术博客","author":"yangling","language":"zh-CN","timezone":"","url":"https://kobingogo.github.io","root":"/","permalink":":title/","permalink_defaults":null,"pretty_urls":{"trailing_index":true,"trailing_html":true},"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":["README.md","**/*.html","manifest.json","start","CNAME","robots.txt","assets/*"],"new_post_name":":year-:month-:day-:title.md","default_layout":"post","titlecase":false,"external_link":{"enable":true,"field":"site","exclude":""},"filename_case":1,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":false,"highlight":{"enable":true,"auto_detect":false,"line_number":true,"tab_replace":"    ","wrap":true,"exclude_languages":[],"language_attr":false,"hljs":false,"first_line_number":"always1"},"prismjs":{"enable":false,"preprocess":true,"line_number":true,"tab_replace":""},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","updated_option":false,"per_page":10,"pagination_dir":"page","theme":"volantis","server":{"port":4000,"log":false,"compress":false,"header":true,"cache":false},"deploy":{"type":"git","repo":"git@github.com:kobingogo/kobingogo.github.io.git","branch":"master"},"ignore":null,"meta_generator":false,"keywords":"前端 技术 博客","favicon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","auto_spacing":true,"index_generator":{"per_page":10,"order_by":"-date","path":""},"include":null,"exclude":null,"import":{"meta":["<meta name=\"msapplication-TileColor\" content=\"#ffffff\">","<meta name=\"msapplication-config\" content=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml\">","<meta name=\"theme-color\" content=\"#ffffff\">"],"link":["<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png\">","<link rel=\"manifest\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest\">","<link rel=\"mask-icon\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg\" color=\"#5bbad5\">","<link rel=\"shortcut icon\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico\">"]},"sitemap":{"path":"sitemap.xml","tag":false,"category":false},"neat_enable":true,"nofollow":{"enable":true,"exclude":["xaoxuu.com","volantis.js.org","volantis-x.js.org","blog.mhuig.top","colsrch.cn","inkss.cn","vlts.hin.cool"]},"autoprefixer":{"exclude":["*.min.css"]},"marked":{"gfm":true,"pedantic":false,"breaks":true,"smartLists":true,"smartypants":false,"modifyAnchors":0,"autolink":true,"mangle":true,"sanitizeUrl":false,"dompurify":false,"headerIds":true,"anchorAlias":false,"lazyload":false,"prependRoot":false,"postAsset":false,"external_link":{"enable":true,"exclude":[],"nofollow":true},"descriptionLists":true},"jsonContent":{"ignore":{"paths":["v4/","v3/","v2/","test/","news/"],"tags":[]}},"theme_config":{"use_cdn":false,"navbar":{"logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"scheme":"search","display":{"home":true,"archive":true,"others":false},"logo":null,"title":"扬舲の博客","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}]},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"line_style":"solid","author":true,"readmore":"auto"},"body":{"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"updated":{"title":"本页文档最后更新于："}}}},"comments":{"service":"valine","giscus":{"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"disqus":{"shortname":"volantis","path":"/"},"valine":{"appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","path":"/"},"utterances":{"repo":"volantis-x/community","issue-number":115},"beaudar":{"repo":"volantis-x/community","issue-number":115}},"sidebar":{"for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}]},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qrcode":{"class":"qrcode","display":["desktop"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"height":null,"fancybox":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"site_footer":{"layout":["aplayer","social","copyright"],"copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"br":"<br>"},"tag_plugins":{"note":{"iconfont":"Font Awesome 5 Pro"}},"plugins":{"clipboard":{"enable":true},"fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","parallax":{"enable":true},"aplayer":{"enable":true,"autoplay":false,"volume":0.4,"order":"random","id":5062959861},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"}},"darkmode":{"enable":true},"gitter":{"room":"hexo-theme-volantis/community"}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"custom_css":{"cursor":{"enable":true},"font_smoothing":true,"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"]},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"}}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"icon":"fad fa-print TURQUOISE"},"darkmode":{"icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"icon":"fad fa-book-open EMERALD"},"help":{"icon":"fad fa-question EMERALD"},"examples":{"icon":"fad fa-rss PETERRIVE"},"contributors":{"icon":"fad fa-fan fa-spin AMETHYST"},"source_docs":{"icon":"fad fa-code-branch WETASPHALT"},"source_theme":{"icon":"fad fa-file-code CONCRETE"}}},"category_generator":{"per_page":10},"feed":{"type":"atom","limit":20,"hub":"","content":true,"content_limit":140,"content_limit_delim":"","order_by":"-date","autodiscovery":true,"template":"","path":"atom.xml"},"archive_generator":{"per_page":10,"yearly":true,"monthly":true,"daily":false},"tag_generator":{"per_page":10}};
+  volantis.THEMECONFIG = {"default":{"avatar":"/media/placeholder/avatar/round/3442075.svg","link":"/media/placeholder/link/8f277b4ee0ecd.svg","cover":"/media/placeholder/cover/76b86c0226ffd.svg","image":"/media/placeholder/image/2659360.svg"},"info":{"theme_name":"Volantis","theme_version":"5.0.0-beta.2","theme_docs":"https://volantis.js.org/","theme_repo":"https://github.com/volantis-x/hexo-theme-volantis"},"cdn":{"enable":false,"prefix":null,"set":{"js":{"app":null},"css":{"style":null}},"map":{"js":{"app":"/js/app.js?time=1722398331872","sites":"/js/plugins/sites.js?time=1722398331872","friends":"/js/plugins/friends.js?time=1722398331872","parallax":"/js/plugins/parallax.js?time=1722398331872","rightMenu":"/js/plugins/rightMenu.js?time=1722398331872","contributors":"/js/plugins/contributors.js?time=1722398331872","message":"/js/thirdparty/message.js?time=1722398331872","valine":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","search":"/js/search/hexo.js?time=1722398331872"},"css":{"style":"/css/style.css?time=1722398331872","message":"/css/message.css?time=1722398331872"}}},"replace":["https://npm.elemecdn.com/ => https://npm.elemecdn.com/"],"scroll_smooth":true,"navbar":{"visiable":"auto","logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"height_scheme":"full","layout_scheme":"dock","display":{"home":true,"archive":true,"others":false},"background":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture","logo":null,"title":"扬舲の博客","subtitle":"","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}],"scheme":"search"},"pages":{"friends":{"layout_scheme":"traditional"}},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"hide_excerpt":false,"line_style":"solid","author":true,"readmore":"auto"},"body":{"top_meta":["author","category","date","counter"],"footer_widget":{"references":{"title":"参考资料","icon":"fas fa-quote-left"},"related_posts":{"enable":false,"title":"相关文章","icon":"fas fa-bookmark","max_count":5,"placeholder_img":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"},"copyright":{"enable":true,"permalink":"本文永久链接是：","content":["博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议","permalink"]},"donate":{"enable":false,"images":["/media/org.volantis/blog/qrcode/github@volantis.png","/media/org.volantis/blog/qrcode/github@volantis.png"]}},"bottom_meta":["updated","tags","share"],"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"date":{"icon":"fas fa-calendar-alt","title":"发布于：","format":"ll"},"updated":{"icon":"fas fa-edit","title":"本页文档最后更新于：","format":"ll"},"category":{"icon":"fas fa-folder-open"},"counter":{"icon":"fas fa-eye","unit":"次浏览"},"valinecount":{"icon":"fas fa-comment-dots","desc":""},"walinecount":{"icon":"fas fa-comment-dots","desc":""},"wordcount":{"icon_wordcount":"fas fa-keyboard","icon_duration":"fas fa-hourglass-half"},"tags":{"icon":"fas fa-hashtag"},"share":[{"id":"qq","img":"/media/org.volantis/logo/128/qq.png"},{"id":"qzone","img":"/media/org.volantis/logo/128/qzone.png"},{"id":"weibo","img":"/media/org.volantis/logo/128/weibo.png"},{"id":null,"img":null},{"id":null,"img":null}]}}},"comments":{"title":"<i class='fas fa-comments'></i> 评论","subtitle":null,"service":"valine","artalk":{"js":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.js","css":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.css","server":"http://127.0.0.1:8080/api","path":null,"placeholder":"来啊，快活啊 ( ゜- ゜)","noComment":"快来成为第一个评论的人吧~","pagination":{"readMore":true,"autoLoad":false,"pageSize":10}},"giscus":{"theme":{"light":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/light.css","dark":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/dark.css"},"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"beaudar":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"branch":"main","position":"top","order":"desc","theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"utterances":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"valine":{"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false},"minivaline":{"js":"https://npm.elemecdn.com/minivaline@latest","path":null,"placeholder":"快来评论吧~","serverURL":"https://hello.com"},"disqus":{"shortname":"volantis","autoload":false,"path":"/"},"disqusjs":{"path":null,"js":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqus.js","css":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqusjs.css"},"gitalk":{"js":"https://npm.elemecdn.com/gitalk@1/dist/gitalk.min.js","clientID":null,"clientSecret":null,"repo":null,"owner":null,"admin":null,"path":null},"vssue":{"js":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.github.min.js","css":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.min.css","vue":"https://cdn.jsdelivr.net/gh/vuejs/vue@2.6.11/dist/vue.runtime.min.js","owner":null,"repo":null,"clientId":null,"clientSecret":null},"livere":{"uid":null},"isso":{"url":"https://example.com/(path/)","src":"https://example.com/(path/)js/embed.min.js","css":null,"gravatar":null},"hashover":{"src":"https://example.com/(path/)comments.php"},"twikoo":{"js":"https://npm.elemecdn.com/twikoo@latest","path":null,"envId":"xxxxxxxxxxxxxxx","placeholder":null},"waline":{"js":"https://npm.elemecdn.com/@waline/client/dist/Waline.min.js","path":null,"placeholder":"快来评论吧~","imageHosting":"https://7bu.top/api/upload","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"serverURL":"xxxxxxxxxxxxxxx","avatar":"robohash","avatarCDN":null,"pageSize":10,"lang":"zh-CN","visitor":true}},"sidebar":{"position":"right","for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"id":"blogger"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5,"id":"toc"},"music":{"class":"music","display":["desktop","mobile"],"pjaxReload":false},"category":{"class":"category","display":["desktop"],"header":{"icon":"fas fa-folder-open","title":"文章分类","url":"/blog/categories/"},"id":"category"},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555","id":"tagcloud"},"qrcode":{"class":"qrcode","display":["desktop"],"height":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"fancybox":null,"id":"qrcode"},"webinfo":{"class":"webinfo","display":["desktop"],"header":{"icon":"fas fa-award","title":"站点信息"},"type":{"article":{"enable":true,"text":"文章数目：","unit":"篇"},"runtime":{"enable":true,"data":"2020/01/01","text":"已运行时间：","unit":"天"},"wordcount":{"enable":true,"text":"本站总字数：","unit":"字"},"visitcounter":{"service":"leancloud","siteuv":{"enable":true,"text":"本站访客数：","unit":"人"},"sitepv":{"enable":true,"text":"本站总访问量：","unit":"次"}},"lastupd":{"enable":true,"friendlyShow":true,"text":"最后活动时间：","unit":"日"}}},"lastupdate":{"class":"lastupdate","display":["desktop","mobile"],"header":{"icon":"fas fa-clock WISTERIA","title":"最近更新"}},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"tag_plugins":{"note":{"icon":"\\f054","color":"","iconfont":"Font Awesome 5 Pro"},"checkbox":{"interactive":false,"color":""},"link":{"placeholder":"/media/org.volantis/logo/256/safari.png"}},"site_footer":{"layout":["aplayer","social","copyright"],"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"source":"https://github.com/volantis-x/volantis-docs/","analytics":"<span id=\"lc-sv\">本站总访问量为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 次</span> <span id=\"lc-uv\">访客数为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 人</span>\n","copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","br":"<br>"},"plugins":{"globalJquery":false,"jquery":"/libs/jquery/dist/jquery.min.js","fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","katex":{"js":"/libs/katex/katex.min.js","css":"/libs/katex/katex.min.css","render":"/libs/katex/contrib/auto-render.min.js"},"mathjax":"/libs/mathjax/es5/tex-mml-chtml.js","markdown":"/libs/github-markdown-css/github-markdown.css","marked":"/libs/marked/marked.min.js","hlsjs":"/libs/hls.js/dist/hls.min.js","fancybox":{"css":"/libs/@fancyapps/ui/dist/fancybox.css","js":"/libs/@fancyapps/ui/dist/fancybox.umd.js"},"sitesjs":{"enable":true},"friendsjs":{"enable":true},"contributorsjs":{"enable":true},"preload":{"enable":true,"service":"flying_pages","instant_page":"/libs/instant_page/instant_page.js","flying_pages":"/libs/flying-pages/flying-pages.min.js"},"lazyload":{"enable":true,"js":"/libs/vanilla-lazyload/dist/lazyload.min.js","onlypost":false,"loadingImg":null,"blurIn":true},"code_highlight":"highlightjs","highlightjs":{"copy_code":true},"prismjs":{"copy_code":true,"js":["https://npm.elemecdn.com/prismjs/components/prism-core.min.js","https://npm.elemecdn.com/prismjs/plugins/autoloader/prism-autoloader.min.js","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.min.js"],"css":["https://npm.elemecdn.com/prismjs/themes/prism-dark.css","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.css"]},"scrollreveal":{"enable":null,"js":"/libs/scrollreveal/dist/scrollreveal.min.js","distance":"32px","duration":800,"interval":20,"scale":1},"wordcount":{"enable":null},"nodewaves":{"enable":null,"css":"/libs/node-waves/dist/waves.min.css","js":"/libs/node-waves/dist/waves.min.js"},"fontawesome_animation":{"enable":null,"css":"/libs/font-awesome-animation/font-awesome-animation.min.css"},"comment_typing":{"enable":null,"js":"/libs/comment_typing/comment_typing.js"},"parallax":{"enable":true,"position":"cover","shuffle":true,"duration":10000,"fade":1500,"images":["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp"]},"aplayer":{"enable":true,"js":{"aplayer":"/libs/aplayer/dist/APlayer.min.js","meting":"/libs/meting/dist/Meting.min.js"},"css":"/libs/aplayer/dist/APlayer.min.css","server":"netease","type":"playlist","id":5062959861,"fixed":false,"theme":"#1BCDFC","autoplay":false,"order":"random","loop":"all","volume":0.4,"list_max_height":"320px","list_folded":true,"autoHide":true},"pjax":{"js":"/libs/pjax/pjax.min.js","enable":true,"cover":true,"timeout":5000,"cacheBust":false,"animation":false,"nprogress":"/libs/nprogress/nprogress.js","banUrl":null},"darkmode":{"enable":true},"killOldVersionsOfIE":{"enable":true},"killNoScript":{"enable":true},"artitalk":{"js":"https://npm.elemecdn.com/artitalk","appId":"ogP8qj3veMh0LFpFWMPOyF0X-MdYXbMMI","appKey":"nHXLd3N3Jgh460t2iRQKWAtr"},"bbtalk":{"js":"https://npm.elemecdn.com/bbtalk@0.1.5/dist/bbtalk.min.js","appId":"0KzOX4vC7Jsk6vzUGNeEiUaI-gzGzoHsz","appKey":"HwCiWuxfpvKiLm4teCUgTIba","serverURLs":"https://bbapi.heson10.com"},"hpp":{"hpp_talk":{"css":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk.css","js":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk_user.js","limit":10,"start":0}},"fcircle":{"api":"","max_number":20,"add_number":10,"opentype":"_blank","nofollow":true,"imgError":"https://cdn.jsdelivr.net/gh/Zfour/Butterfly-friend-poor-html/friendcircle/404.png"},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"time":{"default":5000,"quection":20000},"position":"topRight","transitionIn":"bounceInLeft","transitionOut":"fadeOutRight","titleColor":"var(--color-text)","messageColor":"var(--color-text)","backgroundColor":"var(--color-card)","zindex":2147483647,"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"},"rightmenu":{"enable":true,"notice":true}},"tag_plugin_load_on_demand":{"enable":null,"plugins":["note","btns","p","gallery"]},"chat_service":null,"tidio":{"id":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"},"gitter":{"room":"hexo-theme-volantis/community"},"swiper":{"enable":true,"css":"/libs/swiper/swiper-bundle.min.css","js":"/libs/swiper/swiper-bundle.min.js"},"clipboard":{"enable":true}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"name":"打印页面","icon":"fad fa-print TURQUOISE","defaultStyles":true},"darkmode":{"name":"暗黑模式","icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"name":"阅读模式","icon":"fad fa-book-open EMERALD"},"customPicUrl":{"enable":false,"old":null,"new":null},"music":{"alwaysShow":true},"help":{"name":"常见问题","icon":"fad fa-question EMERALD","url":"https://volantis.js.org/faqs/"},"examples":{"name":"示例博客","icon":"fad fa-rss PETERRIVE","url":"https://volantis.js.org/examples/"},"contributors":{"name":"加入社区","icon":"fad fa-fan fa-spin AMETHYST","url":"https://volantis.js.org/contributors/"},"source_docs":{"name":"本站源码","icon":"fad fa-code-branch WETASPHALT","url":"https://github.com/volantis-x/volantis-docs/"},"source_theme":{"name":"主题源码","icon":"fad fa-file-code CONCRETE","url":"https://github.com/volantis-x/hexo-theme-volantis/"}},"search":{"enable":true,"service":"hexo","js":null},"color_scheme":{"common":{"theme":"#44D7B6","link":"#1b79c4","button":"#44D7B6","hover":"#ff5722","inner":"#fff","selection":"alpha(#2196f3, 0.2)"},"light":{"site_bg":"#f4f4f4","site_inner":"#fff","site_footer":"#666","card":"#fff","text":"#444","block":"#f6f6f6","codeblock":"#FFF7EA","inlinecode":"#c74f00","h1":"#3a3a3a","h2":"#3a3a3a","h3":"#333","h4":"#444","h5":"#555","h6":"#666","p":"#444","list":"#666","list_hl":"mix($color-theme, #000, 80)","meta":"#888"},"dark":{"site_bg":"#222","site_inner":"#eee","site_footer":"#aaa","card":"#333","text":"#eee","block":"#3a3a3a","codeblock":"#343a3c","inlinecode":"#D56D28","h1":"#eee","h2":"#eee","h3":"#ddd","h4":"#ddd","h5":"#ddd","h6":"#ddd","p":"#bbb","list":"#aaa","list_hl":"mix($color-theme, #fff, 80)","meta":"#888","brightness":"70%"}},"custom_css":{"cursor":{"enable":true,"text":"/media/cursor/text.png","pointer":"/media/cursor/pointer.png","default":"/media/cursor/left_ptr.png","not-allowed":"/media/cursor/circle.png","zoom-out":"/media/cursor/zoom-out.png","zoom-in":"/media/cursor/zoom-in.png","grab":"/media/cursor/openhand.png"},"font_smoothing":true,"max_width":"1080px","scrollbar":{"size":"4px","border":"2px"},"navbar":{"height":"64px","width":"auto","effect":["shadow","blur"]},"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"],"highlight":{"language":true,"grayscale":false},"text_align":{"h1":"left","h2":"left","h3":"left","h4":"left","p":"justify"}},"gap":{"h2":"48px","h3":"24px","h4":"16px","p":"1em","line_height":1.6},"border_radius":{"card":"8px","codeblock":"4px","searchbar":"8px","button":"4px"},"fontsize":{"root":"16px","h1":"1.5rem","h2":"1.5rem","h3":"1.25rem","h4":"1.125rem","h5":"1rem","h6":"1rem","list":".9375rem","meta":".875rem","code":".8125rem","footnote":".78125rem"},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"codefont":{"fontfamily":"Menlo, UbuntuMono, Monaco"}}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"seo":{"use_tags_as_keywords":true,"use_excerpt_as_description":true,"robots":{"home_first_page":"index,follow","home_other_pages":"noindex,follow","archive":"noindex,follow","category":"noindex,follow","tag":"noindex,follow"}},"open_graph":{"image":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","twitter_card":"summary"},"structured_data":{"enable":true,"data":{"person":{"sns":["https://github.com/volantis-x"]},"logo":{"path":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}},"use_cdn":false,"custom":{},"injects":{"first":[],"style":[],"dark":[],"darkVar":[],"head":[{"layout":"inject/head/custom.ejs","order":0}],"header":[{"layout":"inject/header/custom.ejs","order":0}],"side":[{"layout":"inject/side/custom.ejs","order":0}],"topMeta":[{"layout":"inject/topMeta/custom.ejs","order":0}],"bottomMeta":[{"layout":"inject/bottomMeta/custom.ejs","order":0}],"footer":[{"layout":"inject/footer/custom.ejs","order":0}],"postEnd":[{"layout":"inject/postEnd/custom.ejs","order":0}],"bodyEnd":[{"layout":"inject/bodyEnd/custom.ejs","order":0}]},"cdnCtrl":{"prefix":"https://npm.elemecdn.com/hexo-theme-volantis@5.0.0-beta.2/source"},"pjax_cover":{"enableCover":true,"frontMatterCover":"none","coverWrapperDisplay":"none","scrollDownDisplay":"none","headerShow":"show"}};
+  volantis.LASTUPDATE = new Date('Wed Jul 31 2024 03:58:51 GMT+0000 (Coordinated Universal Time)');
+  volantis.dom = {}; // 页面Dom see: /source/js/app.js etc.
+  /******************** volantis.EventListener ********************************/
+  // 事件监听器 see: /source/js/app.js
+  volantis.EventListener = {}
+  // 这里存放pjax切换页面时将被移除的事件监听器
+  volantis.EventListener.list = []
+  //构造方法
+  function volantisEventListener(type, f, ele) {
+    this.type = type
+    this.f = f
+    this.ele = ele
+  }
+  // 移除事件监听器
+  volantis.EventListener.remove = () => {
+    volantis.EventListener.list.forEach(function (i) {
+      i.ele.removeEventListener(i.type, i.f, false)
+    })
+    volantis.EventListener.list = []
+  }
+  /******************** volantis.dom.$ ********************************/
+  // 注：这里没有选择器，也没有forEach一次只处理一个dom，这里重新封装主题常用的dom方法，返回的是dom对象，对象包含了以下方法，同时保留dom的原生API
+  function volantisDom(ele) {
+    if (!ele) ele = document.createElement("div")
+    this.ele = ele;
+    // ==============================================================
+    this.ele.find = (c) => {
+      let q = this.ele.querySelector(c)
+      if (q)
+        return new volantisDom(q)
+    }
+    // ==============================================================
+    this.ele.hasClass = (c) => {
+      return this.ele.className.match(new RegExp('(\\s|^)' + c + '(\\s|$)'));
+    }
+    this.ele.addClass = (c) => {
+      this.ele.classList.add(c);
+      return this.ele
+    }
+    this.ele.removeClass = (c) => {
+      this.ele.classList.remove(c);
+      return this.ele
+    }
+    this.ele.toggleClass = (c) => {
+      if (this.ele.hasClass(c)) {
+        this.ele.removeClass(c)
+      } else {
+        this.ele.addClass(c)
+      }
+      return this.ele
+    }
+    // ==============================================================
+    // 参数 r 为 true 表示pjax切换页面时事件监听器将被移除，false不移除
+    this.ele.on = (c, f, r = 1) => {
+      this.ele.addEventListener(c, f, false)
+      if (r) {
+        volantis.EventListener.list.push(new volantisEventListener(c, f, this.ele))
+      }
+      return this.ele
+    }
+    this.ele.click = (f, r) => {
+      this.ele.on("click", f, r)
+      return this.ele
+    }
+    this.ele.scroll = (f, r) => {
+      this.ele.on("scroll", f, r)
+      return this.ele
+    }
+    // ==============================================================
+    this.ele.html = (c) => {
+      // if(c=== undefined){
+      //   return this.ele.innerHTML
+      // }else{
+      this.ele.innerHTML = c
+      return this.ele
+      // }
+    }
+    // ==============================================================
+    this.ele.hide = (c) => {
+      this.ele.style.display = "none"
+      return this.ele
+    }
+    this.ele.show = (c) => {
+      this.ele.style.display = "block"
+      return this.ele
+    }
+    // ==============================================================
+    return this.ele
+  }
+  volantis.dom.$ = (ele) => {
+    return !!ele ? new volantisDom(ele) : null;
+  }
+  /******************** RunItem ********************************/
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = ()=>{
+          volantis.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) =>{
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index,1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+  /******************** Pjax ********************************/
+  // /layout/_plugins/pjax/index.ejs
+  // volantis.pjax.send(callBack[,"callBackName"]) 传入pjax:send回调函数
+  // volantis.pjax.push(callBack[,"callBackName"]) 传入pjax:complete回调函数
+  // volantis.pjax.error(callBack[,"callBackName"]) 传入pjax:error回调函数
+  volantis.pjax = {};
+  volantis.pjax.method = {
+    complete: new RunItem(),
+    error: new RunItem(),
+    send: new RunItem(),
+  };
+  volantis.pjax = {
+    ...volantis.pjax,
+    push: volantis.pjax.method.complete.push,
+    error: volantis.pjax.method.error.push,
+    send: volantis.pjax.method.send.push,
+  };
+  /********************  Dark Mode  ********************************/
+  // /layout/_partial/scripts/darkmode.ejs
+  // volantis.dark.mode 当前模式 dark or light
+  // volantis.dark.toggle() 暗黑模式触发器
+  // volantis.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  volantis.dark = {};
+  volantis.dark.method = {
+    toggle: new RunItem(),
+  };
+  volantis.dark = {
+    ...volantis.dark,
+    push: volantis.dark.method.toggle.push,
+  };
+  /********************  Message  ********************************/
+  // VolantisApp.message
+  /********************  isMobile  ********************************/
+  // /source/js/app.js
+  // volantis.isMobile
+  // volantis.isMobileOld
+  /********************脚本动态加载函数********************************/
+  // volantis.js(src, cb)  cb 可以传入onload回调函数 或者 JSON对象 例如: volantis.js("src", ()=>{}) 或 volantis.js("src", {defer:true,onload:()=>{}})
+  // volantis.css(src)
+
+  // 返回Promise对象，如下方法同步加载资源，这利于处理文件资源之间的依赖关系，例如：APlayer 需要在 MetingJS 之前加载
+  // (async () => {
+  //     await volantis.js("...theme.plugins.aplayer.js.aplayer...")
+  //     await volantis.js("...theme.plugins.aplayer.js.meting...")
+  // })();
+
+  // 已经加入了setTimeout
+  volantis.js = (src, cb) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+  volantis.css = (src) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  }
+  /********************按需加载的插件********************************/
+  // volantis.import.jQuery().then(()=>{})
+  volantis.import = {
+    jQuery: () => {
+      if (typeof jQuery == "undefined") {
+        return volantis.js("/libs/jquery/dist/jquery.min.js")
+      } else {
+        return new Promise(resolve => {
+          resolve()
+        });
+      }
+    }
+  }
+  /********************** requestAnimationFrame ********************************/
+  // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+  // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+  volantis.requestAnimationFrame = (fn)=>{
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+    }
+    window.requestAnimationFrame(fn)
+  }
+  /************************ layoutHelper *****************************************/
+  volantis.layoutHelper = (helper, html, opt)=>{
+    opt = Object.assign({clean:false, pjax:true}, opt)
+    function myhelper(helper, html, clean) {
+      volantis.tempDiv = document.createElement("div");
+      volantis.tempDiv.innerHTML = html;
+      let layoutHelper = document.querySelector("#layoutHelper-"+helper)
+      if (layoutHelper) {
+        if (clean) {
+          layoutHelper.innerHTML = ""
+        }
+        layoutHelper.append(volantis.tempDiv);
+      }
+    }
+    myhelper(helper, html, opt.clean)
+    if (opt.pjax) {
+      volantis.pjax.push(()=>{
+        myhelper(helper, html, opt.clean)
+      },"layoutHelper-"+helper)
+    }
+  }
+  /****************************** 滚动事件处理 ****************************************/
+  volantis.scroll = {
+    engine: new RunItem(),
+    unengine: new RunItem(),
+  };
+  volantis.scroll = {
+    ...volantis.scroll,
+    push: volantis.scroll.engine.push,
+  };
+  // 滚动条距离顶部的距离
+  volantis.scroll.getScrollTop = () =>{
+    let scrollPos;
+    if (window.pageYOffset) {
+      scrollPos = window.pageYOffset;
+    } else if (document.compatMode && document.compatMode != 'BackCompat') {
+      scrollPos = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scrollPos = document.body.scrollTop;
+    }
+    return scrollPos;
+  }
+  // 使用 requestAnimationFrame 处理滚动事件
+  // `volantis.scroll.del` 中存储了一个数值, 该数值检测一定时间间隔内滚动条滚动的位移, 数值的检测频率是浏览器的刷新频率. 数值为正数时, 表示向下滚动. 数值为负数时, 表示向上滚动.
+  volantis.scroll.handleScrollEvents = () => {
+    volantis.scroll.lastScrollTop = volantis.scroll.getScrollTop()
+    function loop() {
+      const scrollTop = volantis.scroll.getScrollTop();
+      if (volantis.scroll.lastScrollTop !== scrollTop) {
+        volantis.scroll.del = scrollTop - volantis.scroll.lastScrollTop;
+        volantis.scroll.lastScrollTop = scrollTop;
+        // if (volantis.scroll.del > 0) {
+        //   console.log("向下滚动");
+        // } else {
+        //   console.log("向上滚动");
+        // }
+        volantis.scroll.engine.start();
+      }else{
+        volantis.scroll.unengine.start();
+      }
+      volantis.requestAnimationFrame(loop)
+    }
+    volantis.requestAnimationFrame(loop)
+  }
+  volantis.scroll.handleScrollEvents()
+  // 触发页面滚动至目标元素位置
+  volantis.scroll.to = (ele, option = {}) =>{
+    // 默认配置
+    opt = {
+      top: ele.getBoundingClientRect().top + document.documentElement.scrollTop,
+      behavior: "smooth"
+    }
+    // 定义配置
+    if ("top" in option) {
+      opt.top = option.top
+    }
+    if ("behavior" in option) {
+      opt.behavior = option.behavior
+    }
+    if ("addTop" in option) {
+      opt.top += option.addTop
+    }
+    if (!("observerDic" in option)) {
+      option.observerDic = 25
+    }
+    // 滚动
+    window.scrollTo(opt);
+    // 监视器
+    // 监视并矫正元素滚动到指定位置 
+    // 目前用于处理 toc 部分 lazyload 引起的 cls 导致的定位失败问题
+    if (option.observer) {
+      volantis.scroll.unengine.push(()=>{
+        let me = ele.getBoundingClientRect().top
+        if(!(me >= -option.observerDic && me <= option.observerDic)){
+          volantis.scroll.to(ele, option)
+        }else{
+          volantis.scroll.unengine.remove("unengineObserver")
+        }
+      },"unengineObserver")
+    }
+  }
+  /******************************************************************************/
+  /******************************************************************************/
+</script>
+  <!-- Custom Files head begin-->
+  
+  <!-- Custom Files head end-->
+</head>
+  <body itemscope itemtype="http://schema.org/WebPage">
+    <header itemscope itemtype="http://schema.org/WPHeader" id="l_header" class="l_header auto shadow blur show" style="opacity: 0">
+  <div class="container">
+  <div id="wrapper">
+    <div class="nav-sub">
+      <p class="title"></p>
+      <ul class="switcher nav-list-h m-phone" id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href="/" onclick="return false;" title="comment"></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href="/" onclick="return false;" title="toc"></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href="/">
+          
+          
+            <i class="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico"></i>
+          
+          
+            扬舲の博客
+          
+        </a>
+      
+
+			<div class="menu navigation">
+				<ul class="nav-list-h m-pc">
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+      
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search...">
+        </form>
+      </div>
+      
+
+			<ul class="switcher nav-list-h m-phone">
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href="/" onclick="return false;" title="search"></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href="/" onclick="return false;" title="menu"></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+
+      <!-- Custom Files header begin -->
+      
+      <!-- Custom Files header end -->
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+      <!-- see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs -->
+      <div id="none" class="cover-wrapper post dock" style="display: none;">
+        
+  <div id="parallax-window"></div>
+
+<div class="cover-body">
+  <div class="top">
+    
+    
+      <p class="title">扬舲の博客</p>
+    
+    
+  </div>
+  <div class="bottom">
+    <div class="menu navigation">
+      <div class="list-h">
+        
+          
+            <a href="/" active-action="action-home">
+              <i class="fas fa-book fa-fw"></i><p>博客</p>
+            </a>
+          
+            <a href="/categories/" active-action="action-categories">
+              <i class="fas fa-folder-open fa-fw"></i><p>分类</p>
+            </a>
+          
+            <a href="/tags/" active-action="action-tags">
+              <i class="fas fa-tags fa-fw"></i><p>标签</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://volantis.js.org/contributors/" active-action="action-https:volantisjsorgcontributors">
+              <i class="fas fa-handshake fa-fw"></i><p>鸣谢</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+      </div>
+    
+  
+</div>
+
+      <div id="safearea">
+        <div class="body-wrapper">
+          
+<div id="l_main" class>
+  <article itemscope itemtype="http://schema.org/Article" class="article post white-box reveal md shadow article-type-post" id="post" itemprop="blogPost">
+  <link itemprop="mainEntityOfPage" href="https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/">
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬舲の博客">
+  </span>
+  <span hidden itemprop="post" itemscope itemtype="http://schema.org/Post">
+    <meta itemprop="name" content="扬舲の博客">
+    <meta itemprop="description" content="前端技术博客">
+  </span>
+  
+
+
+  
+    <span hidden>
+      <meta itemprop="image" content="/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+    </span>
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title" itemprop="name headline">
+        知识图谱在金融领域的应用
+      </h1>
+      <div class="new-meta-box">
+        
+          
+            
+<div class="new-meta-item author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <a itemprop="url" class="author" target="_blank" href="https://github.com/kobingogo" rel="external nofollow noopener noreferrer">
+    <img itemprop="image" src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+    <p itemprop="name">扬舲</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item category">
+    <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+    <a class="category-link" href="/categories/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">知识图谱</a>
+    
+      <span hidden itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" itemprop="url"><span itemprop="name">知识图谱</span></a>
+      </span>
+    
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2023-02-10T20:43:53+00:00">
+  <a class="notlink">
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2023年2月10日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class="notlink">
+      
+      <div id="lc-pv" data-title="知识图谱在金融领域的应用" data-path="/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+        <!-- Custom Files topMeta begin-->
+        
+        <!-- Custom Files topMeta end-->
+      </div>
+    
+  </div>
+
+
+  <div id="layoutHelper-page-plugins"></div>
+  <div id="post-body" itemprop="articleBody">
+    <h2 id="知识图谱在金融领域的应用"><a href="#知识图谱在金融领域的应用" class="headerlink" title="知识图谱在金融领域的应用"></a><strong>知识图谱在金融领域的应用</strong></h2><div class="story post-story"><p>摘要</p>
+<p>知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自 2012 年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Where）加以探讨和展望。</p>
+<p><strong>关键词：</strong>  知识图谱 金融 应用</p>
+</div><h2 id="1-知识图谱是什么（What）"><a href="#1-知识图谱是什么（What）" class="headerlink" title="1. 知识图谱是什么（What）"></a><strong>1. 知识图谱是什么（What）</strong></h2><div class="story post-story"><p>知识图谱（Knowledge Graph）的提出是为了描述现实世界中的实体、概念以及它们之间的关联。它本质上是一个语义网络，是基于图的数据结构，由节点和边组成。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174622.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174622.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174622">如上图所示，知识图谱的基本形式为&lt;实体 1, 关系, 实体 2&gt;、&lt;实体, 属性, 属性值&gt;。其中，节点表示实体、概念或属性值；边表示关系或属性。下面分别对实体、概念、属性、属性值、关系的含义进行阐释说明：</p>
+<ul>
+<li><strong>实体</strong>：实体是知识图谱中最基本的元素，指的是具有可区别性且独立存在的某种事物。如某一个人：Barack Obama、姚明等；某一个国家：中国、英国等；某一座城市：北京、纽约等。即现实世界由实体组成。</li>
+<li><strong>概念</strong>：指对具有相同特性的实体的概括和抽象，如国家、城市、民族等。</li>
+<li><strong>属性</strong>：用于区分概念的特征，不同概念具有不同的属性。如城市对应的属性有：面积、人口等。</li>
+<li><strong>属性值</strong>：实体指向的属性的值。例如：“中国的面积为 960 万平方公里”，其中“中国”为实体，“面积”为属性，“960 万平方公里”为属性值。</li>
+<li><strong>关系</strong>：关系是实体或概念之间的关联，如：路遥与《平凡的世界》之间存在着创作关系。关系可以看作是一种特殊的属性，当属性值对应的是概念或实体时，属性就等价于关系。</li>
+</ul>
+<p>基于上述基本概念，我们对知识图谱有了初步的认知，下面本节将依次介绍知识图谱的组成结构、表示方法、分类以及发展历程。</p>
+<h3 id="1-1-组成结构"><a href="#1-1-组成结构" class="headerlink" title="1.1 组成结构"></a><strong>1.1 组成结构</strong></h3><p>与传统的数据库相似，知识图谱同样可分为模式层和实例层；但与关系型数据库的 ER 模型不同的是，知识图谱的模式层一般称为本体层（Ontology）。如下图，“Barack Obama”与“New York City”等节点是实例层的实体，“Politician”与“City”等节点是它们对应的本体层的概念。位于箭头旁的“was_born_in”、“leader”等则表示关系。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174646.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174646.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174646"></p>
+<p>可以看出：不仅实例层的节点之间存在关系，本体层的节点之间也存在关系。另外，与普通的图不同的是，知识图谱中包含多种类型的节点和边，因此知识图谱又可看作是一种异质信息网络。</p>
+<h3 id="1-2-表示方法"><a href="#1-2-表示方法" class="headerlink" title="1.2 表示方法"></a><strong>1.2 表示方法</strong></h3><p>知识图谱的表示方法一般可分为两类：基于符号的表示和基于向量的表示。</p>
+<h3 id="1-2-1-基于符号的表示"><a href="#1-2-1-基于符号的表示" class="headerlink" title="1.2.1 基于符号的表示"></a><strong>1.2.1 基于符号的表示</strong></h3><p>基于符号的表示有 RDF、RDFS、OWL 等。</p>
+<p>RDF（Resource Description Framework）本质是一个基于有向标记图（Directed Labeled Graph）的数据模型，它提供了一个统一的标准，用于描述实体（资源）。RDF 形式上表示为 SPO 三元组，即(Subject-主语, Predicate-谓语, Object-宾语)。一个 SPO 三元组对应一个逻辑表达式或关于现实世界的陈述，可以理解为：Subject 表示头实体，Predicate 表示关系，Object 表示尾实体。</p>
+<p>RDF 的表达能力有限，无法区分类（Class）和对象（Object），也无法定义描述类的属性以及类间的关系，因此 W3C 又制定了 RDFS 和 OWL 标准。</p>
+<p>RDFS（Resource Description Framework Schema）是一种基础的模式语言，它在 RDF 的基础上扩展了本体的表达。RDFS 主要包括如下元语：Class, subClassOf, type, Property, subPropertyOf, Domain, Range 等。基于这些简单的表达构件可以构建最基本的类层次体系和属性体系。</p>
+<p>OWL（Web Ontology Language）在 RDFS 的基础上又增加了预定义的词汇，进一步扩展了表示类和属性约束的表示能力，可以构建更为复杂而完备的本体。这些扩展的本体表达能力包括：</p>
+<ul>
+<li>复杂类表达（Complex Classes），如：intersection, union, complement 等；</li>
+<li>属性约束（Property Restrictions），如：existential quantification, universal quantification, hasValue 等；</li>
+<li>基数约束（Cardinality Restrictions），如：maxQualifiedCardinality, minQualifiedCardinality, qualifiedCardinality 等；</li>
+<li>属性特征（Property Characteristics），如：inverseOf, SymmetricProperty, AsymmetricProperty, propertyDisjointWith, ReflexiveProperty, FunctionalProperty 等。</li>
+</ul>
+<p>上述基于符号的表示易于刻画显性、离散的知识，因而具有内生的可解释性。但由于人类知识还包含大量不易于符号化的隐性知识，完全基于符号逻辑的知识表示通常由于知识的不完备而失去鲁棒性，特别是推理很难达到实用。由此催生了采用连续向量方式表示知识的研究。</p>
+<h3 id="1-2-2-基于向量的表示"><a href="#1-2-2-基于向量的表示" class="headerlink" title="1.2.2 基于向量的表示"></a><strong>1.2.2 基于向量的表示</strong></h3><p>基于向量的表示有组合模型、神经网络模型、转换模型等。</p>
+<p>组合（Composition）模型将知识图谱建模为三维邻接张量，又被称为“张量分解”（tensor factorization）模型。其典型特征是将实体建模为列向量、关系建模为矩阵，然后通过头实体向量与关系矩阵的线性组合，再与尾实体进行点积计算打分函数。例如采用普通矩阵的 RESCAL<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:3" target="_blank" rel="external nofollow noopener noreferrer">3</a>、采用低秩矩阵的 LFM<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:4" target="_blank" rel="external nofollow noopener noreferrer">4</a>等。</p>
+<p>神经网络（Neural Network）模型通过非线性计算对实体-关系交互进行建模，如采用单层非线性网络的 SLM、NTN<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:5" target="_blank" rel="external nofollow noopener noreferrer">5</a>等。</p>
+<p>转换（Translation）模型的灵感来自 word2vec 中词汇关系的平移不变性。它将关系建模为转换（translation）操作，即将关系看作是头实体到尾实体的转换，认为经过向量化的头实体、关系和尾实体满足：，如基于向量的三角形法则和范数原理的 TransE<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:6" target="_blank" rel="external nofollow noopener noreferrer">6</a>、通过超平面转化处理多元关系的 TransH<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:7" target="_blank" rel="external nofollow noopener noreferrer">7</a>等。</p>
+<p>这种基于向量的知识表示可以通过数值运算发现新事实和新关系，并能更有效地发现更多的隐性知识和潜在假设，这些隐性知识通常是人的主观不易于观察和总结出来的。更为重要的是，知识图谱嵌入也通常作为一种辅助的先验知识输入到很多深度神经网络模型中，用来约束和监督神经网络的训练过程。</p>
+<h3 id="1-3-分类"><a href="#1-3-分类" class="headerlink" title="1.3 分类"></a><strong>1.3 分类</strong></h3><p>知识图谱的分类方式很多，分类依据可以是知识种类、构建方法等。从所涉领域的角度出发，知识图谱通常可分为通用领域知识图谱（Open Domain）和特定领域知识图谱（Specific Domain）两类。</p>
+<p>通用领域知识图谱可以看作是一个面向通用领域的结构化的百科知识库，其中包含了大量的现实世界中的常识性知识，覆盖面广，如 Freebase<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:8" target="_blank" rel="external nofollow noopener noreferrer">8</a>、YAGO<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:9" target="_blank" rel="external nofollow noopener noreferrer">9</a>、WikiData<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:10" target="_blank" rel="external nofollow noopener noreferrer">10</a>、DBPedia<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:11" target="_blank" rel="external nofollow noopener noreferrer">11</a>、Nell<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:12" target="_blank" rel="external nofollow noopener noreferrer">12</a>、Probase<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:13" target="_blank" rel="external nofollow noopener noreferrer">13</a>和谷歌的 Knowledge Vault<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:14" target="_blank" rel="external nofollow noopener noreferrer">14</a>等。</p>
+<p>特定领域知识图谱可以看作是一个基于语义技术的行业知识库，因其基于行业数据构建，有着严格而丰富的数据模式，对领域知识的深度、知识准确性要求高，如生命科学领域的 Bio2RDF<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:15" target="_blank" rel="external nofollow noopener noreferrer">15</a>和 Gene Ontology<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:16" target="_blank" rel="external nofollow noopener noreferrer">16</a>，以及描述家谱关系的 Kinship<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:17" target="_blank" rel="external nofollow noopener noreferrer">17</a>等。</p>
+<h3 id="1-4-发展历程"><a href="#1-4-发展历程" class="headerlink" title="1.4 发展历程"></a><strong>1.4 发展历程</strong></h3><p>知识图谱属于人工智能重要研究领域——知识工程的一个分支。为了更好地了解知识图谱的理论基础，下面我们回顾一下知识工程的发展历程。如下图，知识工程的发展历程可分成五个标志性的阶段：前知识工程时期、专家系统时期、万维网时期，群体智能时期以及知识图谱时期<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:1" target="_blank" rel="external nofollow noopener noreferrer">1</a><a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:2" target="_blank" rel="external nofollow noopener noreferrer">2</a>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174736.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174736.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174736"></p>
+<ul>
+<li><strong>1950-1970 年代：前知识工程时期</strong></li>
+</ul>
+<p>前知识工程时期使用图灵测试作为评测智能的手段。这一时期人们对人工智能的理解主要可分为两个学派：符号主义和连结主义。符号主义认为物理符号系统是智能行为的充要条件；连结主义则认为大脑（大脑神经元及其连接机制）是一切智能活动的基础。这一时期具有代表性的工作是通用问题求解程序（GPS）：首先将问题进行形式化表达，然后通过搜索，从问题初始状态，结合规则或表示得到目标状态。其中比较成功的应用是博弈论和机器定理证明等。这一时期的知识表示方法主要有逻辑知识表示、产生式规则、语义网络等。人工智能和知识工程的先驱 Minsky，Mccarthy，Newell 和 Simon 四位学者因为在感知机、人工智能语言、通用问题求解和形式化语言方面的杰出工作分别获得了 1969 年、1971 年、1975 年的图灵奖。</p>
+<ul>
+<li><strong>1970-1990 年代：专家系统时期</strong></li>
+</ul>
+<p>通用问题求解强调利用人的求解问题的能力建立智能系统，而忽略了知识对智能的支持，使人工智能难以在实际应用中发挥作用。1970 年开始，人工智能开始转向建立基于知识的系统，通过“知识库+推理机”实现智能，这一时期涌现出很多成功的限定领域专家系统，如 MYCIN 医疗诊断专家系统、识别分子结构的 DENRAL 专家系统、以及计算机故障诊断 XCON 专家系统等。1994 年图灵奖获得者 Feigenbaum 在 70 年代提出知识工程的定义，从此确立了知识工程在人工智能中的核心地位。这一时期知识表示方法有新的演进，包括框架和脚本等。80 年代后期出现很多专家系统的开发平台，可以帮助将专家的领域知识转变成计算机可以处理的知识。</p>
+<ul>
+<li><strong>1990-2000 年代：万维网时期（Web 1.0）</strong></li>
+</ul>
+<p>在 1990-2000 年间，出现了很多人工构建的大规模知识库，包括英文的 WordNet、采用一阶谓词逻辑知识表示的 Cyc 常识知识库、以及中文的 Hownet。万维网的产生为人们提供了一个开放平台，它使用 HTML 定义文本的内容，通过超链接把文本连接起来，使得大众可以共享信息。W3C 提出的可扩展标记语言 XML，通过定义标签对互联网文档内容的结构进行标记，为互联网环境下大规模的知识表示和共享奠定了基础。这一时期还提出了本体的知识表示方法。</p>
+<ul>
+<li><strong>2000-2006 年代：群体智能时期（Web 2.0）</strong></li>
+</ul>
+<p>在 2001 年，万维网发明人、2016 年图灵奖获得者 Tim Berners-Lee 提出语义 Web 的概念，旨在对互联网内容进行结构化语义表示。W3C 进一步提出互联网语义标识语言 RDF（资源描述框架）和 OWL（万维网本体表述语言），利用本体描述互联网内容的语义结构，通过对网页进行语义标识得到网页语义信息，使人和机器能够更好地协同工作。</p>
+<p>万维网的出现使得互联网上的知识由封闭走向开放，由集中变为分布。原来专家系统是系统内部定义的知识，现在可以实现知识源之间相互链接，可以通过关联来产生更多的知识，而非完全由固定人生产。这个过程中出现了群体智能，最典型的代表就是维基百科，实际上是用户去建立知识，体现了互联网大众用户对知识的贡献，成为今天大规模结构化知识图谱的重要基础。</p>
+<ul>
+<li><strong>2006 年至今：知识图谱时期</strong></li>
+</ul>
+<p>从 2006 年开始，大规模维基百科类富结构知识资源的出现和网络信息提取方法的进步，使得大规模知识获取方法取得了巨大进展。与 Cyc、WordNet 和 HowNet 等手工研制的知识库不同，这一时期知识获取是自动化的，并且在网络规模下运行。最具代表性的大规模网络知识获取的工作包括 Freebase、YAGO、WikiData、DBPedia、Nell、Probase 等。</p>
+<p>除了这些通用领域的应用，知识图谱逐渐扩展到限定领域。典型的例子是谷歌收购 Freebase 后在 2012 年推出的语义搜索产品，IBM 的 Watson 深度问答系统，以及商业、金融、生命科学等特定领域的知识库。此外，知识图谱的应用还包括大数据语义分析、智能知识服务等。更多知识图谱的创新应用还有待开发。</p>
+</div><h2 id="2-为什么构建知识图谱（Why）"><a href="#2-为什么构建知识图谱（Why）" class="headerlink" title="2. 为什么构建知识图谱（Why）"></a><strong>2. 为什么构建知识图谱（Why）</strong></h2><div class="story post-story"><p>上文介绍了什么是知识图谱，那么为什么要构建知识图谱呢？整体而言，知识图谱是大数据时代应运而生的一种技术手段。相较数据库时代，大数据时代的数据性质和数据模式都发生了巨大的变化。</p>
+<p>在数据性质方面，数据库时代的数据规模较小，类型较单一，且通常是结构化数据；而大数据时代的数据量较大，类型较丰富，不仅包含结构化的数据，还包含半结构化，甚至非结构化的数据。</p>
+<p>在数据模式方面，数据库时代的数据模式相对固定，一般可以预先确定，即先有数据模式后产生数据；而大数据时代的数据模式随着数据增长不断演变，难以预先确定。</p>
+<p>由于这些差异，大数据时代面临着众多挑战，而知识图谱则提供了应对这些挑战的一种方式。</p>
+<p>第一，针对多源异构数据难以融合的挑战，使用知识图谱进行抽象建模，基于可动态变化的“概念-实体-属性-关系”数据模型，可以实现各类数据的统一建模。</p>
+<p>第二，针对数据模式动态变迁困难的挑战，知识图谱基于图模型的数据存储，便于数据模式的动态变化。</p>
+<p>第三，针对分散的数据难以统一利用的挑战，知识图谱在知识融合的基础上，基于语义检索、智能问答、图计算、推理、可视化等技术，可以提供统一的数据检索、分析和利用平台。</p>
+</div><h2 id="3-怎样构建知识图谱（How）"><a href="#3-怎样构建知识图谱（How）" class="headerlink" title="3. 怎样构建知识图谱（How）"></a><strong>3. 怎样构建知识图谱（How）</strong></h2><div class="story post-story"><p>本节首先介绍知识图谱的构建流程，然后对其中的技术要点做进一步展开说明。</p>
+<h3 id="3-1-构建流程"><a href="#3-1-构建流程" class="headerlink" title="3.1 构建流程"></a><strong>3.1 构建流程</strong></h3><p>如下图所示，知识图谱的构建流程可分为知识建模、知识获取、知识融合、知识存储/计算、以及知识应用五阶段。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174755.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174755.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174755">1. 在知识建模阶段，需要按照业务需求完成本体设计。 2. 在知识获取阶段，知识获取来源可以是结构化数据、半结构化数据或非结构化数据。其中，对半结构化和非结构化的数据需要经过实体抽取、关系抽取以及属性抽取等处理流程。 3. 在知识融合阶段，主要解决的问题是实体对齐。 4. 在知识存储/计算阶段，知识图谱通常存储在图数据库中，并通过知识表示学习完成进一步的知识推理。 5. 在知识应用阶段，上层应用依赖于知识图谱的底层支持。</p>
+<h3 id="3-2-技术要点"><a href="#3-2-技术要点" class="headerlink" title="3.2 技术要点"></a><strong>3.2 技术要点</strong></h3><p>由上图可知：实体抽取、关系抽取、属性抽取和实体对齐是构建知识图谱的关键环节。由于关系可以看作是一种特殊的属性，关系抽取和属性抽取可归为一类，因此构建知识图谱的技术要点主要有三个：命名实体识别（Named Entity Recognition）、关系抽取（Relation Extraction）、以及实体对齐（Entity Matching）。下面分别介绍这三个技术要点的目标和实现方法。</p>
+<h3 id="3-2-1-命名实体识别"><a href="#3-2-1-命名实体识别" class="headerlink" title="3.2.1 命名实体识别"></a><strong>3.2.1 命名实体识别</strong></h3><p>命名实体识别是自然语言处理中的一项基本任务，目标是从文本中识别出人们关注的实体类型。如下图<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:24" target="_blank" rel="external nofollow noopener noreferrer">24</a>，命名实体一般指的是文本中具有特定意义或者指代性强的实体，通常包括人名、地名、组织机构名、日期时间、专有名词等，在业务需要下也包括人们关注的特定领域内的实体。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174816.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174816.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174816"></p>
+<p>早期的命名实体识别方法多基于规则和字典，后来逐渐出现了基于传统机器学习的方法和基于深度学习的方法。</p>
+<p>在基于传统机器学习的方法中，命名实体识别被看作是序列标注问题：首先利用大规模语料学习标注模型，然后对句子的各个位置进行标注，如生成式模型 HMM、判别式模型 CRF 等。但这些方法存在的问题是严重依赖手工特征，并且需要引入外部资源。</p>
+<p>随着硬件计算能力的发展以及词分布式表示技术的提出，基于深度学习的方法逐渐兴起。目前比较主流的命名实体识别方法是 BiLSTM-CRF 模型<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:18" target="_blank" rel="external nofollow noopener noreferrer">18</a>，其模型架构如下图，主要包括：Embedding 层（主要有词向量、字向量和一些额外特征），BiLSTM 层，以及最后的 CRF 层。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174835.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174835.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174835"></p>
+<p>其中，BiLSTM 可以捕捉上下文的语义信息，只用 BiLSTM 也可以完成命名实体识别任务，处理流程为：首先将每个 token 映射到低维空间中成为稠密的嵌入表示，随后将句子的嵌入表示输入到 BiLSTM 中，用神经网络自动提取特征，随后用 softmax 来预测每个 token 的标签。</p>
+<p>但这种方法的缺点是对每个 token 打标签的过程是独立的，不能直接利用上文已经预测的标签（只能靠隐含状态传递上文信息），从而导致预测出的标签序列可能是无效的，例如标签 I-PER（PER 实体的中间部分）后面不可能紧跟着 B-PER（PER 实体的开始部分），而 softmax 不会利用到这个信息。</p>
+<p>为了避免预测出的标签序列无效，在上图中，BiLSTM 的输出会接入 CRF 层来做句子级别的标签预测。CRF 层使得标注过程不再是对各个 token 独立分类，能够给最终的预测标签添加一些约束以确保其合理有效。</p>
+<p>实验结果表明：BiLSTM-CRF 模型的效果已经达到或者超过了基于丰富特征的 CRF 模型。在特征方面，该模型是一个端到端的模型，无需特征工程，使用词向量以及字符向量就可以达到很好的效果。如果有高质量的词典特征，模型效果能够获得进一步提高。</p>
+<h3 id="3-2-2-关系抽取"><a href="#3-2-2-关系抽取" class="headerlink" title="3.2.2 关系抽取"></a><strong>3.2.2 关系抽取</strong></h3><p>关系抽取的目标是从给定的文本中抽取实体之间的语义关系。如下图<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:25" target="_blank" rel="external nofollow noopener noreferrer">25</a>，关系抽取技术可以从一段新闻文本中抽取出公司实体之间的子公司关系、人物实体之间的好友关系、以及人物与公司之间的任职关系等。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174847.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174847.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174847"></p>
+<p>现有的关系抽取方法主要有两种：流水线模型（Pipeline Model）和联合模型（Joint Model）。</p>
+<p>流水线模型是将关系抽取任务分两步处理，即先进行命名实体识别，然后对识别出的实体两两组合，再进行关系分类。常用的关系分类模型例如 Att-BiLSTM<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:19" target="_blank" rel="external nofollow noopener noreferrer">19</a>，其模型架构如下图。该模型使用 BiLSTM 克服长距离依赖，并引入注意力机制关注重点信息，避免了传统方法复杂的特征设计工作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174902.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730174902.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730174902"></p>
+<p>流水线模型可以灵活地选取命名实体识别模型与关系分类模型，但在处理过程中存在如下缺点：</p>
+<p>1)存在误差传递问题，即命名实体识别模型的准确率会影响整体模型的效果；</p>
+<p>2)割裂了实体抽取与关系抽取两个任务的内在联系，忽略了两个任务之间的有用信息，例如已知某两个实体之间存在 Country-President 关系，那么前一个实体必然属于 Location 类型，后一个实体必然属于 Person 类型，流水线模型无法利用这种信息；</p>
+<p>3)信息冗余导致效率低，由于对识别出的实体进行两两组合，然后再进行关系分类，那些没有关系的实体对属于冗余信息，使得效率降低。</p>
+<p>为克服流水线模型的上述问题，研究者提出联合模型，旨在将实体和关系的抽取同时进行，直接抽取得出实体关系三元组。但这种方法的模型结构相对复杂，在实际应用中不一定能取得更优的效果。</p>
+<h3 id="3-2-3-实体对齐"><a href="#3-2-3-实体对齐" class="headerlink" title="3.2.3 实体对齐"></a><strong>3.2.3 实体对齐</strong></h3><p>实体对齐的目标是判断不同数据源指称的实体是否对应现实世界中的同一个实体，又称之为“实体消歧”、“实体消解”或“实体匹配”。例如：当两个数据源融合时，一个数据源中有实体“John Smith”，另一个数据源中有实体“J. Smith”，实体对齐要解决的问题就是从数据中寻找证据，从而判断“John Smith”与“J. Smith”是否对应现实世界中的同一个人。</p>
+<p>实体对齐的方法大致可分为两类：成对实体对齐（Pair-wise Entity Matching）与集体实体对齐（Collective Entity Matching）。成对实体对齐根据两个实体成对属性之间的相似性判断实体是否匹配，但这种方法忽略了实体之间的关系对匹配决策的影响，因而准确率不高。集体实体对齐考虑了实体之间的关系，但是可以同时处理的实体数量有限，可扩展性差。</p>
+<p>因此，有研究者提出了一种基于马尔科夫逻辑网的大规模集体实体对齐框架<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:20" target="_blank" rel="external nofollow noopener noreferrer">20</a>，如下图。该框架主要分为三个步骤：1) 将实体匹配器建模为黑盒；2) 将实体集合划分成不同的邻域（所有邻域的并集覆盖全部实体和关系），并在每个邻域上运行实体匹配器的实例；3) 在实体匹配器实例之间使用消息传递机制。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175035.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175035.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175035"></p>
+<p>上述三个步骤环环相扣，其中步骤 1)满足了框架的通用性，步骤 2)实现了集体实体对齐的可扩展性及可并行化，步骤 3)保证了实体对齐的准确性和完整性。实验结果显示：该框架在准确率、召回率及运行时间方面均取得了较好的性能。</p>
+</div><h2 id="4-知识图谱可以用于哪些金融场景（Where）"><a href="#4-知识图谱可以用于哪些金融场景（Where）" class="headerlink" title="4. 知识图谱可以用于哪些金融场景（Where）"></a><strong>4. 知识图谱可以用于哪些金融场景（Where）</strong></h2><div class="story post-story"><p>在对知识图谱是什么、为什么构建知识图谱、怎样构建知识图谱有一定了解后，下面我们探讨知识图谱可以用于哪些金融场景。本节主要介绍知识图谱在风控、营销以及客服三类金融场景中的应用。</p>
+<h3 id="4-1-风控类应用"><a href="#4-1-风控类应用" class="headerlink" title="4.1 风控类应用"></a><strong>4.1 风控类应用</strong></h3><p>知识图谱的风控类应用<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:23" target="_blank" rel="external nofollow noopener noreferrer">23</a>包括反欺诈、失联客户管理以及企业风险预测等。</p>
+<h3 id="4-1-1-反欺诈"><a href="#4-1-1-反欺诈" class="headerlink" title="4.1.1 反欺诈"></a><strong>4.1.1 反欺诈</strong></h3><p>以网络借贷为例，网络借贷公司可以利用借款人基本信息、资产情况、信用记录以及消费记录等信息，构建借贷人知识图谱。在借贷人知识图谱上进行不一致检验，可以发现可能的个人欺诈或组团欺诈。如下图，张三就职于公司 1，李四就职于公司 2，公司 1 与公司 2 不是同一个，而两人却留了相同的公司电话，这就产生了不一致，说明可能存在欺诈风险。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175047.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175047.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175047">另外，在借贷人知识图谱上进行社区检测，可以找出可能的风险团体。如下图，在借贷人知识图谱中，李四与张三是朋友关系，张三与王五是朋友关系，李四的父亲李明为王五提供了担保，因此这四个人构成了强连通图，属于一个社区。如果在这个社区中，张三存在着失信记录，那么这四个人构成的团体也可能存在着失信风险。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175056.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175056.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175056"></p>
+<h3 id="4-1-2-失联客户管理"><a href="#4-1-2-失联客户管理" class="headerlink" title="4.1.2 失联客户管理"></a><strong>4.1.2 失联客户管理</strong></h3><p>在网络借贷中，反欺诈属于贷前环节，失联客户管理则属于贷后环节。在贷后失联客户管理的问题上，利用知识图谱可以挖掘失联客户的潜在联系人，从而提高催收的成功率。如下图，已知公司 B 的法人张三贷后失联。从知识图谱中挖掘出李四曾经是公司 B 的法人，且李四与张三曾经存在夫妻关系，因此推断出李四为张三的潜在联系人，可以尝试通过李四联系张三。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175105.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175105.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175105"></p>
+<h3 id="4-1-3-企业风险预测"><a href="#4-1-3-企业风险预测" class="headerlink" title="4.1.3 企业风险预测"></a><strong>4.1.3 企业风险预测</strong></h3><p>利用丰富多维度的企业公开信息可以构建企业知识图谱<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:1" target="_blank" rel="external nofollow noopener noreferrer">1</a>。企业知识图谱主要由企业、人物、专利等实体构成，关注企业与人物之间任职及股权关系、专利与企业人物的所属权关系等。如下图，企查查<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:26" target="_blank" rel="external nofollow noopener noreferrer">26</a>立足于企业征信，通过深度学习、特征抽取以及知识图谱技术对相关信息进行整合，并向用户提供数据信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175119.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175119.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175119"></p>
+<p>上述企业知识图谱可以辅助完成企业风险预测，流程如下图所示：首先从企业资讯、社会舆情以及行业热点中监测到企业 A 发生某事件；然后在企业知识图谱中，通过企业关联分析找出企业 A 的上下游产业链、子母公司、合作公司以及对手公司等，分析该事件对这些相关企业的影响，进而进行风险预警。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175131.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175131.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175131"></p>
+<h3 id="4-2-营销类应用"><a href="#4-2-营销类应用" class="headerlink" title="4.2 营销类应用"></a><strong>4.2 营销类应用</strong></h3><p>知识图谱的营销类应用主要表现为个性化推荐，如文献<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:21" target="_blank" rel="external nofollow noopener noreferrer">21</a>针对证券公司向用户推荐金融新闻以吸引投资特定股票的场景，提出了一种如下图所示的基于知识图谱及图嵌入的金融新闻推荐框架，以期克服金融新闻推荐的难点：1)金融新闻涉及面广，新闻包含与公司、股票相关的外部知识；2)读者兴趣难刻画，金融新闻的读者通常同时对多个特定的公司、股票和行业感兴趣；3)金融新闻的时效性强，存在在线更新问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175144.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175144.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175144"></p>
+<p>该框架主要分为两部分：一是基于图嵌入的新闻推荐模型（Node2vec-based News Recommendation, NNR），二是增量更新模型（Incremental NNR, INNR）。</p>
+<p>NNR 模型框架如下图所示：在图构建阶段，首先构建证券子图、用户子图及新闻子图，然后将三个子图连接起来构成知识图谱；在嵌入训练阶段，使用 Node2Vec 训练图嵌入表示（也可换用其他的图嵌入算法）；在新闻推荐阶段，计算用户嵌入与新闻嵌入的余弦相似度，推荐相似度最高的前 k 条新闻。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175156.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175156.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175156"></p>
+<p>INNR 模型框架如下图所示。由于金融新闻在线更新，训练全部千亿级别实体的图嵌入计算代价大，因此 INNR 选择实体较少发生改变的证券子图作为核心图，只训练核心图的嵌入表示。然后，基于核心图嵌入，INNR 使用多种策略来表示新用户或者新的新闻，从而解决用户冷启动及新闻冷启动的问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175209.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/20240730175209.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="20240730175209"></p>
+<p>以上应用知识图谱的金融新闻推荐框架，将基于 node2vec 的推荐方法与增量更新方法结合，可以较好地平衡推荐效率和推荐准确度。</p>
+<h3 id="4-3-客服类应用"><a href="#4-3-客服类应用" class="headerlink" title="4.3 客服类应用"></a><strong>4.3 客服类应用</strong></h3><p>知识图谱的客服类应用主要表现为智能问答。基于文档的问答是智能问答的一个场景，系统面临的挑战则在于需要在包含多实体和关系的情况下直接应答。这个问题在需要解决基于多文档应答的情况下尤为显著。基于知识图谱的问答系统可能会给出较好的答案，但仍会受限于图谱固有的不完整性和延时性。</p>
+<p>为此，支付宝 AI 工程师提出了 QUEST<a href="https://www.fanzhuoya.com/ai/knowledge-graph/#fn:22" target="_blank" rel="external nofollow noopener noreferrer">22</a>，一种能够基于即时文本来源，通过计算不同文档的部分结果相似性直接回答复杂问题的方法。QUEST 用节点和带权重的边构建了一个带噪声的类知识图谱，其由动态检索的实体名称和关系短语组成。这个类知识图谱又用实体类型和语义对齐进行了扩充，然后用 Group Steiner Tree 算法计算最佳答案。这种方法是无监督的，不存在训练数据瓶颈，从而能够应对在用户问题当中快速变化的特定主题和表达风格。实验结果表明：QUEST 在处理复杂问题时的效果远超目前的最优基线系统。</p>
+</div><h2 id="5-总结与展望"><a href="#5-总结与展望" class="headerlink" title="5. 总结与展望"></a><strong>5. 总结与展望</strong></h2><div class="story post-story"><p>本文介绍了知识图谱的技术背景及其在金融场景中的应用。其风控类应用主要有反欺诈、失联客户管理以及企业风险预测，营销类应用主要表现为个性化推荐，客服类应用主要表现为智能问答。其他类的应用诸如智能投顾、智能投研等，在此不一一阐述。未来将会出现更多应用形态，如基于知识图谱的智能文本编制，通过知识图谱将行业中的业务知识与文档相结合，在文档编制过程中，进行实时的智能提示、知识校验、知识生产等，辅助文档编制。</p>
+<p>总而言之，知识图谱在金融领域大有可为，但不可忽视的是，知识图谱的全面落地仍然面临诸多挑战，比如：领域知识复杂难以集成，数据的深层关系难抽取，生成的策略仅能辅助决策等。随着知识图谱构建技术的不断发展和对应用场景的持续探索，相信知识图谱能够在金融领域进一步解放生产力，助力业务转型。</p>
+
+</div>
+  </div>
+  
+  
+    
+    <div class="footer">
+      
+      
+      
+        <div class="copyright">
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href="https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/">https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class="article-meta" id="bottom">
+    <div class="new-meta-box">
+      
+        
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2024-07-31T03:58:30+00:00">
+  <a class="notlink">
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>本页文档最后更新于：2024年7月31日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>知识图谱</p></a></div>
+  <span hidden itemprop="keywords">知识图谱</span>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title rel="external nofollow noopener noreferrer" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/&title=知识图谱在金融领域的应用 - 扬舲の博客&summary=知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Where）加以探讨和展望。">
+          
+            <img src="/media/org.volantis/logo/128/qq.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qq.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title rel="external nofollow noopener noreferrer" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/&title=知识图谱在金融领域的应用 - 扬舲の博客&summary=知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Where）加以探讨和展望。">
+          
+            <img src="/media/org.volantis/logo/128/qzone.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qzone.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title rel="external nofollow noopener noreferrer" target="_blank" href="http://service.weibo.com/share/share.php?url=https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/&title=知识图谱在金融领域的应用 - 扬舲の博客&summary=知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Where）加以探讨和展望。">
+          
+            <img src="/media/org.volantis/logo/128/weibo.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/weibo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+    <!-- Custom Files bottomMeta begin -->
+    
+    <!-- Custom Files bottomMeta end -->
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class="prev" href="/framework-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E5%BD%93%E5%89%8D%E4%B8%BB%E6%B5%81%E7%9A%84%E5%BE%AE%E5%89%8D%E7%AB%AF%E6%96%B9%E6%A1%88%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">
+          <p class="title"><i class="fas fa-chevron-left" aria-hidden="true"></i>深入分析当前主流的微前端方案及其实现原理</p>
+          <p class="content">深入分析当前主流的微前端方案及其实现原理随着前端应用的复杂性增加和团队协作需求的提升，微前端架构成为解决大规模前端项目开发和维护的有效方案。微前端架构允许将一个大型前端应用分解为多个独立开发、独...</p>
+        </a>
+      
+      
+        <a class="next" href="/framework-react-fiber/">
+          <p class="title">深入React Fiber<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class="content">Fiber 设计思想Fiber 是对 React 核心算法的重构，facebook 团队使用两年多的时间去重构 React 的核心算法，在 React16 以上的版本中引入了 Fiber 架构，...</p>
+        </a>
+      
+    </div>
+  
+  <!-- Custom Files postEnd begin-->
+  
+  <!-- Custom Files postEnd end-->
+</article>
+
+
+  
+
+  
+  <article class="post white-box reveal shadow" id="comments">
+    <span hidden>
+      <meta itemprop="discussionUrl" content="/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/index.html#comments">
+    </span>
+    <p ct><i class="fas fa-comments"></i> 评论</p>
+    
+    
+    <div id="layoutHelper-comments"></div>
+
+  </article>
+  
+
+
+
+
+
+</div>
+<aside id="l_side" itemscope itemtype="http://schema.org/WPSideBar">
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile pjax" id="toc-div">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class="name">本文目录</span>
+    
+  </header>
+
+
+    <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-text">知识图谱在金融领域的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%88What%EF%BC%89"><span class="toc-text">1. 知识图谱是什么（What）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%BB%84%E6%88%90%E7%BB%93%E6%9E%84"><span class="toc-text">1.1 组成结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="toc-text">1.2 表示方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-%E5%9F%BA%E4%BA%8E%E7%AC%A6%E5%8F%B7%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="toc-text">1.2.1 基于符号的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-%E5%9F%BA%E4%BA%8E%E5%90%91%E9%87%8F%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="toc-text">1.2.2 基于向量的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%88%86%E7%B1%BB"><span class="toc-text">1.3 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%8F%91%E5%B1%95%E5%8E%86%E7%A8%8B"><span class="toc-text">1.4 发展历程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9E%84%E5%BB%BA%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%EF%BC%88Why%EF%BC%89"><span class="toc-text">2. 为什么构建知识图谱（Why）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%80%8E%E6%A0%B7%E6%9E%84%E5%BB%BA%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%EF%BC%88How%EF%BC%89"><span class="toc-text">3. 怎样构建知识图谱（How）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="toc-text">3.1 构建流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%8A%80%E6%9C%AF%E8%A6%81%E7%82%B9"><span class="toc-text">3.2 技术要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1-%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB"><span class="toc-text">3.2.1 命名实体识别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2-%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96"><span class="toc-text">3.2.2 关系抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-3-%E5%AE%9E%E4%BD%93%E5%AF%B9%E9%BD%90"><span class="toc-text">3.2.3 实体对齐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BA%8E%E5%93%AA%E4%BA%9B%E9%87%91%E8%9E%8D%E5%9C%BA%E6%99%AF%EF%BC%88Where%EF%BC%89"><span class="toc-text">4. 知识图谱可以用于哪些金融场景（Where）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E9%A3%8E%E6%8E%A7%E7%B1%BB%E5%BA%94%E7%94%A8"><span class="toc-text">4.1 风控类应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-1-%E5%8F%8D%E6%AC%BA%E8%AF%88"><span class="toc-text">4.1.1 反欺诈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-2-%E5%A4%B1%E8%81%94%E5%AE%A2%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-text">4.1.2 失联客户管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-3-%E4%BC%81%E4%B8%9A%E9%A3%8E%E9%99%A9%E9%A2%84%E6%B5%8B"><span class="toc-text">4.1.3 企业风险预测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%90%A5%E9%94%80%E7%B1%BB%E5%BA%94%E7%94%A8"><span class="toc-text">4.2 营销类应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E5%AE%A2%E6%9C%8D%E7%B1%BB%E5%BA%94%E7%94%A8"><span class="toc-text">4.3 客服类应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%B1%95%E6%9C%9B"><span class="toc-text">5. 总结与展望</span></a></li></ol>
+    </div>
+  </section>
+
+  
+
+
+<!-- 没有 pjax 占位会报错 万恶的 pjax -->
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+
+  <!-- Custom Files side begin -->
+  
+  <!-- Custom Files side end -->
+</aside>
+
+
+
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<pjax>
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="知识图谱在金融领域的应用";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  pdata.commentConfig={};
+  //  see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs
+  
+    // header
+    var l_header=document.getElementById("l_header");
+    
+    l_header.classList.add("show");
+    
+    
+      // cover
+      var cover_wrapper=document.querySelector('#l_cover .cover-wrapper');
+      var scroll_down=document.getElementById('scroll-down');
+      cover_wrapper.id="none";
+      cover_wrapper.style.display="none";
+      scroll_down.style.display="none";
+    
+  
+</script>
+</pjax>
+        </div>
+        
+  
+  <footer class="footer clearfix" itemscope itemtype="http://schema.org/WPFooter">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js theme="#1BCDFC" autoplay="false" volume="0.4" loop="all" order="random" fixed="false" list-max-height="320px" server="netease" type="playlist" id="5062959861" list-folded="true">
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper" itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          
+            
+              <a href="/atom.xml" class="social fas fa-rss flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="mailto:yangling7212@gmail.com" class="social fas fa-envelope flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://github.com/kobingogo" class="social fab fa-github flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://music.163.com/#/user/home?id=31684329" class="social fas fa-headphones-alt flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div class="copyright">
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+    <!-- Custom Files footer begin-->
+    
+    <!-- Custom Files footer end-->
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="/" onclick="return false;" title="top"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+  /******************** volantis.dom ********************************/
+  // 页面选择器 将dom对象缓存起来 see: /source/js/app.js etc.
+  volantis.dom.bodyAnchor = volantis.dom.$(document.getElementById("safearea")); // 页面主体
+  volantis.dom.topBtn = volantis.dom.$(document.getElementById('s-top')); // 向上
+  volantis.dom.wrapper = volantis.dom.$(document.getElementById('wrapper')); // 整个导航栏
+  volantis.dom.coverAnchor = volantis.dom.$(document.querySelector('#l_cover .cover-wrapper')); // 1个
+  volantis.dom.switcher = volantis.dom.$(document.querySelector('#l_header .switcher .s-search')); // 搜索按钮   移动端 1个
+  volantis.dom.header = volantis.dom.$(document.getElementById('l_header')); // 移动端导航栏
+  volantis.dom.search = volantis.dom.$(document.querySelector('#l_header .m_search')); // 搜索框 桌面端 移动端 1个
+  volantis.dom.mPhoneList = volantis.dom.$(document.querySelectorAll('#l_header .m-phone .list-v')); //  手机端 子菜单 多个
+</script>
+
+<script>
+  
+  volantis.css("https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css");
+  
+  
+  
+</script>
+
+<!-- required -->
+
+
+<!-- internal -->
+
+<script src="/js/app.js?time=1722398331872.js"></script>
+
+
+
+  
+  
+  
+  <div id="rightmenu-wrapper">
+    <ul class="list-v rightmenu" id="rightmenu-content">
+      <li class="navigation menuNavigation-Content">
+        <a class="nav icon-only fix-cursor-default" onclick="history.back()"><i class="fad PETERRIVE fa-arrow-left fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="history.forward()"><i class="fad PETERRIVE fa-arrow-right fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="window.location.reload()"><i class="fad PETERRIVE fa-redo fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" href="/"><i class="fad PETERRIVE fa-home fa-fw"></i></a>
+      </li>
+      <li class="option menuOption-Content">
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyText">
+          
+          <i class="fad PETERRIVE fa-copy fa-fw"></i> 复制文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyPaste">
+          
+          <i class="fad PETERRIVE fa-paste fa-fw mR12"></i> 粘贴文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySelect">
+          
+          <i class="fad PETERRIVE fa-object-ungroup fa-fw mR12"></i> 全选文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyCut">
+          
+          <i class="fad PETERRIVE fa-cut fa-fw mR12"></i> 剪切文本
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="searchWord">
+          
+          <i class="fad PETERRIVE fa-search fa-fw"></i> 站内搜索
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="openTab">
+          
+          <i class="fad PETERRIVE fa-external-link-square-alt fa-fw mR12"></i> 在新标签页打开
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySrc">
+          
+          <i class="fad PETERRIVE fa-image fa-fw mR12"></i> 复制图片地址
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyImg">
+          
+          <i class="fad PETERRIVE fa-images fa-fw mR12"></i> 复制图片文件
+        </span>
+      </li>
+      
+        
+      
+        
+          <hr class="menuLoad-Content">
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="printHtml">
+              <i class="fad fa-print TURQUOISE fa-fw "></i> 打印页面
+            </span>
+          </li>  
+        
+      
+        
+          
+    <li class="menuLoad-Content">
+      <a class="vlts-menu fix-cursor-default" href="https://github.com/volantis-x/hexo-theme-volantis/" id="https:githubcomvolantis-xhexo-theme-volantis" rel="external nofollow noopener noreferrer" target="_blank">
+        <i class="fad fa-file-code CONCRETE fa-fw"></i> 主题源码
+      </a>
+    </li>
+  
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default toggle-mode-btn" id="menuDarkBtn">
+              <i class="fad fa-eclipse-alt WISTERIA fa-fw "></i> 暗黑模式
+            </span>
+          </li>
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="readingModel">
+              <i class="fad fa-book-open EMERALD fa-fw "></i> 阅读模式
+            </span>
+          </li>  
+        
+      
+        
+          <div id="menuMusic">
+            <li class="music name menuOption-Content">
+              <p class="nav music-title fix-cursor-default"></p>
+            </li>
+            <li class="music ctrl">
+              <a class="nav icon-only backward fix-cursor-default" onclick="RightMenuAplayer.aplayerBackward()"><i class="fad PETERRIVE fa-step-backward fa-fw "></i></a>
+              <a class="nav icon-only toggle fix-cursor-default" onclick="RightMenuAplayer.aplayerToggle()"><i class="fad PETERRIVE fa-play fa-fw "></i></a>
+              <a class="nav icon-only forward fix-cursor-default" onclick="RightMenuAplayer.aplayerForward()"><i class="fad PETERRIVE fa-step-forward fa-fw "></i></a>
+            </li>
+            <li class="music volume">
+              <div class="nav volume">
+                <div class="aplayer-volume-bar-wrap">
+                  <div class="aplayer-volume-bar fix-cursor-pointer">
+                    <div class="aplayer-volume"></div>
+                    <i class="left fad PETERRIVE fa-volume-off fa-fw"></i>
+                    <i class="right fad PETERRIVE fa-volume-up fa-fw"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </div>
+        
+      
+    </ul>
+  </div>
+  <script>volantis.js('/js/plugins/rightMenu.js?time=1722398331872')</script>
+
+
+
+<!-- rightmenu要在darkmode之前（ToggleButton） darkmode要在comments之前（volantis.dark.push）-->
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "color-scheme";
+const rootElementDarkModeAttributeName = "color-scheme";
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+  getCustomDarkMode();
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+/**
+ * get target mode
+ */
+ const getCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  if(currentSetting=="dark"){
+    volantis.dark.mode="light";
+  }else{
+    volantis.dark.mode="dark";
+  }
+  // console.log(volantis.dark.mode)
+};
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+/**
+ * 暗黑模式触发器
+ */
+volantis.dark.toggle=()=>{
+  const mode = toggleCustomDarkMode();
+  applyCustomDarkModeSettings(mode);
+  // 使用 volantis.dark.push 方法传入volantis.dark.toggle回调函数 参见layout/_partial/scripts/global.ejs
+  volantis.dark.method.toggle.start();
+}
+/**
+ * bind event for toggle button
+ */
+
+function bindToggleButton() {
+  var btn= document.querySelectorAll("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn")
+  btn.forEach(function (e) {
+    volantis.dom.$(e).on('click',volantis.dark.toggle);
+  })
+}
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", ()=>{
+  volantis.requestAnimationFrame(bindToggleButton)
+});
+volantis.pjax.push(bindToggleButton);
+
+const darkModelListeners={
+  dark:(mediaQueryList )=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "dark";
+    }
+    volantis.dark.method.toggle.start();
+  },
+  light:(mediaQueryList)=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "light";
+    }
+    volantis.dark.method.toggle.start();
+  }
+}
+window.matchMedia('(prefers-color-scheme: dark)').addListener(darkModelListeners.dark)
+window.matchMedia('(prefers-color-scheme: light)').addListener(darkModelListeners.light)
+</script>
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    
+      const sites_api = document.getElementById('sites-api');
+      if (sites_api != undefined && typeof SitesJS === 'undefined') {
+        volantis.js("/js/plugins/sites.js?time=1722398331872")
+      }
+    
+    
+      const friends_api = document.getElementById('friends-api');
+      if (friends_api != undefined && typeof FriendsJS === 'undefined') {
+        volantis.js("/js/plugins/friends.js?time=1722398331872")
+      }
+    
+    
+      const contributors_api = document.getElementById('contributors-api');
+      if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
+        volantis.js("/js/plugins/contributors.js?time=1722398331872")
+      }
+    
+  };
+  loadIssuesJS()
+  volantis.pjax.push(()=>{
+    loadIssuesJS();
+  })
+
+</script>
+
+
+
+
+  <script defer src="/libs/vanilla-lazyload/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: ["#"],
+	maxRPS: 6,
+	hoverDelay: 0
+  };
+</script>
+<script defer src="/libs/flying-pages/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+  <script>
+  volantis.css("/libs/aplayer/dist/APlayer.min.css");
+  (async () => {
+    // APlayer 需要在  MetingJS 之前加载
+    await volantis.js("/libs/aplayer/dist/APlayer.min.js")
+    await volantis.js("/libs/meting/dist/Meting.min.js")
+  
+    // 右键 music 需要在 APlayer  MetingJS 之后加载
+    await volantis.js('/js/plugins/aplayer.js?time=1722398331873')
+  
+  })();
+
+  function SetAPlayerPlugin(){
+    let Metings = document.querySelectorAll('meting-js');
+    if (Metings.length === 0) {return;};
+    if (Metings[0].aplayer && Metings[0].aplayer.on) {
+      // improve the accessibility https://web.dev/button-name/
+      document.querySelectorAll(".aplayer-icon-menu").forEach(e=>{
+        e.setAttribute("aria-label","Aplayer Menu")
+      })
+      // message see: /layout/_plugins/message/script.ejs
+      
+        try {
+          setTimeout(() => {
+            Metings.forEach((item, index) => {
+              const aplayerItem = item.aplayer; if(!aplayerItem) return;
+              const rightAplayerCheck = volantis.THEMECONFIG.rightmenu.layout.includes('music') 
+                && item.meta.id === volantis.THEMECONFIG.plugins.aplayer.id;
+              if(rightAplayerCheck) RightMenuAplayer.checkAPlayer();
+              if(aplayerItem.events.events.play.every(item => {return item.name !== 'messagePlay'})) {
+                aplayerItem.on('play', function messagePlay() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                      icon: 'fal fa-play light-blue',
+                      transitionIn: 'flipInX',
+                      transitionOut: 'flipOutX'
+                    });
+                  }, 100)
+                });
+              }
+              if(aplayerItem.events.events.pause.every(item => {return item.name !== 'messagePause'})) {
+                aplayerItem.on('pause', function messagePause() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    // 歌曲播放结束也会触发 pause 事件，为了避免错误提示，等待一会儿
+                    if(aplayerItem.paused) {
+                      VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                        icon: 'fal fa-pause light-blue',
+                        transitionIn: 'flipInX',
+                        transitionOut: 'flipOutX'
+                      });
+                    }
+                  }, 100)
+                });
+              }
+            });
+          }, 500)
+        } catch (error) { console.error(error); }
+      
+    }else{
+      volantis.requestAnimationFrame(SetAPlayerPlugin)
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    SetAPlayerPlugin();
+  });
+  volantis.pjax.push(SetAPlayerPlugin);
+</script>
+
+
+
+
+  <script>
+  volantis.layoutHelper("comments",`<div id="valine_container"><i class="fas fa-cog fa-spin fa-fw fa-2x"></i></div>`)
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '/';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign(Object.assign({"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }),pdata.commentConfig))
+    fancybox_valine()
+  }
+  function fancybox_valine() {
+    if(typeof VolantisFancyBox === "undefined") {
+      const checkFancyBox = setInterval(() => {
+        if(typeof VolantisFancyBox === "undefined") return;
+        clearInterval(checkFancyBox);
+        VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+      })
+    } else {
+      VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+    }
+  }
+  volantis.js('https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js').then(pjax_valine)
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+<!-- optional -->
+
+  <script>
+  const SearchServiceDataPathRoot = ("/" || "/").endsWith("/")
+    ? "/" || "/"
+    : "//" || "/";
+  const SearchServiceDataPath = SearchServiceDataPathRoot + "content.json";
+
+  function loadSearchScript() {
+    // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
+    return volantis.js("/js/search/hexo.js?time=1722398331872");
+  }
+
+  function loadSearchService() {
+    loadSearchScript();
+    document.querySelectorAll(".input.u-search-input").forEach((e) => {
+      e.removeEventListener("focus", loadSearchService, false);
+    });
+  }
+
+  // 打开并搜索 字符串 s
+  function OpenSearch(s) {
+    loadSearchScript().then(() => {
+      SearchService.setQueryText(s);
+      SearchService.search();
+    });
+  }
+
+  // 访问含有 ?s=xxx  的链接时打开搜索 // 与搜索引擎 structured data 相关: /scripts/helpers/structured-data/lib/config.js
+  if (window.location.search && /^\?s=/g.test(window.location.search)) {
+    let queryText = decodeURI(window.location.search)
+      .replace(/\ /g, "-")
+      .replace(/^\?s=/g, "");
+    OpenSearch(queryText);
+  }
+
+  // 搜索输入框获取焦点时加载搜索
+  document.querySelectorAll(".input.u-search-input").forEach((e) => {
+    e.addEventListener("focus", loadSearchService, false);
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+
+
+
+  function pjax_highlightjs_copyCode(){
+    if (!(document.querySelector(".highlight .code pre") ||
+      document.querySelector(".article pre code"))) {
+      return;
+    }
+    VolantisApp.utilCopyCode(".highlight .code pre, .article pre code")
+  }
+  volantis.requestAnimationFrame(pjax_highlightjs_copyCode)
+  volantis.pjax.push(pjax_highlightjs_copyCode)
+
+</script>
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI',
+    app_key: '4xKBXGBj6BgecU62vff5rJHs',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'https://kobingogo.github.io' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+  let imgs = ["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp"];
+  let index = 0;
+  let IntervalParallax = null;
+
+  function parallax(){
+    let ParallaxWindow = document.querySelector("#parallax-window");
+    
+    Parallax.window = ParallaxWindow;
+    Parallax.options.fade = 1500;
+    Parallax.cache = 1;
+    next_parallax();
+    Parallax.init();
+    if (imgs.length>1) {
+      IntervalParallax = setInterval(function () {
+        next_parallax();
+      }, '10000');
+    }
+  }
+
+  function next_parallax() {
+    if (typeof Parallax == "undefined") {
+      return
+    }
+    
+      if (!document.querySelector("#full")&&!document.querySelector("#half")) {
+        return
+      }
+    
+    if (imgs.length>=1) {
+      Parallax.options.src = imgs[index % imgs.length];
+      Parallax.start();
+      index++;
+      if (Parallax.cache) {
+        fetch(imgs[index % imgs.length] +"?t=" + new Date().getTime());
+        if (index == imgs.length) {
+          Parallax.cache = 0;
+        }
+      }
+    }
+  }
+  var runningOnBrowser = typeof window !== "undefined";
+  var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+  if (!isBot) {
+    volantis.js('/js/plugins/parallax.js?time=1722398331872').then(()=>{
+      parallax()
+    })
+    volantis.pjax.send(()=>{
+      clearInterval(IntervalParallax)
+    },"clearIntervalParallax");
+    volantis.pjax.push(parallax);
+  }
+</script>
+
+
+
+
+  <script>
+  function load_swiper() {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    volantis.css("/libs/swiper/swiper-bundle.min.css");
+    volantis.js("/libs/swiper/swiper-bundle.min.js").then(() => {
+      pjax_swiper();
+    });
+  }
+
+  load_swiper();
+
+  function pjax_swiper() {
+    volantis.swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      centeredSlides: true,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  }
+
+  volantis.pjax.push(() => {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    if (typeof volantis.swiper === "undefined") {
+      load_swiper();
+    } else {
+      pjax_swiper();
+    }
+  });
+</script>
+
+
+<!-- pjax 标签必须存在于所有页面 否则 pjax error -->
+<pjax>
+
+</pjax>
+
+<script>
+  function listennSidebarTOC() {
+    const navItems = document.querySelectorAll(".toc li");
+    if (!navItems.length) return;
+    const sections = [...navItems].map((element) => {
+      const link = element.querySelector(".toc-link");
+      const target = document.getElementById(
+        decodeURI(link.getAttribute("href")).replace("#", "")
+      );
+      // 解除 a 标签 href 的 锚点定位, a 标签 href 的 锚点定位 会随机启用?? 产生错位???
+      link.setAttribute("onclick","return false;")
+      link.setAttribute("toc-action","toc-"+decodeURI(link.getAttribute("href")).replace("#", ""))
+      link.setAttribute("href","/")
+      // 配置 点击 触发新的锚点定位
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        // 这里的 addTop 是通过错位使得 toc 自动展开.
+        volantis.scroll.to(target,{addTop: 5, observer:false})
+        // Anchor id
+        history.pushState(null, document.title, "#" + target.id);
+      });
+      return target;
+    });
+
+    function activateNavByIndex(target) {
+      if (target.classList.contains("active-current")) return;
+
+      document.querySelectorAll(".toc .active").forEach((element) => {
+        element.classList.remove("active", "active-current");
+      });
+      target.classList.add("active", "active-current");
+      let parent = target.parentNode;
+      while (!parent.matches(".toc")) {
+        if (parent.matches("li")) parent.classList.add("active");
+        parent = parent.parentNode;
+      }
+    }
+
+    function findIndex(entries) {
+      let index = 0;
+      let entry = entries[index];
+      if (entry.boundingClientRect.top > 0) {
+        index = sections.indexOf(entry.target);
+        return index === 0 ? 0 : index - 1;
+      }
+      for (; index < entries.length; index++) {
+        if (entries[index].boundingClientRect.top <= 0) {
+          entry = entries[index];
+        } else {
+          return sections.indexOf(entry.target);
+        }
+      }
+      return sections.indexOf(entry.target);
+    }
+
+    function createIntersectionObserver(marginTop) {
+      marginTop = Math.floor(marginTop + 10000);
+      let intersectionObserver = new IntersectionObserver(
+        (entries, observe) => {
+          let scrollHeight = document.documentElement.scrollHeight;
+          if (scrollHeight > marginTop) {
+            observe.disconnect();
+            createIntersectionObserver(scrollHeight);
+            return;
+          }
+          let index = findIndex(entries);
+          activateNavByIndex(navItems[index]);
+        }, {
+          rootMargin: marginTop + "px 0px -100% 0px",
+          threshold: 0,
+        }
+      );
+      sections.forEach((element) => {
+        element && intersectionObserver.observe(element);
+      });
+    }
+
+    createIntersectionObserver(document.documentElement.scrollHeight);
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+  document.addEventListener("pjax:success", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+</script>
+
+<script>
+  // https://web.dev/content-visibility/
+  // https://www.caniuse.com/?search=content-visibility
+  // https://infrequently.org/2020/12/content-visibility-scroll-fix/
+  // https://infrequently.org/2020/12/resize-resilient-deferred-rendering/
+
+  // 备注 目前已知的问题:
+  // 动态修改导致的内容高度变化(例如评论框异步渲染的外部盒子高度变化) 无法提前获知, 进而导致的首次滚动条跳动无法去除 (wontfix) 事实上不使用 content-visibility 也会有跳动, 不过是比使用 content-visibility 跳动提前
+  // scrollreveal 插件潜在问题 目前尚不明确
+
+  let eqIsh = (a, b, fuzz = 2) => {
+    return Math.abs(a - b) <= fuzz;
+  };
+
+  let rectNotEQ = (a, b) => {
+    return !eqIsh(a.width, b.width) || !eqIsh(a.height, b.height);
+  };
+
+  // Keep a map of elements and the dimensions of
+  // their place-holders, re-setting the element's
+  // intrinsic size when we get updated measurements
+  // from observers.
+  let spaced = new WeakMap();
+
+  // Only call this when known cheap, post layout
+  let reserveSpace = (el, rect = el.getClientBoundingRect()) => {
+    let old = spaced.get(el);
+    // Set intrinsic size to prevent jumping on un-painting:
+    //    https://drafts.csswg.org/css-sizing-4/#intrinsic-size-override
+    if (!old || rectNotEQ(old, rect)) {
+      spaced.set(el, rect);
+      el.style["contain-intrinsic-size"] = `${rect.width}px ${rect.height}px`;
+    }
+  };
+
+  let iObs = new IntersectionObserver(
+    (entries, o) => {
+      entries.forEach((entry) => {
+        // We don't care if the element is intersecting or
+        // has been laid out as our page structure ensures
+        // they'll get the right width.
+        reserveSpace(entry.target, entry.boundingClientRect);
+      });
+    },
+    { rootMargin: "500px 0px 500px 0px" }
+  );
+
+  let rObs = new ResizeObserver((entries, o) => {
+    entries.forEach((entry) => {
+      reserveSpace(entry.target, entry.contentRect);
+    });
+  });
+
+  let resizeResilientDeferredRendering = (Selector) => {
+    let articles = document.querySelectorAll(Selector);
+
+    if (articles.length) {
+      articles.forEach((el) => {
+        iObs.observe(el);
+        rObs.observe(el);
+      });
+
+      // Workaround for Chrome bug, part 2.
+      //
+      // Re-enable browser management of rendering for the
+      // first article after the first paint. Double-rAF
+      // to ensure we get called after a layout.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          articles[0].style["content-visibility"] = "auto";
+        });
+      });
+    }
+  };
+
+  let contentVisibilityScrollFix = () => {
+    if (!("content-visibility" in document.documentElement.style)) {
+      return;
+    }
+    resizeResilientDeferredRendering(".post-story");
+    resizeResilientDeferredRendering("article");
+    resizeResilientDeferredRendering(".post-wrapper");
+  };
+  contentVisibilityScrollFix();
+  volantis.pjax.push(contentVisibilityScrollFix);
+</script>
+
+
+
+  <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"扬舲の博客","url":"https://kobingogo.github.io/","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/","sameAs":["https://github.com/volantis-x"],"description":"前端技术博客"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://kobingogo.github.io/","name":"扬舲の博客"}},{"@type":"ListItem","position":2,"item":{"@id":"https://kobingogo.github.io/categories/知识图谱/","name":"知识图谱"}},{"@type":"ListItem","position":3,"item":{"@id":"https://kobingogo.github.io/知识图谱在金融领域的应用/","name":"知识图谱在金融领域的应用"}}]},{"@context":"http://schema.org","@type":"BlogPosting","headline":"知识图谱在金融领域的应用","description":"知识图谱旨在对现实世界中的实体或概念及其之间的关系进行建模，是一种新的海量数据组织、管理和利用方式。自2012年谷歌推出知识图谱以来，它在学术界和工业界掀起了一股热潮，已经在许多领域扮演着重要角色。本文重点关注知识图谱在金融领域的应用，首先从知识图谱是什么（What），为什么要构建知识图谱（Why），怎样构建知识图谱（How）的逻辑出发，介绍知识图谱的技术背景；然后对知识图谱的金融应用场景（Where）加以探讨和展望。","datePublished":"2023-02-10T20:43:53.000Z","dateModified":"2024-07-31T03:58:30.493Z","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/"},"author":{"@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/"},"publisher":{"@type":"Organization","name":"扬舲の博客","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://kobingogo.github.io/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E5%9C%A8%E9%87%91%E8%9E%8D%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8/","wordCount":211,"articleSection":"知识图谱","keywords":"知识图谱","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+
+
+<!-- more -->
+
+
+
+      
+        <!-- 
+  pjax重载区域接口：
+  1.  <pjax></pjax> 标签 pjax 标签必须存在于所有页面 否则 pjax error
+  2.  script[data-pjax]
+  3.  .pjax-reload script
+  4.  .pjax
+-->
+
+
+
+<script src="/libs/pjax/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox]):not([onclick="return false;"]):not([target="_blank"]):not([target="view_window"]):not([href$=".xml"])',
+        selectors: [
+          "head title",
+          "head meta[name='description']",
+          "head meta[name='keywords']",
+          "head meta[property^='og']",
+          
+          "#l_main",
+          "#pjax-header-nav-list",
+          ".pjax",
+          "pjax", // <pjax></pjax> 标签
+          "script[data-pjax], .pjax-reload script" // script标签添加data-pjax 或 script标签外层添加.pjax-reload 的script代码段重载
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.complete.start();
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+      
+    </div>
+  <!-- Custom Files bodyEnd begin-->
+  
+  <!-- Custom Files bodyEnd end-->
+  </body>
+</html>
