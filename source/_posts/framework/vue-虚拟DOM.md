@@ -3,7 +3,7 @@ title: Vue中的虚拟DOM与Diff算法
 date: 2024-03-31 19:58:07
 tags: vue
 categories: vue
-excerpt:
+excerpt: 虚拟 DOM (Virtual DOM，简称 VDOM) 是一种编程概念，意为将目标所需的 UI 通过数据结构“虚拟”地表示出来，保存在内存中，然后将真实的`DOM`与之保持同步。具体来说，`虚拟 DOM` 是由一系列的 JavaScript 对象组成的树状结构，每个对象代表着一个`DOM`元素，包括元素的标签名、属性、子节点等信息。`虚拟 DOM` 中的每个节点都是一个 JavaScript 对象，它们可以轻松地被创建、更新和销毁，而不涉及到实际的`DOM`操作。
 ---
 
 ## 虚拟 DOM

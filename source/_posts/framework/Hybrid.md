@@ -3,7 +3,7 @@ title: Hybrid App 技术方案
 date: 2023-09-12 18:25:29
 tags: Hybrid
 categories: Hybrid
-excerpt:
+excerpt: 作为一名经验丰富的前端工程师，设计一套完善的 Hybrid App 技术方案需要综合考虑技术栈选择、架构设计、性能优化、安全策略、测试与发布等方面。Hybrid App 结合了 Web 和 Native 的优点，通过一套代码适配多个平台，既有 Web 的开发效率，又能利用 Native 的硬件能力和用户体验。
 ---
 
 ### Hybrid App 技术方案
