@@ -1,6 +1,6 @@
 ---
 title: 我的 agent 交给我一堆 Markdown，我真的读了几份？
-date: 2026-10-10 18:02:00
+date: 2026-09-28 20:30:00
 tags:
   - AI
   - Claude Code

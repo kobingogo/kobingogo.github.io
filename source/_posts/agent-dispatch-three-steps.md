@@ -11,16 +11,8 @@ categories: AI
 ![派活只有三步](/images/agent-dispatch/cover.jpg)
 
 
-<!--
-备选标题（不进正文）：
-1. 一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill（推荐）
-2. 派活给 agent 的第一句，不是「帮我做」，是「你先复述一遍」（附中英提示词 + skill）
-3. 一句被收藏 1.1 万次的提示词：一个人派活给 agent 的 3 步法（附任务卡模板）
-4. 不读代码的人怎么派活：复述、拷问、验收单，3 步 + 1 张任务卡 + 1 个 skill
-5. 一个人带一群 agent · 第 0 篇：派活就三步，复述、拷问、验收单（附模板和 skill 全文）
--->
 
-> 「一个人带一群 agent」系列 · 第 0 篇。五篇各自独立，可以单独读；这篇讲的是最前面那一步：派活。
+> 「一个人带一群 agent」系列之一。每篇各自独立，可以单独读；这篇讲的是最前面那一步：派活。
 
 这篇能拿走的东西，先摆在前面：
 
@@ -441,7 +433,7 @@ Do not say "done" if any item is ❌ or ⚠️. Say "partially done" and list wh
 
 ## 系列导航
 
-这是第 0 篇，讲派活。后面四篇，各管活交出去之后的一段：
+这篇讲派活，是整个系列最前面的一步。另外四篇，各管活交出去之后的一段，按阅读顺序是：
 
 - [我不再逐行看 agent 写的代码了，所以得先想清楚：凭什么信它](https://kobingogo.github.io/trust-agent-code-without-reading/)：不读每一行，靠什么相信它，讲证据链。
 - [我不再琢磨 prompt 了，我在写「什么时候停」](https://kobingogo.github.io/agent-stop-conditions/)：循环什么时候该停，停止条件和外置刹车怎么写。
