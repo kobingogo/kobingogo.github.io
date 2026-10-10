@@ -1,0 +1,4124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head hexo-theme="https://github.com/volantis-x/hexo-theme-volantis/tree/5.0.0-beta.2">
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+  <link rel="canonical" href="https://kobingogo.github.io/minimal-agent-workflow/">
+  <!-- 渲染优化 -->
+  <!-- <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin> -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta content="扬舲の博客" name="application-name">
+  <meta content="扬舲の博客" name="apple-mobile-web-app-title">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <link rel="preload" href="/css/style.css?time=1791643020183" as="style">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <!-- 页面元数据 -->
+  <title>一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪 - 扬舲の博客</title>
+  <meta name="keywords" content="AI,Agent,AI编程,前端 技术 博客">
+  <meta name="description" content="「一个人带一群 agent」系列 · 第 4 篇。四篇各自独立，可以单独读。  7 月 2 日，Christoph Nakazawa 在 X 上发了一句话，大意是：大家都在搭特别复杂的 agent 配置，可很多人拿不出什么成果；Codex 加 Codiff 加人工验证，就是他现在整个开发周期需要的全部。 Christoph 是 Jest 的作者，现在在 VoidZero 做 Vite+ 这一摊。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪">
+<meta property="og:url" content="https://kobingogo.github.io/minimal-agent-workflow/index.html">
+<meta property="og:site_name" content="扬舲の博客">
+<meta property="og:description" content="「一个人带一群 agent」系列 · 第 4 篇。四篇各自独立，可以单独读。  7 月 2 日，Christoph Nakazawa 在 X 上发了一句话，大意是：大家都在搭特别复杂的 agent 配置，可很多人拿不出什么成果；Codex 加 Codiff 加人工验证，就是他现在整个开发周期需要的全部。 Christoph 是 Jest 的作者，现在在 VoidZero 做 Vite+ 这一摊。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+<meta property="article:published_time" content="2026-08-26T20:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-10T14:36:38.365Z">
+<meta property="article:author" content="yangling">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="AI编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+  <!-- feed -->
+    <link rel="alternate" href="/atom.xml" title="扬舲の博客" type="application/atom+xml">
+  <!-- import meta -->
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml">
+      <meta name="theme-color" content="#ffffff">
+  <!-- link -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <!-- import link -->
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png">
+      <link rel="manifest" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest">
+      <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg" color="#5bbad5">
+      <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <style>
+    /* 首屏样式 */
+    #safearea {
+  display: none;
+}
+/* 
+  * Workaround for Chrome bug, part 1
+  * Chunk rendering for all but the first article.
+  * /layout/_partial/scripts/content-visibility-scroll-fix.ejs
+*/
+.post-story + .post-story,
+article + article,
+.post-wrapper + .post-wrapper {
+  content-visibility: auto;
+  contain-intrinsic-size: 10px 500px;
+}
+:root {
+  --color-site-body: #f4f4f4;
+  --color-site-bg: #f4f4f4;
+  --color-site-inner: #fff;
+  --color-site-footer: #666;
+  --color-card: #fff;
+  --color-text: #444;
+  --color-block: #f6f6f6;
+  --color-inlinecode: #c74f00;
+  --color-codeblock: #fff7ea;
+  --color-h1: #3a3a3a;
+  --color-h2: #3a3a3a;
+  --color-h3: #333;
+  --color-h4: #444;
+  --color-h5: #555;
+  --color-h6: #666;
+  --color-p: #444;
+  --color-list: #666;
+  --color-list-hl: #36ac91;
+  --color-meta: #888;
+  --color-read-bkg: #e0d8c8;
+  --color-read-post: #f8f1e2;
+}
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+html {
+  color: var(--color-text);
+  width: 100%;
+  height: 100%;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  font-size: 16px;
+}
+html >::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+html >::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+html >::-webkit-scrollbar-thumb {
+  background: #44d7b6;
+  cursor: pointer;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+html >::-webkit-scrollbar-thumb:hover {
+  background: #ff5722;
+}
+body {
+  background-color: var(--color-site-body);
+  text-rendering: optimizelegibility;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body.modal-active {
+  overflow: hidden;
+}
+@media screen and (max-width: 680px) {
+  body.modal-active {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+a {
+  color: #1b79c4;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+a:hover {
+  color: #ff5722;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+ul,
+ol {
+  padding-left: 0;
+}
+ul li,
+ol li {
+  list-style: none;
+}
+header {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+img {
+  border: 0;
+  background: none;
+  max-width: 100%;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 0;
+  border: 0;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  border-bottom: 1px solid rgba(68,68,68,0.1);
+}
+button,
+input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+@supports (backdrop-filter: blur(20px)) {
+  .blur {
+    background: rgba(255,255,255,0.9) !important;
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.shadow {
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.shadow.floatable {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.shadow.floatable:hover {
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+}
+#l_cover {
+  min-height: 64px;
+}
+.cover-wrapper {
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: 100vh;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  color: var(--color-site-inner);
+  padding: 0 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: -100px;
+}
+.cover-wrapper .cover-body {
+  z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.cover-wrapper#full {
+  height: calc(100vh + 100px);
+  padding-bottom: 100px;
+}
+.cover-wrapper#half {
+  max-height: 640px;
+  min-height: 400px;
+  height: calc(36vh - 64px + 200px);
+}
+.cover-wrapper #scroll-down {
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  bottom: 100px;
+  text-align: center;
+  cursor: pointer;
+}
+.cover-wrapper #scroll-down .scroll-down-effects {
+  color: #fff;
+  font-size: 24px;
+  line-height: 64px;
+  position: absolute;
+  width: 24px;
+  left: calc(50% - 12px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  animation: scroll-down-effect 1.5s infinite;
+  -webkit-animation: scroll-down-effect 1.5s infinite;
+  -khtml-animation: scroll-down-effect 1.5s infinite;
+  -moz-animation: scroll-down-effect 1.5s infinite;
+  -o-animation: scroll-down-effect 1.5s infinite;
+  -ms-animation: scroll-down-effect 1.5s infinite;
+}
+@-moz-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.cover-wrapper .cover-body {
+  margin-top: 64px;
+  margin-bottom: 100px;
+}
+.cover-wrapper .cover-body,
+.cover-wrapper .cover-body .top,
+.cover-wrapper .cover-body .bottom {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  max-width: 100%;
+}
+.cover-wrapper .cover-body .bottom {
+  margin-top: 32px;
+}
+.cover-wrapper .cover-body .title {
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+  font-size: 3.125rem;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.cover-wrapper .cover-body .subtitle {
+  font-size: 20px;
+}
+.cover-wrapper .cover-body .logo {
+  max-height: 120px;
+  max-width: calc(100% - 4 * 16px);
+}
+@media screen and (min-height: 1024px) {
+  .cover-wrapper .cover-body .title {
+    font-size: 3rem;
+  }
+  .cover-wrapper .cover-body .subtitle {
+    font-size: 1.05rem;
+  }
+  .cover-wrapper .cover-body .logo {
+    max-height: 150px;
+  }
+}
+.cover-wrapper .cover-body .m_search {
+  position: relative;
+  max-width: calc(100% - 16px);
+  width: 320px;
+  vertical-align: middle;
+}
+.cover-wrapper .cover-body .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  width: 100%;
+}
+.cover-wrapper .cover-body .m_search .icon,
+.cover-wrapper .cover-body .m_search .input {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.cover-wrapper .cover-body .m_search .icon {
+  position: absolute;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  line-height: 2.5rem;
+  width: 32px;
+  top: 0;
+  left: 5px;
+  color: rgba(68,68,68,0.75);
+}
+.cover-wrapper .cover-body .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  height: 2.5rem;
+  width: 100%;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-size: 0.875rem;
+  -webkit-appearance: none;
+  padding-left: 36px;
+  border-radius: 1.4rem;
+  -webkit-border-radius: 1.4rem;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border: none;
+  color: var(--color-text);
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .cover-body .m_search .input {
+    padding-left: 36px;
+  }
+}
+.cover-wrapper .cover-body .m_search .input:hover {
+  background: rgba(255,255,255,0.8);
+}
+.cover-wrapper .cover-body .m_search .input:focus {
+  background: #fff;
+}
+.cover-wrapper .list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -khtml-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  align-items: stretch;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cover-wrapper .list-h a {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 0;
+  -ms-flex: 1 0;
+  flex: 1 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  font-weight: 600;
+}
+.cover-wrapper .list-h a img {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  margin: 4px;
+  min-width: 40px;
+  max-width: 44px;
+}
+@media screen and (max-width: 768px) {
+  .cover-wrapper .list-h a img {
+    min-width: 36px;
+    max-width: 40px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .list-h a img {
+    margin: 2px 4px;
+    min-width: 32px;
+    max-width: 36px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .cover-wrapper .list-h a img {
+    min-width: 28px;
+    max-width: 32px;
+  }
+}
+.cover-wrapper {
+  max-width: 100%;
+}
+.cover-wrapper.search .bottom .menu {
+  margin-top: 16px;
+}
+.cover-wrapper.search .bottom .menu .list-h a {
+  white-space: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 2px;
+  margin: 4px;
+  color: var(--color-site-inner);
+  opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -moz-opacity: 0.75;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-bottom: 2px solid transparent;
+}
+.cover-wrapper.search .bottom .menu .list-h a i {
+  margin-right: 4px;
+}
+.cover-wrapper.search .bottom .menu .list-h a p {
+  font-size: 0.9375rem;
+}
+.cover-wrapper.search .bottom .menu .list-h a:hover,
+.cover-wrapper.search .bottom .menu .list-h a.active,
+.cover-wrapper.search .bottom .menu .list-h a:active {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  border-bottom: 2px solid var(--color-site-inner);
+}
+.cover-wrapper.dock .menu,
+.cover-wrapper.featured .menu,
+.cover-wrapper.focus .menu {
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+.cover-wrapper.dock .menu .list-h a,
+.cover-wrapper.featured .menu .list-h a,
+.cover-wrapper.focus .menu .list-h a {
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  line-height: 24px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-bottom: none;
+  text-align: center;
+  align-content: flex-end;
+  color: rgba(68,68,68,0.7);
+  font-size: 1.5rem;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h a,
+  .cover-wrapper.featured .menu .list-h a,
+  .cover-wrapper.focus .menu .list-h a {
+    padding: 12px 8px;
+  }
+}
+.cover-wrapper.dock .menu .list-h a i,
+.cover-wrapper.featured .menu .list-h a i,
+.cover-wrapper.focus .menu .list-h a i {
+  margin: 8px;
+}
+.cover-wrapper.dock .menu .list-h a p,
+.cover-wrapper.featured .menu .list-h a p,
+.cover-wrapper.focus .menu .list-h a p {
+  font-size: 0.875rem;
+}
+.cover-wrapper.dock .menu .list-h a.active,
+.cover-wrapper.featured .menu .list-h a.active,
+.cover-wrapper.focus .menu .list-h a.active {
+  background: var(--color-card);
+  backdrop-filter: none;
+}
+.cover-wrapper.dock .menu .list-h a.active i,
+.cover-wrapper.featured .menu .list-h a.active i,
+.cover-wrapper.focus .menu .list-h a.active i,
+.cover-wrapper.dock .menu .list-h a.active i+p,
+.cover-wrapper.featured .menu .list-h a.active i+p,
+.cover-wrapper.focus .menu .list-h a.active i+p {
+  color: #44d7b6;
+}
+.cover-wrapper.dock .menu .list-h a.active img+p,
+.cover-wrapper.featured .menu .list-h a.active img+p,
+.cover-wrapper.focus .menu .list-h a.active img+p {
+  color: var(--color-text);
+}
+.cover-wrapper.dock .menu .list-h a:hover,
+.cover-wrapper.featured .menu .list-h a:hover,
+.cover-wrapper.focus .menu .list-h a:hover {
+  background: var(--color-card);
+}
+.cover-wrapper.dock .top {
+  margin-bottom: 48px;
+}
+.cover-wrapper.dock .menu {
+  background: rgba(255,255,255,0.5);
+  position: absolute;
+  bottom: 0;
+  max-width: 100%;
+}
+.cover-wrapper.dock .menu .list-h {
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  margin: 4px;
+}
+.cover-wrapper.dock .menu .list-h a+a {
+  margin-left: 4px;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h {
+    overflow-x: scroll;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-track-piece {
+    background: transparent;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb {
+    background: #44d7b6;
+    cursor: pointer;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb:hover {
+    background: #ff5722;
+  }
+}
+@supports (backdrop-filter: blur(20px)) {
+  .cover-wrapper.dock .menu {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.cover-wrapper #parallax-window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.parallax-mirror {
+  animation-delay: 0s;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-name: fadeIn;
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-mode: 'dark';
+  }
+  :root:not([color-scheme]) {
+    --color-site-body: #000;
+    --color-read-bkg: #222;
+    --color-read-post: #333;
+    --color-site-bg: #222;
+    --color-site-inner: #eee;
+    --color-site-footer: #aaa;
+    --color-card: #333;
+    --color-text: #eee;
+    --color-block: #3a3a3a;
+    --color-codeblock: #343a3c;
+    --color-inlinecode: #d56d28;
+    --color-h1: #eee;
+    --color-h2: #eee;
+    --color-h3: #ddd;
+    --color-h4: #ddd;
+    --color-h5: #ddd;
+    --color-h6: #ddd;
+    --color-p: #bbb;
+    --color-list: #aaa;
+    --color-list-hl: #69dfc4;
+    --color-meta: #888;
+    --color-link: #888;
+  }
+  :root:not([color-scheme]) img {
+    filter: brightness(70%) !important;
+  }
+  :root:not([color-scheme]) #wrapper .title {
+    color: var(--color-meta) !important;
+  }
+  :root:not([color-scheme]) .l_header ul.nav-list-h>li>a,
+  :root:not([color-scheme]) ul.list-v >li>a {
+    color: var(--color-list) !important;
+  }
+  :root:not([color-scheme]) .blur {
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) .nav-main .u-search-input {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a:hover {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) .article blockquote {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .article-title a {
+    color: var(--color-h1) !important;
+  }
+  :root:not([color-scheme]) details>summary {
+    color: var(--color-p) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) details {
+    border: 1px solid var(--color-site-bg) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal,
+  :root:not([color-scheme]) #u-search .modal-header,
+  :root:not([color-scheme]) #u-search .modal-body {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal-body .modal-results .result:hover {
+    background: var(--color-block) !important;
+  }
+}
+[color-scheme='dark'] {
+  --color-site-body: #000;
+  --color-read-bkg: #222;
+  --color-read-post: #333;
+  --color-site-bg: #222;
+  --color-site-inner: #eee;
+  --color-site-footer: #aaa;
+  --color-card: #333;
+  --color-text: #eee;
+  --color-block: #3a3a3a;
+  --color-codeblock: #343a3c;
+  --color-inlinecode: #d56d28;
+  --color-h1: #eee;
+  --color-h2: #eee;
+  --color-h3: #ddd;
+  --color-h4: #ddd;
+  --color-h5: #ddd;
+  --color-h6: #ddd;
+  --color-p: #bbb;
+  --color-list: #aaa;
+  --color-list-hl: #69dfc4;
+  --color-meta: #888;
+  --color-link: #888;
+}
+[color-scheme='dark'] img {
+  filter: brightness(70%) !important;
+}
+[color-scheme='dark'] #wrapper .title {
+  color: var(--color-meta) !important;
+}
+[color-scheme='dark'] .l_header ul.nav-list-h>li>a,
+[color-scheme='dark'] ul.list-v >li>a {
+  color: var(--color-list) !important;
+}
+[color-scheme='dark'] .blur {
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] .nav-main .u-search-input {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a:hover {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] .article blockquote {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .article-title a {
+  color: var(--color-h1) !important;
+}
+[color-scheme='dark'] details>summary {
+  color: var(--color-p) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] details {
+  border: 1px solid var(--color-site-bg) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] #u-search .modal,
+[color-scheme='dark'] #u-search .modal-header,
+[color-scheme='dark'] #u-search .modal-body {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #u-search .modal-body .modal-results .result:hover {
+  background: var(--color-block) !important;
+}
+@media screen and (max-width: 500px) {
+  [color-scheme='dark'] .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+.l_header {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  width: 100%;
+  height: 64px;
+  background: var(--color-card);
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.l_header.auto {
+  transition: opacity 0.4s ease;
+  -webkit-transition: opacity 0.4s ease;
+  -khtml-transition: opacity 0.4s ease;
+  -moz-transition: opacity 0.4s ease;
+  -o-transition: opacity 0.4s ease;
+  -ms-transition: opacity 0.4s ease;
+  visibility: hidden;
+}
+.l_header.auto.show {
+  opacity: 1 !important;
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  visibility: visible;
+}
+.l_header .container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.l_header #wrapper {
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.l_header #wrapper .nav-main,
+.l_header #wrapper .nav-sub {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -khtml-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -o-justify-content: space-between;
+  -ms-justify-content: space-between;
+  align-items: center;
+}
+.l_header #wrapper .nav-main {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.l_header #wrapper.sub .nav-main {
+  transform: translateY(-64px);
+  -webkit-transform: translateY(-64px);
+  -khtml-transform: translateY(-64px);
+  -moz-transform: translateY(-64px);
+  -o-transform: translateY(-64px);
+  -ms-transform: translateY(-64px);
+}
+.l_header #wrapper .nav-sub {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  opacity: 0;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  height: 64px;
+  width: calc(100% - 2 * 16px);
+  position: absolute;
+}
+.l_header #wrapper .nav-sub ::-webkit-scrollbar {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (min-width: 2048px) {
+  .l_header #wrapper .nav-sub {
+    max-width: 55vw;
+    margin: auto;
+  }
+}
+.l_header #wrapper.sub .nav-sub {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+}
+.l_header #wrapper .title {
+  position: relative;
+  color: var(--color-text);
+  padding-left: 24px;
+  max-height: 64px;
+}
+.l_header #wrapper .nav-main .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  line-height: 64px;
+  padding: 0 24px;
+  font-size: 1.25rem;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+}
+.l_header #wrapper .nav-main .title img {
+  height: 64px;
+}
+.l_header .nav-sub {
+  max-width: 1080px;
+  margin: auto;
+}
+.l_header .nav-sub .title {
+  font-weight: bold;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  line-height: 1.2;
+  max-height: 64px;
+  white-space: normal;
+  flex-shrink: 1;
+}
+.l_header .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  line-height: 64px;
+  align-items: center;
+}
+.l_header .switcher .s-toc {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .l_header .switcher .s-toc {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+  }
+}
+.l_header .switcher >li {
+  height: 48px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  margin: 2px;
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li {
+    margin: 0 1px;
+    height: 48px;
+  }
+}
+.l_header .switcher >li >a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0.85em 1.1em;
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  color: #44d7b6;
+}
+.l_header .switcher >li >a:hover {
+  border: none;
+}
+.l_header .switcher >li >a.active,
+.l_header .switcher >li >a:active {
+  border: none;
+  background: var(--color-site-bg);
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li >a {
+    width: 36px;
+    height: 48px;
+  }
+}
+.l_header .nav-sub .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+}
+.l_header .m_search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  height: 64px;
+  width: 240px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (max-width: 1024px) {
+  .l_header .m_search {
+    width: 44px;
+    min-width: 44px;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+  }
+  .l_header .m_search:hover {
+    width: 240px;
+  }
+  .l_header .m_search:hover input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search:hover .input {
+    width: 100%;
+  }
+  .l_header .m_search:hover .input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search {
+    min-width: 0;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.l_header .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.l_header .m_search .icon {
+  position: absolute;
+  width: 36px;
+  left: 5px;
+  color: var(--color-meta);
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .icon {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+.l_header .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 1.3;
+  width: 100%;
+  color: var(--color-text);
+  background: #fafafa;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding-left: 40px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search .input:focus {
+    box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .input {
+    background: var(--color-block);
+    padding-left: 8px;
+    border: none;
+  }
+  .l_header .m_search .input:hover,
+  .l_header .m_search .input:focus {
+    border: none;
+  }
+}
+@media (max-width: 500px) {
+  .l_header .m_search {
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    background: #fff;
+    transition: all 0.28s ease;
+    -webkit-transition: all 0.28s ease;
+    -khtml-transition: all 0.28s ease;
+    -moz-transition: all 0.28s ease;
+    -o-transition: all 0.28s ease;
+    -ms-transition: all 0.28s ease;
+  }
+  .l_header .m_search .input {
+    border-radius: 32px;
+    -webkit-border-radius: 32px;
+    margin-left: 16px;
+    padding-left: 16px;
+  }
+  .l_header.z_search-open .m_search {
+    width: 100%;
+  }
+  .l_header.z_search-open .m_search .input {
+    width: calc(100% - 120px);
+  }
+}
+ul.m-pc >li>a {
+  color: inherit;
+  border-bottom: 2px solid transparent;
+}
+ul.m-pc >li>a:active,
+ul.m-pc >li>a.active {
+  border-bottom: 2px solid #44d7b6;
+}
+ul.m-pc li:hover >ul.list-v,
+ul.list-v li:hover >ul.list-v {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.nav-list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  align-items: stretch;
+}
+ul.nav-list-h>li {
+  position: relative;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  height: 100%;
+  line-height: 2.4;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+ul.nav-list-h>li >a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 600;
+}
+ul.list-v {
+  z-index: 1;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: absolute;
+  background: var(--color-card);
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  margin-top: -6px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding: 8px 0;
+}
+ul.list-v.show {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.list-v hr {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+ul.list-v >li {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+ul.list-v >li.header {
+  font-size: 0.78125rem;
+  font-weight: bold;
+  line-height: 2em;
+  color: var(--color-meta);
+  margin: 8px 16px 4px;
+}
+ul.list-v >li.header i {
+  margin-right: 8px;
+}
+ul.list-v >li ul {
+  margin-left: 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: -40px;
+}
+ul.list-v .aplayer-container {
+  min-height: 64px;
+  padding: 6px 16px;
+}
+ul.list-v >li>a {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  color: var(--color-list);
+  font-size: 0.875rem;
+  font-weight: bold;
+  line-height: 36px;
+  padding: 0 20px 0 16px;
+  text-overflow: ellipsis;
+  margin: 0 4px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+@media screen and (max-width: 1024px) {
+  ul.list-v >li>a {
+    line-height: 40px;
+  }
+}
+ul.list-v >li>a >i {
+  margin-right: 8px;
+}
+ul.list-v >li>a:active,
+ul.list-v >li>a.active {
+  color: var(--color-list-hl);
+}
+ul.list-v >li>a:hover {
+  color: var(--color-list-hl);
+  background: var(--color-site-bg);
+}
+.l_header .menu >ul>li>a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding: 0 8px;
+}
+.l_header .menu >ul>li>a >i {
+  margin-right: 4px;
+}
+.l_header ul.nav-list-h>li {
+  color: var(--color-list);
+  line-height: 64px;
+}
+.l_header ul.nav-list-h>li >a {
+  max-height: 64px;
+  overflow: hidden;
+  color: inherit;
+}
+.l_header ul.nav-list-h>li >a:active,
+.l_header ul.nav-list-h>li >a.active {
+  color: #44d7b6;
+}
+.l_header ul.nav-list-h>li:hover>a {
+  color: var(--color-list-hl);
+}
+.l_header ul.nav-list-h>li i.music {
+  animation: rotate-effect 1.5s linear infinite;
+  -webkit-animation: rotate-effect 1.5s linear infinite;
+  -khtml-animation: rotate-effect 1.5s linear infinite;
+  -moz-animation: rotate-effect 1.5s linear infinite;
+  -o-animation: rotate-effect 1.5s linear infinite;
+  -ms-animation: rotate-effect 1.5s linear infinite;
+}
+@-moz-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+.menu-phone li ul.list-v {
+  right: calc(100% - 0.5 * 16px);
+}
+.menu-phone li ul.list-v ul {
+  right: calc(100% - 0.5 * 16px);
+}
+#wrapper {
+  max-width: 1080px;
+  margin: auto;
+}
+@media screen and (min-width: 2048px) {
+  #wrapper {
+    max-width: 55vw;
+  }
+}
+#wrapper .menu {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  margin: 0 16px 0 0;
+}
+#wrapper .menu .list-v ul {
+  left: calc(100% - 0.5 * 16px);
+}
+.menu-phone {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: 16px;
+  right: 8px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.menu-phone ul {
+  right: calc(100% - 0.5 * 16px);
+}
+@media screen and (max-width: 500px) {
+  .menu-phone {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: block;
+  }
+}
+.l_header {
+  max-width: 65vw;
+  left: calc((100% - 65vw) * 0.5);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+@media screen and (max-width: 2048px) {
+  .l_header {
+    max-width: 1112px;
+    left: calc((100% - 1112px) * 0.5);
+  }
+}
+@media screen and (max-width: 1112px) {
+  .l_header {
+    left: 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    max-width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .l_header #wrapper .nav-main .title {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .l_header #wrapper .nav-sub {
+    width: 100%;
+  }
+  .l_header #wrapper .nav-sub .title {
+    overflow-y: scroll;
+    margin-top: 2px;
+    padding: 8px 16px;
+  }
+  .l_header #wrapper .switcher {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+    margin-right: 8px;
+  }
+  .l_header .menu {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+@media screen and (max-width: 500px) {
+  .list-v li {
+    max-width: 270px;
+  }
+}
+#u-search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 60px 20px;
+  z-index: 1001;
+}
+@media screen and (max-width: 680px) {
+  #u-search {
+    padding: 0px;
+  }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 500px) {
+  .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+
+  </style>
+  <link rel="stylesheet" href="/css/style.css?time=1791643020183" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1791643020183"></noscript>
+    <script>
+      let userColorScheme=localStorage.getItem("color-scheme")
+      if(userColorScheme){
+        document.documentElement.setAttribute("color-scheme", userColorScheme);
+      }
+    </script>
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+    '.kill-t{'+
+      'font-size: 2rem;'+
+    '}'+
+    '.kill-c{'+
+      'font-size: 1.2rem;'+
+    '}'+
+		'#l_header,#l_body{'+
+			'display: none;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        `<span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br/>`+
+        `<span class="kill-c">微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</span><br/>`+
+        `<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>`+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+    .kill-t{
+      font-size: 2rem;
+    }
+    .kill-c{
+      font-size: 1.2rem;
+    }
+		#l_header,#l_body{
+			display: none;
+		}
+	</style>
+    <div class="kill-noscript">
+        <span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br>
+        <span class="kill-c">本页面需要浏览器支持（启用）JavaScript</span><br>
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+
+  <script>
+  /************这个文件存放不需要重载的全局变量和全局函数*********/
+  window.volantis = {}; // volantis 全局变量
+  volantis.WEBCONFIG = {"title":"扬舲の博客","subtitle":"","description":"前端技术博客","author":"yangling","language":"zh-CN","timezone":"","url":"https://kobingogo.github.io","root":"/","permalink":":title/","permalink_defaults":null,"pretty_urls":{"trailing_index":true,"trailing_html":true},"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":["README.md","**/*.html","manifest.json","start","CNAME","robots.txt","assets/*"],"new_post_name":":year-:month-:day-:title.md","default_layout":"post","titlecase":false,"external_link":{"enable":true,"field":"site","exclude":""},"filename_case":1,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":false,"highlight":{"enable":true,"auto_detect":false,"line_number":true,"tab_replace":"    ","wrap":true,"exclude_languages":[],"language_attr":false,"hljs":false,"first_line_number":"always1"},"prismjs":{"enable":false,"preprocess":true,"line_number":true,"tab_replace":""},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","updated_option":false,"per_page":10,"pagination_dir":"page","theme":"volantis","server":{"port":4000,"log":false,"compress":false,"header":true,"cache":false},"deploy":{"type":"git","repo":"git@github.com:kobingogo/kobingogo.github.io.git","branch":"master"},"ignore":null,"meta_generator":false,"keywords":"前端 技术 博客","favicon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","auto_spacing":true,"index_generator":{"per_page":10,"order_by":"-date","path":""},"include":null,"exclude":null,"import":{"meta":["<meta name=\"msapplication-TileColor\" content=\"#ffffff\">","<meta name=\"msapplication-config\" content=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml\">","<meta name=\"theme-color\" content=\"#ffffff\">"],"link":["<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png\">","<link rel=\"manifest\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest\">","<link rel=\"mask-icon\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg\" color=\"#5bbad5\">","<link rel=\"shortcut icon\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico\">"]},"sitemap":{"path":"sitemap.xml","tag":false,"category":false},"neat_enable":true,"nofollow":{"enable":true,"exclude":["xaoxuu.com","volantis.js.org","volantis-x.js.org","blog.mhuig.top","colsrch.cn","inkss.cn","vlts.hin.cool"]},"autoprefixer":{"exclude":["*.min.css"]},"marked":{"gfm":true,"pedantic":false,"breaks":true,"smartLists":true,"smartypants":false,"modifyAnchors":0,"autolink":true,"mangle":true,"sanitizeUrl":false,"dompurify":false,"headerIds":true,"anchorAlias":false,"lazyload":false,"prependRoot":false,"postAsset":false,"external_link":{"enable":true,"exclude":[],"nofollow":true},"descriptionLists":true},"jsonContent":{"ignore":{"paths":["v4/","v3/","v2/","test/","news/"],"tags":[]}},"theme_config":{"use_cdn":false,"navbar":{"logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"scheme":"search","display":{"home":true,"archive":true,"others":false},"logo":null,"title":"扬舲の博客","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}]},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"line_style":"solid","author":true,"readmore":"auto"},"body":{"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"updated":{"title":"本页文档最后更新于："}}}},"comments":{"service":"valine","giscus":{"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"disqus":{"shortname":"volantis","path":"/"},"valine":{"appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","path":"/"},"utterances":{"repo":"volantis-x/community","issue-number":115},"beaudar":{"repo":"volantis-x/community","issue-number":115}},"sidebar":{"for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}]},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qrcode":{"class":"qrcode","display":["desktop"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"height":null,"fancybox":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"site_footer":{"layout":["aplayer","social","copyright"],"copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"br":"<br>"},"tag_plugins":{"note":{"iconfont":"Font Awesome 5 Pro"}},"plugins":{"clipboard":{"enable":true},"fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","parallax":{"enable":true},"aplayer":{"enable":true,"autoplay":false,"volume":0.4,"order":"random","id":5062959861},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"}},"darkmode":{"enable":true},"gitter":{"room":"hexo-theme-volantis/community"}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"custom_css":{"cursor":{"enable":true},"font_smoothing":true,"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"]},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"}}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"icon":"fad fa-print TURQUOISE"},"darkmode":{"icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"icon":"fad fa-book-open EMERALD"},"help":{"icon":"fad fa-question EMERALD"},"examples":{"icon":"fad fa-rss PETERRIVE"},"contributors":{"icon":"fad fa-fan fa-spin AMETHYST"},"source_docs":{"icon":"fad fa-code-branch WETASPHALT"},"source_theme":{"icon":"fad fa-file-code CONCRETE"}}},"archive_generator":{"per_page":10,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":10},"feed":{"type":"atom","limit":20,"hub":"","content":true,"content_limit":140,"content_limit_delim":"","order_by":"-date","autodiscovery":true,"template":"","path":"atom.xml"},"tag_generator":{"per_page":10}};
+  volantis.THEMECONFIG = {"default":{"avatar":"/media/placeholder/avatar/round/3442075.svg","link":"/media/placeholder/link/8f277b4ee0ecd.svg","cover":"/media/placeholder/cover/76b86c0226ffd.svg","image":"/media/placeholder/image/2659360.svg"},"info":{"theme_name":"Volantis","theme_version":"5.0.0-beta.2","theme_docs":"https://volantis.js.org/","theme_repo":"https://github.com/volantis-x/hexo-theme-volantis"},"cdn":{"enable":false,"prefix":null,"set":{"js":{"app":null},"css":{"style":null}},"map":{"js":{"app":"/js/app.js?time=1791643020183","sites":"/js/plugins/sites.js?time=1791643020182","friends":"/js/plugins/friends.js?time=1791643020182","parallax":"/js/plugins/parallax.js?time=1791643020183","rightMenu":"/js/plugins/rightMenu.js?time=1791643020183","contributors":"/js/plugins/contributors.js?time=1791643020183","message":"/js/thirdparty/message.js?time=1791643020183","valine":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","search":"/js/search/hexo.js?time=1791643020183"},"css":{"style":"/css/style.css?time=1791643020183","message":"/css/message.css?time=1791643020182"}}},"replace":["https://npm.elemecdn.com/ => https://npm.elemecdn.com/"],"scroll_smooth":true,"navbar":{"visiable":"auto","logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"height_scheme":"full","layout_scheme":"dock","display":{"home":true,"archive":true,"others":false},"background":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture","logo":null,"title":"扬舲の博客","subtitle":"","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}],"scheme":"search"},"pages":{"friends":{"layout_scheme":"traditional"}},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"hide_excerpt":false,"line_style":"solid","author":true,"readmore":"auto"},"body":{"top_meta":["author","category","date","counter"],"footer_widget":{"references":{"title":"参考资料","icon":"fas fa-quote-left"},"related_posts":{"enable":false,"title":"相关文章","icon":"fas fa-bookmark","max_count":5,"placeholder_img":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"},"copyright":{"enable":true,"permalink":"本文永久链接是：","content":["博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议","permalink"]},"donate":{"enable":false,"images":["/media/org.volantis/blog/qrcode/github@volantis.png","/media/org.volantis/blog/qrcode/github@volantis.png"]}},"bottom_meta":["updated","tags","share"],"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"date":{"icon":"fas fa-calendar-alt","title":"发布于：","format":"ll"},"updated":{"icon":"fas fa-edit","title":"本页文档最后更新于：","format":"ll"},"category":{"icon":"fas fa-folder-open"},"counter":{"icon":"fas fa-eye","unit":"次浏览"},"valinecount":{"icon":"fas fa-comment-dots","desc":""},"walinecount":{"icon":"fas fa-comment-dots","desc":""},"wordcount":{"icon_wordcount":"fas fa-keyboard","icon_duration":"fas fa-hourglass-half"},"tags":{"icon":"fas fa-hashtag"},"share":[{"id":"qq","img":"/media/org.volantis/logo/128/qq.png"},{"id":"qzone","img":"/media/org.volantis/logo/128/qzone.png"},{"id":"weibo","img":"/media/org.volantis/logo/128/weibo.png"},{"id":null,"img":null},{"id":null,"img":null}]}}},"comments":{"title":"<i class='fas fa-comments'></i> 评论","subtitle":null,"service":"valine","artalk":{"js":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.js","css":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.css","server":"http://127.0.0.1:8080/api","path":null,"placeholder":"来啊，快活啊 ( ゜- ゜)","noComment":"快来成为第一个评论的人吧~","pagination":{"readMore":true,"autoLoad":false,"pageSize":10}},"giscus":{"theme":{"light":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/light.css","dark":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/dark.css"},"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"beaudar":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"branch":"main","position":"top","order":"desc","theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"utterances":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"valine":{"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false},"minivaline":{"js":"https://npm.elemecdn.com/minivaline@latest","path":null,"placeholder":"快来评论吧~","serverURL":"https://hello.com"},"disqus":{"shortname":"volantis","autoload":false,"path":"/"},"disqusjs":{"path":null,"js":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqus.js","css":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqusjs.css"},"gitalk":{"js":"https://npm.elemecdn.com/gitalk@1/dist/gitalk.min.js","clientID":null,"clientSecret":null,"repo":null,"owner":null,"admin":null,"path":null},"vssue":{"js":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.github.min.js","css":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.min.css","vue":"https://cdn.jsdelivr.net/gh/vuejs/vue@2.6.11/dist/vue.runtime.min.js","owner":null,"repo":null,"clientId":null,"clientSecret":null},"livere":{"uid":null},"isso":{"url":"https://example.com/(path/)","src":"https://example.com/(path/)js/embed.min.js","css":null,"gravatar":null},"hashover":{"src":"https://example.com/(path/)comments.php"},"twikoo":{"js":"https://npm.elemecdn.com/twikoo@latest","path":null,"envId":"xxxxxxxxxxxxxxx","placeholder":null},"waline":{"js":"https://npm.elemecdn.com/@waline/client/dist/Waline.min.js","path":null,"placeholder":"快来评论吧~","imageHosting":"https://7bu.top/api/upload","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"serverURL":"xxxxxxxxxxxxxxx","avatar":"robohash","avatarCDN":null,"pageSize":10,"lang":"zh-CN","visitor":true}},"sidebar":{"position":"right","for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"id":"blogger"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5,"id":"toc"},"music":{"class":"music","display":["desktop","mobile"],"pjaxReload":false},"category":{"class":"category","display":["desktop"],"header":{"icon":"fas fa-folder-open","title":"文章分类","url":"/blog/categories/"},"id":"category"},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555","id":"tagcloud"},"qrcode":{"class":"qrcode","display":["desktop"],"height":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"fancybox":null,"id":"qrcode"},"webinfo":{"class":"webinfo","display":["desktop"],"header":{"icon":"fas fa-award","title":"站点信息"},"type":{"article":{"enable":true,"text":"文章数目：","unit":"篇"},"runtime":{"enable":true,"data":"2020/01/01","text":"已运行时间：","unit":"天"},"wordcount":{"enable":true,"text":"本站总字数：","unit":"字"},"visitcounter":{"service":"leancloud","siteuv":{"enable":true,"text":"本站访客数：","unit":"人"},"sitepv":{"enable":true,"text":"本站总访问量：","unit":"次"}},"lastupd":{"enable":true,"friendlyShow":true,"text":"最后活动时间：","unit":"日"}}},"lastupdate":{"class":"lastupdate","display":["desktop","mobile"],"header":{"icon":"fas fa-clock WISTERIA","title":"最近更新"}},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"tag_plugins":{"note":{"icon":"\\f054","color":"","iconfont":"Font Awesome 5 Pro"},"checkbox":{"interactive":false,"color":""},"link":{"placeholder":"/media/org.volantis/logo/256/safari.png"}},"site_footer":{"layout":["aplayer","social","copyright"],"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"source":"https://github.com/volantis-x/volantis-docs/","analytics":"<span id=\"lc-sv\">本站总访问量为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 次</span> <span id=\"lc-uv\">访客数为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 人</span>\n","copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","br":"<br>"},"plugins":{"globalJquery":false,"jquery":"/libs/jquery/dist/jquery.min.js","fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","katex":{"js":"/libs/katex/katex.min.js","css":"/libs/katex/katex.min.css","render":"/libs/katex/contrib/auto-render.min.js"},"mathjax":"/libs/mathjax/es5/tex-mml-chtml.js","markdown":"/libs/github-markdown-css/github-markdown.css","marked":"/libs/marked/marked.min.js","hlsjs":"/libs/hls.js/dist/hls.min.js","fancybox":{"css":"/libs/@fancyapps/ui/dist/fancybox.css","js":"/libs/@fancyapps/ui/dist/fancybox.umd.js"},"sitesjs":{"enable":true},"friendsjs":{"enable":true},"contributorsjs":{"enable":true},"preload":{"enable":true,"service":"flying_pages","instant_page":"/libs/instant_page/instant_page.js","flying_pages":"/libs/flying-pages/flying-pages.min.js"},"lazyload":{"enable":true,"js":"/libs/vanilla-lazyload/dist/lazyload.min.js","onlypost":false,"loadingImg":null,"blurIn":true},"code_highlight":"highlightjs","highlightjs":{"copy_code":true},"prismjs":{"copy_code":true,"js":["https://npm.elemecdn.com/prismjs/components/prism-core.min.js","https://npm.elemecdn.com/prismjs/plugins/autoloader/prism-autoloader.min.js","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.min.js"],"css":["https://npm.elemecdn.com/prismjs/themes/prism-dark.css","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.css"]},"scrollreveal":{"enable":null,"js":"/libs/scrollreveal/dist/scrollreveal.min.js","distance":"32px","duration":800,"interval":20,"scale":1},"wordcount":{"enable":null},"nodewaves":{"enable":null,"css":"/libs/node-waves/dist/waves.min.css","js":"/libs/node-waves/dist/waves.min.js"},"fontawesome_animation":{"enable":null,"css":"/libs/font-awesome-animation/font-awesome-animation.min.css"},"comment_typing":{"enable":null,"js":"/libs/comment_typing/comment_typing.js"},"parallax":{"enable":true,"position":"cover","shuffle":true,"duration":10000,"fade":1500,"images":["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp"]},"aplayer":{"enable":true,"js":{"aplayer":"/libs/aplayer/dist/APlayer.min.js","meting":"/libs/meting/dist/Meting.min.js"},"css":"/libs/aplayer/dist/APlayer.min.css","server":"netease","type":"playlist","id":5062959861,"fixed":false,"theme":"#1BCDFC","autoplay":false,"order":"random","loop":"all","volume":0.4,"list_max_height":"320px","list_folded":true,"autoHide":true},"pjax":{"js":"/libs/pjax/pjax.min.js","enable":true,"cover":true,"timeout":5000,"cacheBust":false,"animation":false,"nprogress":"/libs/nprogress/nprogress.js","banUrl":null},"darkmode":{"enable":true},"killOldVersionsOfIE":{"enable":true},"killNoScript":{"enable":true},"artitalk":{"js":"https://npm.elemecdn.com/artitalk","appId":"ogP8qj3veMh0LFpFWMPOyF0X-MdYXbMMI","appKey":"nHXLd3N3Jgh460t2iRQKWAtr"},"bbtalk":{"js":"https://npm.elemecdn.com/bbtalk@0.1.5/dist/bbtalk.min.js","appId":"0KzOX4vC7Jsk6vzUGNeEiUaI-gzGzoHsz","appKey":"HwCiWuxfpvKiLm4teCUgTIba","serverURLs":"https://bbapi.heson10.com"},"hpp":{"hpp_talk":{"css":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk.css","js":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk_user.js","limit":10,"start":0}},"fcircle":{"api":"","max_number":20,"add_number":10,"opentype":"_blank","nofollow":true,"imgError":"https://cdn.jsdelivr.net/gh/Zfour/Butterfly-friend-poor-html/friendcircle/404.png"},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"time":{"default":5000,"quection":20000},"position":"topRight","transitionIn":"bounceInLeft","transitionOut":"fadeOutRight","titleColor":"var(--color-text)","messageColor":"var(--color-text)","backgroundColor":"var(--color-card)","zindex":2147483647,"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"},"rightmenu":{"enable":true,"notice":true}},"tag_plugin_load_on_demand":{"enable":null,"plugins":["note","btns","p","gallery"]},"chat_service":null,"tidio":{"id":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"},"gitter":{"room":"hexo-theme-volantis/community"},"swiper":{"enable":true,"css":"/libs/swiper/swiper-bundle.min.css","js":"/libs/swiper/swiper-bundle.min.js"},"clipboard":{"enable":true}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"name":"打印页面","icon":"fad fa-print TURQUOISE","defaultStyles":true},"darkmode":{"name":"暗黑模式","icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"name":"阅读模式","icon":"fad fa-book-open EMERALD"},"customPicUrl":{"enable":false,"old":null,"new":null},"music":{"alwaysShow":true},"help":{"name":"常见问题","icon":"fad fa-question EMERALD","url":"https://volantis.js.org/faqs/"},"examples":{"name":"示例博客","icon":"fad fa-rss PETERRIVE","url":"https://volantis.js.org/examples/"},"contributors":{"name":"加入社区","icon":"fad fa-fan fa-spin AMETHYST","url":"https://volantis.js.org/contributors/"},"source_docs":{"name":"本站源码","icon":"fad fa-code-branch WETASPHALT","url":"https://github.com/volantis-x/volantis-docs/"},"source_theme":{"name":"主题源码","icon":"fad fa-file-code CONCRETE","url":"https://github.com/volantis-x/hexo-theme-volantis/"}},"search":{"enable":true,"service":"hexo","js":null},"color_scheme":{"common":{"theme":"#44D7B6","link":"#1b79c4","button":"#44D7B6","hover":"#ff5722","inner":"#fff","selection":"alpha(#2196f3, 0.2)"},"light":{"site_bg":"#f4f4f4","site_inner":"#fff","site_footer":"#666","card":"#fff","text":"#444","block":"#f6f6f6","codeblock":"#FFF7EA","inlinecode":"#c74f00","h1":"#3a3a3a","h2":"#3a3a3a","h3":"#333","h4":"#444","h5":"#555","h6":"#666","p":"#444","list":"#666","list_hl":"mix($color-theme, #000, 80)","meta":"#888"},"dark":{"site_bg":"#222","site_inner":"#eee","site_footer":"#aaa","card":"#333","text":"#eee","block":"#3a3a3a","codeblock":"#343a3c","inlinecode":"#D56D28","h1":"#eee","h2":"#eee","h3":"#ddd","h4":"#ddd","h5":"#ddd","h6":"#ddd","p":"#bbb","list":"#aaa","list_hl":"mix($color-theme, #fff, 80)","meta":"#888","brightness":"70%"}},"custom_css":{"cursor":{"enable":true,"text":"/media/cursor/text.png","pointer":"/media/cursor/pointer.png","default":"/media/cursor/left_ptr.png","not-allowed":"/media/cursor/circle.png","zoom-out":"/media/cursor/zoom-out.png","zoom-in":"/media/cursor/zoom-in.png","grab":"/media/cursor/openhand.png"},"font_smoothing":true,"max_width":"1080px","scrollbar":{"size":"4px","border":"2px"},"navbar":{"height":"64px","width":"auto","effect":["shadow","blur"]},"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"],"highlight":{"language":true,"grayscale":false},"text_align":{"h1":"left","h2":"left","h3":"left","h4":"left","p":"justify"}},"gap":{"h2":"48px","h3":"24px","h4":"16px","p":"1em","line_height":1.6},"border_radius":{"card":"8px","codeblock":"4px","searchbar":"8px","button":"4px"},"fontsize":{"root":"16px","h1":"1.5rem","h2":"1.5rem","h3":"1.25rem","h4":"1.125rem","h5":"1rem","h6":"1rem","list":".9375rem","meta":".875rem","code":".8125rem","footnote":".78125rem"},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"codefont":{"fontfamily":"Menlo, UbuntuMono, Monaco"}}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"seo":{"use_tags_as_keywords":true,"use_excerpt_as_description":true,"robots":{"home_first_page":"index,follow","home_other_pages":"noindex,follow","archive":"noindex,follow","category":"noindex,follow","tag":"noindex,follow"}},"open_graph":{"image":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","twitter_card":"summary"},"structured_data":{"enable":true,"data":{"person":{"sns":["https://github.com/volantis-x"]},"logo":{"path":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}},"use_cdn":false,"custom":{},"injects":{"first":[],"style":[],"dark":[],"darkVar":[],"head":[{"layout":"inject/head/custom.ejs","order":0}],"header":[{"layout":"inject/header/custom.ejs","order":0}],"side":[{"layout":"inject/side/custom.ejs","order":0}],"topMeta":[{"layout":"inject/topMeta/custom.ejs","order":0}],"bottomMeta":[{"layout":"inject/bottomMeta/custom.ejs","order":0}],"footer":[{"layout":"inject/footer/custom.ejs","order":0}],"postEnd":[{"layout":"inject/postEnd/custom.ejs","order":0}],"bodyEnd":[{"layout":"inject/bodyEnd/custom.ejs","order":0}]},"cdnCtrl":{"prefix":"https://npm.elemecdn.com/hexo-theme-volantis@5.0.0-beta.2/source"},"pjax_cover":{"enableCover":true,"frontMatterCover":"none","coverWrapperDisplay":"none","scrollDownDisplay":"none","headerShow":"show"}};
+  volantis.LASTUPDATE = new Date('Sat Oct 10 2026 14:37:00 GMT+0000 (Coordinated Universal Time)');
+  volantis.dom = {}; // 页面Dom see: /source/js/app.js etc.
+  /******************** volantis.EventListener ********************************/
+  // 事件监听器 see: /source/js/app.js
+  volantis.EventListener = {}
+  // 这里存放pjax切换页面时将被移除的事件监听器
+  volantis.EventListener.list = []
+  //构造方法
+  function volantisEventListener(type, f, ele) {
+    this.type = type
+    this.f = f
+    this.ele = ele
+  }
+  // 移除事件监听器
+  volantis.EventListener.remove = () => {
+    volantis.EventListener.list.forEach(function (i) {
+      i.ele.removeEventListener(i.type, i.f, false)
+    })
+    volantis.EventListener.list = []
+  }
+  /******************** volantis.dom.$ ********************************/
+  // 注：这里没有选择器，也没有forEach一次只处理一个dom，这里重新封装主题常用的dom方法，返回的是dom对象，对象包含了以下方法，同时保留dom的原生API
+  function volantisDom(ele) {
+    if (!ele) ele = document.createElement("div")
+    this.ele = ele;
+    // ==============================================================
+    this.ele.find = (c) => {
+      let q = this.ele.querySelector(c)
+      if (q)
+        return new volantisDom(q)
+    }
+    // ==============================================================
+    this.ele.hasClass = (c) => {
+      return this.ele.className.match(new RegExp('(\\s|^)' + c + '(\\s|$)'));
+    }
+    this.ele.addClass = (c) => {
+      this.ele.classList.add(c);
+      return this.ele
+    }
+    this.ele.removeClass = (c) => {
+      this.ele.classList.remove(c);
+      return this.ele
+    }
+    this.ele.toggleClass = (c) => {
+      if (this.ele.hasClass(c)) {
+        this.ele.removeClass(c)
+      } else {
+        this.ele.addClass(c)
+      }
+      return this.ele
+    }
+    // ==============================================================
+    // 参数 r 为 true 表示pjax切换页面时事件监听器将被移除，false不移除
+    this.ele.on = (c, f, r = 1) => {
+      this.ele.addEventListener(c, f, false)
+      if (r) {
+        volantis.EventListener.list.push(new volantisEventListener(c, f, this.ele))
+      }
+      return this.ele
+    }
+    this.ele.click = (f, r) => {
+      this.ele.on("click", f, r)
+      return this.ele
+    }
+    this.ele.scroll = (f, r) => {
+      this.ele.on("scroll", f, r)
+      return this.ele
+    }
+    // ==============================================================
+    this.ele.html = (c) => {
+      // if(c=== undefined){
+      //   return this.ele.innerHTML
+      // }else{
+      this.ele.innerHTML = c
+      return this.ele
+      // }
+    }
+    // ==============================================================
+    this.ele.hide = (c) => {
+      this.ele.style.display = "none"
+      return this.ele
+    }
+    this.ele.show = (c) => {
+      this.ele.style.display = "block"
+      return this.ele
+    }
+    // ==============================================================
+    return this.ele
+  }
+  volantis.dom.$ = (ele) => {
+    return !!ele ? new volantisDom(ele) : null;
+  }
+  /******************** RunItem ********************************/
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = ()=>{
+          volantis.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) =>{
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index,1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+  /******************** Pjax ********************************/
+  // /layout/_plugins/pjax/index.ejs
+  // volantis.pjax.send(callBack[,"callBackName"]) 传入pjax:send回调函数
+  // volantis.pjax.push(callBack[,"callBackName"]) 传入pjax:complete回调函数
+  // volantis.pjax.error(callBack[,"callBackName"]) 传入pjax:error回调函数
+  volantis.pjax = {};
+  volantis.pjax.method = {
+    complete: new RunItem(),
+    error: new RunItem(),
+    send: new RunItem(),
+  };
+  volantis.pjax = {
+    ...volantis.pjax,
+    push: volantis.pjax.method.complete.push,
+    error: volantis.pjax.method.error.push,
+    send: volantis.pjax.method.send.push,
+  };
+  /********************  Dark Mode  ********************************/
+  // /layout/_partial/scripts/darkmode.ejs
+  // volantis.dark.mode 当前模式 dark or light
+  // volantis.dark.toggle() 暗黑模式触发器
+  // volantis.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  volantis.dark = {};
+  volantis.dark.method = {
+    toggle: new RunItem(),
+  };
+  volantis.dark = {
+    ...volantis.dark,
+    push: volantis.dark.method.toggle.push,
+  };
+  /********************  Message  ********************************/
+  // VolantisApp.message
+  /********************  isMobile  ********************************/
+  // /source/js/app.js
+  // volantis.isMobile
+  // volantis.isMobileOld
+  /********************脚本动态加载函数********************************/
+  // volantis.js(src, cb)  cb 可以传入onload回调函数 或者 JSON对象 例如: volantis.js("src", ()=>{}) 或 volantis.js("src", {defer:true,onload:()=>{}})
+  // volantis.css(src)
+
+  // 返回Promise对象，如下方法同步加载资源，这利于处理文件资源之间的依赖关系，例如：APlayer 需要在 MetingJS 之前加载
+  // (async () => {
+  //     await volantis.js("...theme.plugins.aplayer.js.aplayer...")
+  //     await volantis.js("...theme.plugins.aplayer.js.meting...")
+  // })();
+
+  // 已经加入了setTimeout
+  volantis.js = (src, cb) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+  volantis.css = (src) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  }
+  /********************按需加载的插件********************************/
+  // volantis.import.jQuery().then(()=>{})
+  volantis.import = {
+    jQuery: () => {
+      if (typeof jQuery == "undefined") {
+        return volantis.js("/libs/jquery/dist/jquery.min.js")
+      } else {
+        return new Promise(resolve => {
+          resolve()
+        });
+      }
+    }
+  }
+  /********************** requestAnimationFrame ********************************/
+  // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+  // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+  volantis.requestAnimationFrame = (fn)=>{
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+    }
+    window.requestAnimationFrame(fn)
+  }
+  /************************ layoutHelper *****************************************/
+  volantis.layoutHelper = (helper, html, opt)=>{
+    opt = Object.assign({clean:false, pjax:true}, opt)
+    function myhelper(helper, html, clean) {
+      volantis.tempDiv = document.createElement("div");
+      volantis.tempDiv.innerHTML = html;
+      let layoutHelper = document.querySelector("#layoutHelper-"+helper)
+      if (layoutHelper) {
+        if (clean) {
+          layoutHelper.innerHTML = ""
+        }
+        layoutHelper.append(volantis.tempDiv);
+      }
+    }
+    myhelper(helper, html, opt.clean)
+    if (opt.pjax) {
+      volantis.pjax.push(()=>{
+        myhelper(helper, html, opt.clean)
+      },"layoutHelper-"+helper)
+    }
+  }
+  /****************************** 滚动事件处理 ****************************************/
+  volantis.scroll = {
+    engine: new RunItem(),
+    unengine: new RunItem(),
+  };
+  volantis.scroll = {
+    ...volantis.scroll,
+    push: volantis.scroll.engine.push,
+  };
+  // 滚动条距离顶部的距离
+  volantis.scroll.getScrollTop = () =>{
+    let scrollPos;
+    if (window.pageYOffset) {
+      scrollPos = window.pageYOffset;
+    } else if (document.compatMode && document.compatMode != 'BackCompat') {
+      scrollPos = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scrollPos = document.body.scrollTop;
+    }
+    return scrollPos;
+  }
+  // 使用 requestAnimationFrame 处理滚动事件
+  // `volantis.scroll.del` 中存储了一个数值, 该数值检测一定时间间隔内滚动条滚动的位移, 数值的检测频率是浏览器的刷新频率. 数值为正数时, 表示向下滚动. 数值为负数时, 表示向上滚动.
+  volantis.scroll.handleScrollEvents = () => {
+    volantis.scroll.lastScrollTop = volantis.scroll.getScrollTop()
+    function loop() {
+      const scrollTop = volantis.scroll.getScrollTop();
+      if (volantis.scroll.lastScrollTop !== scrollTop) {
+        volantis.scroll.del = scrollTop - volantis.scroll.lastScrollTop;
+        volantis.scroll.lastScrollTop = scrollTop;
+        // if (volantis.scroll.del > 0) {
+        //   console.log("向下滚动");
+        // } else {
+        //   console.log("向上滚动");
+        // }
+        volantis.scroll.engine.start();
+      }else{
+        volantis.scroll.unengine.start();
+      }
+      volantis.requestAnimationFrame(loop)
+    }
+    volantis.requestAnimationFrame(loop)
+  }
+  volantis.scroll.handleScrollEvents()
+  // 触发页面滚动至目标元素位置
+  volantis.scroll.to = (ele, option = {}) =>{
+    // 默认配置
+    opt = {
+      top: ele.getBoundingClientRect().top + document.documentElement.scrollTop,
+      behavior: "smooth"
+    }
+    // 定义配置
+    if ("top" in option) {
+      opt.top = option.top
+    }
+    if ("behavior" in option) {
+      opt.behavior = option.behavior
+    }
+    if ("addTop" in option) {
+      opt.top += option.addTop
+    }
+    if (!("observerDic" in option)) {
+      option.observerDic = 25
+    }
+    // 滚动
+    window.scrollTo(opt);
+    // 监视器
+    // 监视并矫正元素滚动到指定位置 
+    // 目前用于处理 toc 部分 lazyload 引起的 cls 导致的定位失败问题
+    if (option.observer) {
+      volantis.scroll.unengine.push(()=>{
+        let me = ele.getBoundingClientRect().top
+        if(!(me >= -option.observerDic && me <= option.observerDic)){
+          volantis.scroll.to(ele, option)
+        }else{
+          volantis.scroll.unengine.remove("unengineObserver")
+        }
+      },"unengineObserver")
+    }
+  }
+  /******************************************************************************/
+  /******************************************************************************/
+</script>
+  <!-- Custom Files head begin-->
+  
+  <!-- Custom Files head end-->
+</head>
+  <body itemscope itemtype="http://schema.org/WebPage">
+    <header itemscope itemtype="http://schema.org/WPHeader" id="l_header" class="l_header auto shadow blur show" style="opacity: 0">
+  <div class="container">
+  <div id="wrapper">
+    <div class="nav-sub">
+      <p class="title"></p>
+      <ul class="switcher nav-list-h m-phone" id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href="/" onclick="return false;" title="comment"></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href="/" onclick="return false;" title="toc"></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href="/">
+          
+          
+            <i class="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico"></i>
+          
+          
+            扬舲の博客
+          
+        </a>
+      
+
+			<div class="menu navigation">
+				<ul class="nav-list-h m-pc">
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+      
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search...">
+        </form>
+      </div>
+      
+
+			<ul class="switcher nav-list-h m-phone">
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href="/" onclick="return false;" title="search"></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href="/" onclick="return false;" title="menu"></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+
+      <!-- Custom Files header begin -->
+      
+      <!-- Custom Files header end -->
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+      <!-- see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs -->
+      <div id="none" class="cover-wrapper post dock" style="display: none;">
+        
+  <div id="parallax-window"></div>
+
+<div class="cover-body">
+  <div class="top">
+    
+    
+      <p class="title">扬舲の博客</p>
+    
+    
+  </div>
+  <div class="bottom">
+    <div class="menu navigation">
+      <div class="list-h">
+        
+          
+            <a href="/" active-action="action-home">
+              <i class="fas fa-book fa-fw"></i><p>博客</p>
+            </a>
+          
+            <a href="/categories/" active-action="action-categories">
+              <i class="fas fa-folder-open fa-fw"></i><p>分类</p>
+            </a>
+          
+            <a href="/tags/" active-action="action-tags">
+              <i class="fas fa-tags fa-fw"></i><p>标签</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://volantis.js.org/contributors/" active-action="action-https:volantisjsorgcontributors">
+              <i class="fas fa-handshake fa-fw"></i><p>鸣谢</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+      </div>
+    
+  
+</div>
+
+      <div id="safearea">
+        <div class="body-wrapper">
+          
+<div id="l_main" class>
+  <article itemscope itemtype="http://schema.org/Article" class="article post white-box reveal md shadow article-type-post" id="post" itemprop="blogPost">
+  <link itemprop="mainEntityOfPage" href="https://kobingogo.github.io/minimal-agent-workflow/">
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬舲の博客">
+  </span>
+  <span hidden itemprop="post" itemscope itemtype="http://schema.org/Post">
+    <meta itemprop="name" content="扬舲の博客">
+    <meta itemprop="description" content="前端技术博客">
+  </span>
+  
+
+
+  
+    <span hidden>
+      <meta itemprop="image" content="/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+    </span>
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title" itemprop="name headline">
+        一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪
+      </h1>
+      <div class="new-meta-box">
+        
+          
+            
+<div class="new-meta-item author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <a itemprop="url" class="author" target="_blank" href="https://github.com/kobingogo" rel="external nofollow noopener noreferrer">
+    <img itemprop="image" src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+    <p itemprop="name">扬舲</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item category">
+    <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+    <a class="category-link" href="/categories/ai/">AI</a>
+    
+      <span hidden itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/ai/" itemprop="url"><span itemprop="name">AI</span></a>
+      </span>
+    
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2026-08-26T20:30:00+00:00">
+  <a class="notlink">
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2026年8月26日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class="notlink">
+      
+      <div id="lc-pv" data-title="一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪" data-path="/minimal-agent-workflow/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+        <!-- Custom Files topMeta begin-->
+        
+        <!-- Custom Files topMeta end-->
+      </div>
+    
+  </div>
+
+
+  <div id="layoutHelper-page-plugins"></div>
+  <div id="post-body" itemprop="articleBody">
+    <blockquote>
+<p>「一个人带一群 agent」系列 · 第 4 篇。四篇各自独立，可以单独读。</p>
+</blockquote>
+<p>7 月 2 日，Christoph Nakazawa 在 X 上发了一句话，大意是：大家都在搭特别复杂的 agent 配置，可很多人拿不出什么成果；Codex 加 Codiff 加人工验证，就是他现在整个开发周期需要的全部。</p>
+<p>Christoph 是 Jest 的作者，现在在 VoidZero 做 Vite+ 这一摊。一个月前，他刚在博客《Modern Engineering Values》里晒过数字：过去 30 天推了 770 个 commit，每天平均改动约 1.5 万行代码；一年前同期是 328 个 commit，每天约 5000 行。</p>
+<p>他自己写过，手写代码最好的一天大概 1200 行，一周也就一次。</p>
+<p>对，一天 1.5 万行，靠的是一个 agent 加一个 diff 工具。</p>
+<p>说实话，看到这条我是有点心虚的。</p>
+<p>先交代一下我是谁。我叫 kobin，X 上叫 <a href="https://x.com/KobinFlow" target="_blank" rel="external nofollow noopener noreferrer">@KobinFlow</a>，浙大计算机出身，在互联网干了十年左右。现在一个人做产品，主力是「点染 Dianran」，一个节点式的 AI 创作画布；另一个是「Mood3D」，一个 Web3D 展品库。日常我在 Claude Code、Codex、Cursor、Grok Build、Grok Bot、OpenCode、WorkBuddy 之间切来切去，所以他那句话，我是对着自己的账读的。</p>
+<p>心虚在哪？我侧栏里挂着 30 个 bot。有管调度的，有扫选题的，有写帖子草稿的，有专门验收的，还有三个分别开 Codex、Grok Build、Antigravity 的「执行工」。Christoph 说一个 agent 就够，我这边是一整支舰队。</p>
+<p>所以这篇我不光想看懂他，也想拿他的话，回头对一下我自己的账。</p>
+<h2 id="凭什么？"><a href="#凭什么？" class="headerlink" title="凭什么？"></a>凭什么？</h2><div class="story post-story"><p>我第一反应是不服气。</p>
+<p>这半年整个行业在干什么？Claude Code 上了 dynamic workflows，一个任务能扇出几十上百个子 agent；<code>/goal</code>、<code>/loop</code>、<code>/schedule</code> 一个接一个；Cursor 9 月推出 Projects，有一个专门不写代码、只负责派活的协调者 agent。Boris Cherny 说他已经不写 prompt 了，他写循环。</p>
+<p>人家在搭流水线，你说一把螺丝刀就够了？</p>
+<p>更让人犯嘀咕的是他那半句「很多人拿不出什么成果」。要是真这样，问题出在哪：是配置没用，还是他手里有别人没有的东西？</p>
+<p>7 月 31 日他还补了一刀，说现在搭 agent 的人比用 agent 的人还多。</p>
+</div><h2 id="先看他手里到底有什么"><a href="#先看他手里到底有什么" class="headerlink" title="先看他手里到底有什么"></a>先看他手里到底有什么</h2><div class="story post-story"><p>我把他这几个月的博客和推文翻了一遍，拼出来的工作流其实很朴素。</p>
+<p>开场白几乎固定：我要做 X，上下文去 Y 和 Z 找，先给方案，有问题先问我。方案聊到满意再让它动手。修 bug 一律先让它写一个会失败的测试。改完用他自己做的 Codiff 让 Codex 生成一份改动走读，他看走读、看测试，不关键的地方不逐行读。</p>
+<p>模型这块，他用 GPT-5.5，思考强度选 high。他的说法是低档质量不够，xhigh 太慢，还容易把事情搞复杂。</p>
+<p>还有两条推文挺颠覆的。7 月 11 日，他说自己快 6 个月没花心思管理上下文了，Codex 自己会处理。9 月 11 日，他说从 GPT-5.3 左右开始，就基本没再用过 skills。</p>
+<p>他同时推进 3 到 6 个项目，一个项目一个终端窗口。他说过，瓶颈通常在讨论和审查代码上；而在同一个项目里开好几个 agent，反而会变慢。</p>
+<p>有意思的是，8 月 29 日他又发了一条：找一个 LLM 之前的老代码库，那种一直担心性能、内存和 bug 却没空处理的，然后放出 10 个并发 Codex 会话，「是巨大的乐趣」。我的理解是，老代码库里那些问题彼此正交，互不打架，所以能并行；新功能要他持续拍板，只能串行。这是我的推断，他本人没这么解释。</p>
+<p>不碰上下文，不用 skills，不搭循环。这几乎是把这半年最热的几样东西全跳过了。</p>
+</div><h2 id="反转一：极简的只是-agent-那一层"><a href="#反转一：极简的只是-agent-那一层" class="headerlink" title="反转一：极简的只是 agent 那一层"></a>反转一：极简的只是 agent 那一层</h2><div class="story post-story"><p>可是再往下翻，画风就变了。</p>
+<p>他的价值观里，有一条叫 Strict Guardrails &amp; Fast Feedback Loops，严格护栏加快速反馈。他说跟 agent 协作，就像在大公司里不停往代码库塞没有背景的新人；lint、测试和快速验证给得越多，大家跑得越快。工具要只处理改动的文件，不能随代码量变慢。护栏和反馈的速度，决定了 agent 是 1 分钟还是 60 分钟干完活。</p>
+<p>8 月他发布了自己的 oxlint 配置 v2，原话是打开了很多「能让 agent 守规矩」的规则。</p>
+<p>还有一条叫 Own your Stack，核心依赖自己掌控。他说以前应用里大部分是第三方依赖，因为自己写太慢太贵；有了 agent，只要你能现实地维护，就没理由把产品核心外包出去。8 月底他把一个 20 年的 PHP 代码库交给 Codex 用现代 JS 重建，说几乎一次成功。</p>
+<p>剥开来看，他一点都不极简。</p>
+<p>他只是把复杂度放在了代码库里，而不是放在 agent 配置里。<strong>护栏厚，配置薄。</strong>这才是那句「一个 agent 就够」的真正前提。</p>
+<p>他价值观里另外两条，也是同一个思路。一条叫 Strong Ownership：agent 放大了所有权，懂产品的人执行得更快，缺上下文的人会制造更多噪音，所以人和人之间对齐一次的代价越来越高，他预测最高效的团队会很小，两三个人，边界清楚。另一条叫 Taste：</p>
+<blockquote>
+<p>I have a low tolerance for bullshit, and with agents, everyone can generate a lot of bullshit all day long. Please just stop.</p>
+</blockquote>
+<p>翻成中文大概是：我对废话的忍耐度本来就低，有了 agent，谁都能一整天批量生产废话，求你们别这样了。他说品味不只是把产品做好，更是先判断一件事值不值得花时间。</p>
+<p>一个管人，一个管事，都在给 agent 的产出设门槛。</p>
+</div><h2 id="反转二：连他也会撞墙"><a href="#反转二：连他也会撞墙" class="headerlink" title="反转二：连他也会撞墙"></a>反转二：连他也会撞墙</h2><div class="story post-story"><p>这还没完。</p>
+<p>9 月 6 日，他的开源赞助额度到期，换了商业账号。结果两次重置烧掉，周额度只剩 60%，他在推上问：为什么商业账号不能买重置？</p>
+<p>还有一件事，他主力用的 GPT-5.5，OpenAI 已经公告 10 月 14 日从 ChatGPT 和 Codex 下线（API 不受影响）。这几个月 GPT-5.6、GPT-6 Astra、GPT-6 Sol 和 Luna、GPT-6.1 Sol 接连发布。</p>
+<p>更狠的是一份行业数据。Jellyfish 今年上半年的报告里，一家典型公司的中位数用户，月花费十个月涨了 16 倍。连 Christoph 这样的重度用户都会撞上周额度，普通团队的账单只会更难看。</p>
+<p>你会发现，他晒出来的那套工具组合，保质期也就几个月，用起来也越来越贵。</p>
+<p>但他的价值观没跟着过期。</p>
+</div><h2 id="说到这儿，其实可以散了"><a href="#说到这儿，其实可以散了" class="headerlink" title="说到这儿，其实可以散了"></a>说到这儿，其实可以散了</h2><div class="story post-story"><p>说实话，这件事看到这里也就够了：Jest 作者用得很简单，大家别卷配置。</p>
+<p>但有一个词，我翻来覆去还是想多说两句。</p>
+<p>就是他价值观清单最后那一条，<strong>Option Value</strong>，选择权价值。它排在最后，篇幅也最短，我却觉得它是整篇的地基。</p>
+<p>这个说法来自他更早的《Principles of Developer Experience》：对系统的任何改动，都应该为将来的改进和大变化解锁更多选择。到了 AI 语境，他补了一句很重的话：AI 从根本上缩短了大规模改动的时间，可如果你凭感觉把自己逼进了死角，可能很难、甚至根本出不来。</p>
+<p>因为我自己是一个人做产品的，这句话戳得特别准。</p>
+<p>先说一个看似矛盾的地方。Jellyfish 那份报告还发现，代码集中或适度集中的仓库，AI 带来的吞吐提升约 4 倍；越分散越差，最分散的一档只有 0.9 倍，用了 AI 反而略慢。</p>
+<p>这和「小团队各管各的仓库」听着相反。我的看法是两者说的不是一回事：团队之间边界要清楚，一个系统内部别拆得太碎，agent 需要在一个地方找到所有相关代码和一套统一的约定。说到底，这也是在保留选择权：拆得太碎，以后想做一次全局改动，门就关上了。</p>
+<p>agent 让重写变得便宜，人就容易冒出一个念头：反正以后能重写。然后心安理得地接受一个只能往一个方向走的设计。可「能重写」是有前提的。Bun 能在 11 天里从 Zig 移植到 Rust，靠的是一套现成的测试套件，那套测试，就是选择权本身。</p>
+</div><h2 id="拿我自己的舰队对一下账"><a href="#拿我自己的舰队对一下账" class="headerlink" title="拿我自己的舰队对一下账"></a>拿我自己的舰队对一下账</h2><div class="story post-story"><p>道理看完了，轮到我自己。我把这支舰队的分工翻出来，一条条对着 Christoph 那几句话看。</p>
+<p>先说分工，都写在每个 bot 的设定里。总调度是幕僚长，只做三件事：拆任务、一对一派给专线、追进度，只把需要我判断的事升级上来，自己不写长文、不改代码、不发帖。内容这条线，五个选题 bot 加一个 X雷达 扫信号，统一交到素材官那里，素材官是升格成选题卡的唯一出口；X写手只收升格过的卡，而且只交草稿。产品这条线，产品工程写代码和部署，Eval验收 独立验，增长实验 先定成功标准。</p>
+<p>执行层是三个「工」：Codex工 扛中大型、多文件、要严谨的活；Grok Build工 扛搜 X 数据和中小编程；Antigravity工 扛单文件小活和文案初稿。每个 bot 的设定里都有一段「反职责」，比如不做舰队调度、不代发、没任务时保持安静。</p>
+<p>看着挺像回事，对吧？</p>
+<p>可账一翻就不好看了。9 月 16 日，X雷达 有一个盯直播的定时任务，半小时跑一次，跑成功 5 次之后，连续 13 次撞上额度上限报错。10 月 8 日，又有一条定时任务因为额度不够直接失败。原来我把 6 个 bot 拉在一个叫「产品×X舰队」的群里协作，10 月 10 日解散了，改成只一对一派活。</p>
+<p>那天盘点的时候，还翻出一个早就下线、一直没删的「选题·验收」，和两个描述是空的「New Bot」。按 10 月 6 日的本地快照，总调度一个 bot 的历史数据就有约 349 MB，远远甩开其他所有 bot。所有活都从它手里过，它的上下文最先被撑胖。</p>
+<p>于是同一天，总调度的交接文件里多了一套省额度规矩：没变化不汇报、不叫醒别的 bot；长资料存文件，只回路径；批量的活先试一两个样本；同一个操作最多重试 2 次；能不跨 bot 就不跨。</p>
+<p>你品，你细品。Christoph 说「搭 agent 的人比用 agent 的人还多」，我自己就占了一个名额。我把这类东西叫<strong>配置债</strong>：每多一个 bot、一个群、一条定时任务，就多一份额度、多一层转手、多一个出错时要排查的地方，它不会自己消失。</p>
+<p>点染改版那次更直接。我一开始让 Grok Build 从头包到尾，做到一半额度用完，报 HTTP 402；换 Codex，登录凭证被吊销，报 401；最后是 Grok Bot 的执行子代理接手，把剩下的活收了尾。进度文件里分得很清楚：前 6 个提交是 Grok Build 写的，后面的全是接手者写的，Codex 那一轮一行代码都没写成。舰队再大，额度和登录这种底层一断，那条线就停了。</p>
+<p>但这次改版的质量没塌。我回头找原因，发现功劳不在舰队，在仓库里那份 AGENTS.md。</p>
+<p>有意思的是，这份文件不是我写的，是从上游 infinite-canvas 继承下来的。里面有几条特别「硬」：新增或调整超时、重试次数、大小限制、并发上限之前，必须先向用户说明并取得确认；本地验收时不许关掉用户已经打开的浏览器窗口；同一个问题反复出现，就把注意事项补进这份文件。</p>
+<p>后来 Codex 接手 phase6，它的进度文件里白纸黑字写着「未新增超时/重试/并发阈值」「未关闭用户浏览器/标签页」，IndexedDB 里那个叫 <code>infinite-canvas</code> 的存储名也原样保留。phase5 那一轮的进度文件里也有一句「存储名未改（diff 自查），LICENSE 两行版权保留」。执行者前后换了三拨，规矩一条没丢。</p>
+<p>因为规矩在仓库里，不在某个 bot 的设定里。</p>
+<p>这就是我版本的「护栏厚，配置薄」。bot 的设定会被换掉，会过期，会因为额度停摆；仓库里的规则、测试、lint，谁来干活都得过一遍。</p>
+<p>回头再看哪些 bot 值得留，我的标准大概变成了两条：要么手里有独立判断权，比如素材官的升格、Eval验收 的「过不过」；要么能分摊不同家的额度，比如那三个执行工。只负责把话从一个 bot 转给另一个 bot 的，基本就是配置债。按这两条筛下来具体该砍谁，我还没拍板。</p>
+<p>还有一处跟 Christoph 对得上。他说瓶颈在讨论和审查代码，我这边也一样：点染之前有一轮改版，agent 几天就把三个 PR 写完、部署到预览站，然后就挂在那里，等我验收、等我拍 7 个设计决定。舰队再快，最后排队的那一环还是我。</p>
+</div><h2 id="反方意见：一个-agent-也不总是够"><a href="#反方意见：一个-agent-也不总是够" class="headerlink" title="反方意见：一个 agent 也不总是够"></a>反方意见：一个 agent 也不总是够</h2><div class="story post-story"><p>说到这儿，我得替多 agent 说两句公道话，不然这篇就成了一边倒。</p>
+<p>Anthropic 去年 6 月讲过他们的 Research 功能：Opus 4 当主 agent、Sonnet 4 当子 agent 的多 agent 系统，在他们内部的研究类评测上比单个 Opus 4 高了 90.2%。他们还发现，在 BrowseComp 这个评测上，光是 token 用量一项就解释了 80% 的表现差异（<a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="external nofollow noopener noreferrer">Anthropic，2025-06</a>）。</p>
+<p>翻译一下：多 agent 很多时候赢在能烧更多 token。</p>
+<p>代价也写在同一篇里：agent 平均比普通聊天多用约 4 倍 token，多 agent 系统约 15 倍。他们还专门说了一句，大多数编程任务里真正能并行的部分，比研究类任务少。</p>
+<p>他们连「派几个」都写成了规则：简单的事实查找，1 个 agent、3 到 10 次工具调用就够；直接对比类的问题，2 到 4 个子 agent；只有复杂研究才上 10 个以上，而且要分清各自的职责。早期版本犯过的错，就是为一个简单问题拉起 50 个子 agent。</p>
+<p>这条我觉得是整件事的分界线。扇出去搜信息、扫选题、做调研，多 agent 值；写同一个代码库里的新功能，单线程更稳。Christoph 对老代码库开 10 个并发会话，在同一个项目里做新功能却嫌多开会变慢，其实也落在这条线上。</p>
+<p>另一边，Cognition 的 Walden Yan 去年 6 月写过一篇《Don&#39;t Build Multi-Agents》，核心两条：上下文要共享完整的执行轨迹，不能只传几句话；每个动作都带着隐含决定，决定一冲突结果就坏（<a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank" rel="external nofollow noopener noreferrer">Cognition，2025-06</a>）。我群聊解散之前，几个 bot 互相传话、各自理解，就是这种状况。</p>
+<p>Anthropic 那篇附录里还有一条，我是后来才看到的：子 agent 的产出直接写进文件系统，只把一个轻量引用传回主 agent，免得层层转述走样。这跟我那条「长资料存文件，只回路径」几乎是一回事，算是殊途同归。</p>
+<p>「护栏厚」这条也有边界。METR 2025 年那个随机对照实验里，资深开发者在自己熟悉的高质量开源仓库里用 AI，反而慢了 19%。METR 的一个解释是，标准很高、隐性要求很多的仓库（文档、测试覆盖、格式规范），AI 相对吃亏（<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="external nofollow noopener noreferrer">METR，2025-07</a>）。今年 2 月的后续估计已经转成提速，但置信区间跨过了零，METR 自己也说证据很弱（<a href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="external nofollow noopener noreferrer">METR，2026-02</a>）。</p>
+<p>我的理解是，护栏得是写下来、机器能查的。藏在老员工脑子里的规矩越多，agent 越吃亏。</p>
+<p>单 agent 也有它的天花板。Walden Yan 自己也承认，任务大到上下文装不下的时候，单线程会撑爆，得另想办法压缩历史。所以「一个就够」更像是默认值，不是铁律。</p>
+<p>最后提醒一句，上面这几篇都是 2025 年的，模型已经换了好几代。Christoph 本人也只是一个样本，他是 Jest 的作者，手边还有自己写的 Codiff。他那一天 1.5 万行，我当参照，不当目标。</p>
+</div><h2 id="拿走就能用：薄配置、厚护栏的三件套"><a href="#拿走就能用：薄配置、厚护栏的三件套" class="headerlink" title="拿走就能用：薄配置、厚护栏的三件套"></a>拿走就能用：薄配置、厚护栏的三件套</h2><div class="story post-story"><p>乱糟糟地说了不少，最后给几样能直接抄的。都是从我的仓库和 bot 设定里抽出来、去掉项目细节的版本。</p>
+<p>第一样，仓库里的 AGENTS.md 护栏片段。思路是把「谁来干活都得遵守」的规矩写在这里，不写在某个 bot 的设定里：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## 护栏（任何 agent、任何会话都适用）</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 先读现有代码再动手，沿用已有结构；不要顺手重构，不要改无关文件。</span><br><span class="line"><span class="bullet">-</span> 改变实际行为的边界值（超时、重试次数、大小限制、并发上限）不许静默加入；</span><br><span class="line">  先说明用在哪、默认值多少、失败后怎么处理，等人确认。</span><br><span class="line"><span class="bullet">-</span> 存储名、数据结构的核心字段不改，只允许追加可选字段。</span><br><span class="line"><span class="bullet">-</span> 本地或浏览器验收用独立测试页面，不关闭用户已打开的窗口和标签页。</span><br><span class="line"><span class="bullet">-</span> 每次完成前跑：typecheck、build、相关测试；把命令和结果写进 PROGRESS.md。</span><br><span class="line"><span class="bullet">-</span> 同一个问题出现第二次，或人提醒了第二次，就把它写成一条明确规则补进本文件，</span><br><span class="line">  放进最相关的章节；能写成 lint 或测试的，优先写成 lint 或测试。</span><br><span class="line"><span class="bullet">-</span> 合并进 main、force push、改计费和删数据之前，先说明影响并取得明确同意。</span><br></pre></td></tr></table></figure>
+
+<p>最后那条「出现第二次就写进来」最关键。它让这份文件自己长厚，而不是靠我每次在对话里叮嘱。</p>
+<p>第二样，给 bot 做体检的清单。这是我那次盘点之后给自己列的，以后每加一个 bot、每建一条定时任务，先过一遍：</p>
+<ul>
+<li><input disabled type="checkbox"> 一句话说得清它只干哪一件事吗？说不清就别建。</li>
+<li><input disabled type="checkbox"> 有没有写「反职责」：哪些活明确不接、该转给谁？</li>
+<li><input disabled type="checkbox"> 它的产出谁来验？验的那位是不是另一个上下文？</li>
+<li><input disabled type="checkbox"> 交付格式固定吗？结论在前、证据在后、产物给绝对路径。</li>
+<li><input disabled type="checkbox"> 没有新东西时它会不会闭嘴？没变化不汇报、不叫醒别的 bot。</li>
+<li><input disabled type="checkbox"> 同一操作最多重试几次？撞上额度上限之后停在哪里、通知谁？</li>
+<li><input disabled type="checkbox"> 它能不能被一条 lint、一个脚本或者另一个现有 bot 替代？能，就别建。</li>
+</ul>
+<p>最后一条最狠，也最省钱。</p>
+<p>那到底什么时候值得拆成多个 agent？我现在的判断就三问，三个都是「是」才拆：</p>
+<ul>
+<li>这件事能切成互相不依赖的几块吗？像扫五个方向的选题、查十个竞品的文档，可以；改同一个功能的前后端，不行。</li>
+<li>每一块的产出能单独验吗？验不了，拆出去只会多一层转述。</li>
+<li>这件事值那几倍的 token 吗？一个只看一次的小调研，单线程慢点也认了。</li>
+</ul>
+<p>第三样，一对一派活的模板。群聊解散之后只剩一对一派活，我照着那套省额度规矩把派活消息整理成了这个格式，长资料存文件只给路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">【派活｜&lt;任务名&gt;】</span><br><span class="line">给：&lt;一个 bot，只写一个&gt;</span><br><span class="line">要什么：&lt;一句话结果，能被检查&gt;</span><br><span class="line">上下文：&lt;文件绝对路径；不要把长资料贴进消息&gt;</span><br><span class="line">完成标准：&lt;1–3 条可检查的句子&gt;</span><br><span class="line">不许做：&lt;发帖 / 花钱 / 删数据 / 合并 main / 改阈值&gt;</span><br><span class="line">预算：同一操作最多重试 2 次；额度或登录失败立即停，回报卡点和已试过的路径</span><br><span class="line">交付：结论一句 → 证据（命令、结果、产物路径）→ 没验证到的部分</span><br></pre></td></tr></table></figure>
+
+<p>「预算」那一行对着的就是 9 月那 13 次额度报错。那时候定时任务撞了额度，到点还照样接着跑；现在的规矩是同一件事最多重试两次就停，回来说清楚卡在哪、试过什么。</p>
+<p>这个模板里没有一个字在描述 bot 有多聪明，全是边界和证据。我越来越觉得，配置该薄到这个程度。</p>
+</div><h2 id="我从他身上抄什么"><a href="#我从他身上抄什么" class="headerlink" title="我从他身上抄什么"></a>我从他身上抄什么</h2><div class="story post-story"><p>把这几层叠起来，我的结论是这样的。</p>
+<p>我不抄他的工具清单。他用 Codex 加 Codiff，我在用 Codex、Grok Build 和 Claude 系的 agent，下个季度大概率又会变。</p>
+<p>我抄他的分配方式：复杂度放进代码库，放进 lint、测试、类型和自己能掌控的依赖里；agent 那一层能薄就薄。</p>
+<p>我还抄他对瓶颈的判断。他在文末写的是：以前卡在写代码，现在卡在做判断。他也自嘲过，有时候觉得自己只是在把上下文从一个 agent 会话搬到 GitHub Issue、搬到 Discord，再搬回来。</p>
+<p>搬运这一环，工具其实在接手。Codiff 7 月的 1.9 版加了把走读和计划分享到网上、多人评论的功能；Claude Code 6 月推出了 artifacts（Team 和 Enterprise 的 beta），能把会话里的产出发布成组织内可分享、会自动更新的页面，比如 PR 走读和事故时间线。搬运能自动化，判断不行。</p>
+<p>他对管理的看法也落在这里：管理者不能只管结果和方向，得保留领域专长，能自己动手改项目代码。他认为 Tech Lead Manager 这种角色，最适合 agent 时代的大多数管理者。</p>
+<p>这一点放在一人公司里只会更明显。我没有同事分担判断，每条线做不做、做成什么样、能不能上线，最后都落到我一个人头上。所以我给自己定的规矩是，同时推进几条线，以我能认真验收的数量为上限，而不是以 agent 能开几个为上限。</p>
+<p>他在原文里还说过一句，我想原样留在这里：</p>
+<blockquote>
+<p>I was bottlenecked on writing code, now I&#39;m bottlenecked on exercising judgement.</p>
+</blockquote>
+<p>工具会一直换。今天的 GPT-5.5，下周就要下线了。</p>
+<p>但护栏、选择权、判断，这三样东西不会过期。我打算把力气花在这上面，也欢迎你一起。</p>
+</div><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><div class="story post-story"><ul>
+<li>Christoph Nakazawa《Modern Engineering Values》（2026-06-03 首发，09-30 更新）：<a href="https://cpojer.net/posts/modern-engineering-values" target="_blank" rel="external nofollow noopener noreferrer">https://cpojer.net/posts/modern-engineering-values</a></li>
+<li>Christoph Nakazawa 推文：「Codex + Codiff + manual verification」（07-02）<a href="https://x.com/cnakazawa/status/2072524619542925339" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2072524619542925339</a> ；上下文管理（07-11）<a href="https://x.com/cnakazawa/status/2075893958476202299" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2075893958476202299</a> ；搭 agent 的人比用的人多（07-31）<a href="https://x.com/cnakazawa/status/2083078362168176958" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2083078362168176958</a> ；oxlint 配置 v2 <a href="https://x.com/cnakazawa/status/2093121342073864567" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2093121342073864567</a> ；PHP 代码库重建 <a href="https://x.com/cnakazawa/status/2093735451123446031" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2093735451123446031</a> ；商业账号额度（09-06）<a href="https://x.com/cnakazawa/status/2096488677287588014" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2096488677287588014</a> ；不再用 skills（09-11）<a href="https://x.com/cnakazawa/status/2098542278914748571" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2098542278914748571</a></li>
+<li>ChatGPT &amp; Codex 更新日志（GPT-5.5 下线公告、GPT-6 系列）：<a href="https://learn.chatgpt.com/docs/changelog" target="_blank" rel="external nofollow noopener noreferrer">https://learn.chatgpt.com/docs/changelog</a></li>
+<li>GPT-6 Astra 发布：<a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="external nofollow noopener noreferrer">https://openai.com/index/gpt-6-astra/</a></li>
+<li>Addy Osmani《Loop Engineering》（引 Boris Cherny）：<a href="https://addyosmani.com/blog/loop-engineering/" target="_blank" rel="external nofollow noopener noreferrer">https://addyosmani.com/blog/loop-engineering/</a></li>
+<li>Anthropic《Introducing dynamic workflows in Claude Code》（Bun 移植案例）：<a href="https://claude.com/blog/introducing-dynamic-workflows-in-claude-code" target="_blank" rel="external nofollow noopener noreferrer">https://claude.com/blog/introducing-dynamic-workflows-in-claude-code</a></li>
+<li>Cursor 更新日志（Projects）：<a href="https://cursor.com/changelog" target="_blank" rel="external nofollow noopener noreferrer">https://cursor.com/changelog</a></li>
+<li>Christoph Nakazawa 推文：10 个并发 Codex 会话（08-29）<a href="https://x.com/cnakazawa/status/2093577084383924724" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2093577084383924724</a> ；Codiff 1.9（07）<a href="https://x.com/cnakazawa/status/2077765948510281732" target="_blank" rel="external nofollow noopener noreferrer">https://x.com/cnakazawa/status/2077765948510281732</a></li>
+<li>Claude Code artifacts：<a href="https://claude.com/blog/artifacts-in-claude-code" target="_blank" rel="external nofollow noopener noreferrer">https://claude.com/blog/artifacts-in-claude-code</a></li>
+<li>Jellyfish《The State of AI in Software Engineering H1 2026》：<a href="https://jellyfish.co/state-of-ai-software-engineering/" target="_blank" rel="external nofollow noopener noreferrer">https://jellyfish.co/state-of-ai-software-engineering/</a></li>
+<li>Anthropic《How we built our multi-agent research system》（2025-06-13）：<a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="external nofollow noopener noreferrer">https://www.anthropic.com/engineering/multi-agent-research-system</a></li>
+<li>Walden Yan（Cognition）《Don&#39;t Build Multi-Agents》（2025-06-12）：<a href="https://cognition.ai/blog/dont-build-multi-agents" target="_blank" rel="external nofollow noopener noreferrer">https://cognition.ai/blog/dont-build-multi-agents</a></li>
+<li>METR《Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity》（2025-07）：<a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="external nofollow noopener noreferrer">https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/</a></li>
+<li>METR《We are Changing our Developer Productivity Experiment Design》（2026-02）：<a href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="external nofollow noopener noreferrer">https://metr.org/blog/2026-02-24-uplift-update/</a></li>
+<li>点染 Dianran 上游项目 infinite-canvas：<a href="https://github.com/basketikun/infinite-canvas" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/basketikun/infinite-canvas</a></li>
+</ul>
+
+</div>
+  </div>
+  
+  
+    
+    <div class="footer">
+      
+      
+      
+        <div class="copyright">
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href="https://kobingogo.github.io/minimal-agent-workflow/">https://kobingogo.github.io/minimal-agent-workflow/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class="article-meta" id="bottom">
+    <div class="new-meta-box">
+      
+        
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-10-10T14:36:38+00:00">
+  <a class="notlink">
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>本页文档最后更新于：2026年10月10日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ai/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>AI</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/agent/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Agent</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ai%E7%BC%96%E7%A8%8B/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>AI编程</p></a></div>
+  <span hidden itemprop="keywords">AI Agent AI编程</span>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title rel="external nofollow noopener noreferrer" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://kobingogo.github.io/minimal-agent-workflow/&title=一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪 - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/qq.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qq.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title rel="external nofollow noopener noreferrer" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://kobingogo.github.io/minimal-agent-workflow/&title=一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪 - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/qzone.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qzone.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title rel="external nofollow noopener noreferrer" target="_blank" href="http://service.weibo.com/share/share.php?url=https://kobingogo.github.io/minimal-agent-workflow/&title=一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪 - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/weibo.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/weibo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+    <!-- Custom Files bottomMeta begin -->
+    
+    <!-- Custom Files bottomMeta end -->
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class="prev" href="/applied-ai-doesnt-work/">
+          <p class="title"><i class="fas fa-chevron-left" aria-hidden="true"></i>和 300 多位高管聊完，他说企业 AI 大多只是让烂流程跑得更快</p>
+          <p class="content">
+作者：jin kobin（@KobinFlow）本文为对原文的摘译、点评与改写。原文：vas（@vasuman）《Applied AI Doesn&#39;t Work》，https://x....</p>
+        </a>
+      
+      
+        <a class="next" href="/where-agent-rules-live/">
+          <p class="title">一条规矩该放在哪：我给 agent 立规矩的五个位置<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class="content">
+「一个人带一群 agent」系列 · 第 3 篇。四篇各自独立，可以单独读。
+
+开讲之前，先说两句我是谁。
+我叫 kobin，X 上是 @KobinFlow。浙大计算机毕业，在互联网行业待了十...</p>
+        </a>
+      
+    </div>
+  
+  <!-- Custom Files postEnd begin-->
+  
+  <!-- Custom Files postEnd end-->
+</article>
+
+
+  
+
+  
+  <article class="post white-box reveal shadow" id="comments">
+    <span hidden>
+      <meta itemprop="discussionUrl" content="/minimal-agent-workflow/index.html#comments">
+    </span>
+    <p ct><i class="fas fa-comments"></i> 评论</p>
+    
+    
+    <div id="layoutHelper-comments"></div>
+
+  </article>
+  
+
+
+
+
+
+</div>
+<aside id="l_side" itemscope itemtype="http://schema.org/WPSideBar">
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile pjax" id="toc-div">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class="name">本文目录</span>
+    
+  </header>
+
+
+    <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%AD%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">凭什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E7%9C%8B%E4%BB%96%E6%89%8B%E9%87%8C%E5%88%B0%E5%BA%95%E6%9C%89%E4%BB%80%E4%B9%88"><span class="toc-text">先看他手里到底有什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E8%BD%AC%E4%B8%80%EF%BC%9A%E6%9E%81%E7%AE%80%E7%9A%84%E5%8F%AA%E6%98%AF-agent-%E9%82%A3%E4%B8%80%E5%B1%82"><span class="toc-text">反转一：极简的只是 agent 那一层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E8%BD%AC%E4%BA%8C%EF%BC%9A%E8%BF%9E%E4%BB%96%E4%B9%9F%E4%BC%9A%E6%92%9E%E5%A2%99"><span class="toc-text">反转二：连他也会撞墙</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E5%88%B0%E8%BF%99%E5%84%BF%EF%BC%8C%E5%85%B6%E5%AE%9E%E5%8F%AF%E4%BB%A5%E6%95%A3%E4%BA%86"><span class="toc-text">说到这儿，其实可以散了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E8%88%B0%E9%98%9F%E5%AF%B9%E4%B8%80%E4%B8%8B%E8%B4%A6"><span class="toc-text">拿我自己的舰队对一下账</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%96%B9%E6%84%8F%E8%A7%81%EF%BC%9A%E4%B8%80%E4%B8%AA-agent-%E4%B9%9F%E4%B8%8D%E6%80%BB%E6%98%AF%E5%A4%9F"><span class="toc-text">反方意见：一个 agent 也不总是够</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E8%B5%B0%E5%B0%B1%E8%83%BD%E7%94%A8%EF%BC%9A%E8%96%84%E9%85%8D%E7%BD%AE%E3%80%81%E5%8E%9A%E6%8A%A4%E6%A0%8F%E7%9A%84%E4%B8%89%E4%BB%B6%E5%A5%97"><span class="toc-text">拿走就能用：薄配置、厚护栏的三件套</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E4%BB%8E%E4%BB%96%E8%BA%AB%E4%B8%8A%E6%8A%84%E4%BB%80%E4%B9%88"><span class="toc-text">我从他身上抄什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </section>
+
+  
+
+
+<!-- 没有 pjax 占位会报错 万恶的 pjax -->
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+
+  <!-- Custom Files side begin -->
+  
+  <!-- Custom Files side end -->
+</aside>
+
+
+
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<pjax>
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  pdata.commentConfig={};
+  //  see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs
+  
+    // header
+    var l_header=document.getElementById("l_header");
+    
+    l_header.classList.add("show");
+    
+    
+      // cover
+      var cover_wrapper=document.querySelector('#l_cover .cover-wrapper');
+      var scroll_down=document.getElementById('scroll-down');
+      cover_wrapper.id="none";
+      cover_wrapper.style.display="none";
+      scroll_down.style.display="none";
+    
+  
+</script>
+</pjax>
+        </div>
+        
+  
+  <footer class="footer clearfix" itemscope itemtype="http://schema.org/WPFooter">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js theme="#1BCDFC" autoplay="false" volume="0.4" loop="all" order="random" fixed="false" list-max-height="320px" server="netease" type="playlist" id="5062959861" list-folded="true">
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper" itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          
+            
+              <a href="/atom.xml" class="social fas fa-rss flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="mailto:yangling7212@gmail.com" class="social fas fa-envelope flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://github.com/kobingogo" class="social fab fa-github flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://music.163.com/#/user/home?id=31684329" class="social fas fa-headphones-alt flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div class="copyright">
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+    <!-- Custom Files footer begin-->
+    
+    <!-- Custom Files footer end-->
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="/" onclick="return false;" title="top"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+  /******************** volantis.dom ********************************/
+  // 页面选择器 将dom对象缓存起来 see: /source/js/app.js etc.
+  volantis.dom.bodyAnchor = volantis.dom.$(document.getElementById("safearea")); // 页面主体
+  volantis.dom.topBtn = volantis.dom.$(document.getElementById('s-top')); // 向上
+  volantis.dom.wrapper = volantis.dom.$(document.getElementById('wrapper')); // 整个导航栏
+  volantis.dom.coverAnchor = volantis.dom.$(document.querySelector('#l_cover .cover-wrapper')); // 1个
+  volantis.dom.switcher = volantis.dom.$(document.querySelector('#l_header .switcher .s-search')); // 搜索按钮   移动端 1个
+  volantis.dom.header = volantis.dom.$(document.getElementById('l_header')); // 移动端导航栏
+  volantis.dom.search = volantis.dom.$(document.querySelector('#l_header .m_search')); // 搜索框 桌面端 移动端 1个
+  volantis.dom.mPhoneList = volantis.dom.$(document.querySelectorAll('#l_header .m-phone .list-v')); //  手机端 子菜单 多个
+</script>
+
+<script>
+  
+  volantis.css("https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css");
+  
+  
+  
+</script>
+
+<!-- required -->
+
+
+<!-- internal -->
+
+<script src="/js/app.js?time=1791643020183.js"></script>
+
+
+
+  
+  
+  
+  <div id="rightmenu-wrapper">
+    <ul class="list-v rightmenu" id="rightmenu-content">
+      <li class="navigation menuNavigation-Content">
+        <a class="nav icon-only fix-cursor-default" onclick="history.back()"><i class="fad PETERRIVE fa-arrow-left fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="history.forward()"><i class="fad PETERRIVE fa-arrow-right fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="window.location.reload()"><i class="fad PETERRIVE fa-redo fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" href="/"><i class="fad PETERRIVE fa-home fa-fw"></i></a>
+      </li>
+      <li class="option menuOption-Content">
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyText">
+          
+          <i class="fad PETERRIVE fa-copy fa-fw"></i> 复制文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyPaste">
+          
+          <i class="fad PETERRIVE fa-paste fa-fw mR12"></i> 粘贴文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySelect">
+          
+          <i class="fad PETERRIVE fa-object-ungroup fa-fw mR12"></i> 全选文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyCut">
+          
+          <i class="fad PETERRIVE fa-cut fa-fw mR12"></i> 剪切文本
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="searchWord">
+          
+          <i class="fad PETERRIVE fa-search fa-fw"></i> 站内搜索
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="openTab">
+          
+          <i class="fad PETERRIVE fa-external-link-square-alt fa-fw mR12"></i> 在新标签页打开
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySrc">
+          
+          <i class="fad PETERRIVE fa-image fa-fw mR12"></i> 复制图片地址
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyImg">
+          
+          <i class="fad PETERRIVE fa-images fa-fw mR12"></i> 复制图片文件
+        </span>
+      </li>
+      
+        
+      
+        
+          <hr class="menuLoad-Content">
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="printHtml">
+              <i class="fad fa-print TURQUOISE fa-fw "></i> 打印页面
+            </span>
+          </li>  
+        
+      
+        
+          
+    <li class="menuLoad-Content">
+      <a class="vlts-menu fix-cursor-default" href="https://github.com/volantis-x/hexo-theme-volantis/" id="https:githubcomvolantis-xhexo-theme-volantis" rel="external nofollow noopener noreferrer" target="_blank">
+        <i class="fad fa-file-code CONCRETE fa-fw"></i> 主题源码
+      </a>
+    </li>
+  
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default toggle-mode-btn" id="menuDarkBtn">
+              <i class="fad fa-eclipse-alt WISTERIA fa-fw "></i> 暗黑模式
+            </span>
+          </li>
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="readingModel">
+              <i class="fad fa-book-open EMERALD fa-fw "></i> 阅读模式
+            </span>
+          </li>  
+        
+      
+        
+          <div id="menuMusic">
+            <li class="music name menuOption-Content">
+              <p class="nav music-title fix-cursor-default"></p>
+            </li>
+            <li class="music ctrl">
+              <a class="nav icon-only backward fix-cursor-default" onclick="RightMenuAplayer.aplayerBackward()"><i class="fad PETERRIVE fa-step-backward fa-fw "></i></a>
+              <a class="nav icon-only toggle fix-cursor-default" onclick="RightMenuAplayer.aplayerToggle()"><i class="fad PETERRIVE fa-play fa-fw "></i></a>
+              <a class="nav icon-only forward fix-cursor-default" onclick="RightMenuAplayer.aplayerForward()"><i class="fad PETERRIVE fa-step-forward fa-fw "></i></a>
+            </li>
+            <li class="music volume">
+              <div class="nav volume">
+                <div class="aplayer-volume-bar-wrap">
+                  <div class="aplayer-volume-bar fix-cursor-pointer">
+                    <div class="aplayer-volume"></div>
+                    <i class="left fad PETERRIVE fa-volume-off fa-fw"></i>
+                    <i class="right fad PETERRIVE fa-volume-up fa-fw"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </div>
+        
+      
+    </ul>
+  </div>
+  <script>volantis.js('/js/plugins/rightMenu.js?time=1791643020183')</script>
+
+
+
+<!-- rightmenu要在darkmode之前（ToggleButton） darkmode要在comments之前（volantis.dark.push）-->
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "color-scheme";
+const rootElementDarkModeAttributeName = "color-scheme";
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+  getCustomDarkMode();
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+/**
+ * get target mode
+ */
+ const getCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  if(currentSetting=="dark"){
+    volantis.dark.mode="light";
+  }else{
+    volantis.dark.mode="dark";
+  }
+  // console.log(volantis.dark.mode)
+};
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+/**
+ * 暗黑模式触发器
+ */
+volantis.dark.toggle=()=>{
+  const mode = toggleCustomDarkMode();
+  applyCustomDarkModeSettings(mode);
+  // 使用 volantis.dark.push 方法传入volantis.dark.toggle回调函数 参见layout/_partial/scripts/global.ejs
+  volantis.dark.method.toggle.start();
+}
+/**
+ * bind event for toggle button
+ */
+
+function bindToggleButton() {
+  var btn= document.querySelectorAll("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn")
+  btn.forEach(function (e) {
+    volantis.dom.$(e).on('click',volantis.dark.toggle);
+  })
+}
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", ()=>{
+  volantis.requestAnimationFrame(bindToggleButton)
+});
+volantis.pjax.push(bindToggleButton);
+
+const darkModelListeners={
+  dark:(mediaQueryList )=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "dark";
+    }
+    volantis.dark.method.toggle.start();
+  },
+  light:(mediaQueryList)=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "light";
+    }
+    volantis.dark.method.toggle.start();
+  }
+}
+window.matchMedia('(prefers-color-scheme: dark)').addListener(darkModelListeners.dark)
+window.matchMedia('(prefers-color-scheme: light)').addListener(darkModelListeners.light)
+</script>
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    
+      const sites_api = document.getElementById('sites-api');
+      if (sites_api != undefined && typeof SitesJS === 'undefined') {
+        volantis.js("/js/plugins/sites.js?time=1791643020182")
+      }
+    
+    
+      const friends_api = document.getElementById('friends-api');
+      if (friends_api != undefined && typeof FriendsJS === 'undefined') {
+        volantis.js("/js/plugins/friends.js?time=1791643020182")
+      }
+    
+    
+      const contributors_api = document.getElementById('contributors-api');
+      if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
+        volantis.js("/js/plugins/contributors.js?time=1791643020183")
+      }
+    
+  };
+  loadIssuesJS()
+  volantis.pjax.push(()=>{
+    loadIssuesJS();
+  })
+
+</script>
+
+
+
+
+  <script defer src="/libs/vanilla-lazyload/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: ["#"],
+	maxRPS: 6,
+	hoverDelay: 0
+  };
+</script>
+<script defer src="/libs/flying-pages/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+  <script>
+  volantis.css("/libs/aplayer/dist/APlayer.min.css");
+  (async () => {
+    // APlayer 需要在  MetingJS 之前加载
+    await volantis.js("/libs/aplayer/dist/APlayer.min.js")
+    await volantis.js("/libs/meting/dist/Meting.min.js")
+  
+    // 右键 music 需要在 APlayer  MetingJS 之后加载
+    await volantis.js('/js/plugins/aplayer.js?time=1791643020185')
+  
+  })();
+
+  function SetAPlayerPlugin(){
+    let Metings = document.querySelectorAll('meting-js');
+    if (Metings.length === 0) {return;};
+    if (Metings[0].aplayer && Metings[0].aplayer.on) {
+      // improve the accessibility https://web.dev/button-name/
+      document.querySelectorAll(".aplayer-icon-menu").forEach(e=>{
+        e.setAttribute("aria-label","Aplayer Menu")
+      })
+      // message see: /layout/_plugins/message/script.ejs
+      
+        try {
+          setTimeout(() => {
+            Metings.forEach((item, index) => {
+              const aplayerItem = item.aplayer; if(!aplayerItem) return;
+              const rightAplayerCheck = volantis.THEMECONFIG.rightmenu.layout.includes('music') 
+                && item.meta.id === volantis.THEMECONFIG.plugins.aplayer.id;
+              if(rightAplayerCheck) RightMenuAplayer.checkAPlayer();
+              if(aplayerItem.events.events.play.every(item => {return item.name !== 'messagePlay'})) {
+                aplayerItem.on('play', function messagePlay() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                      icon: 'fal fa-play light-blue',
+                      transitionIn: 'flipInX',
+                      transitionOut: 'flipOutX'
+                    });
+                  }, 100)
+                });
+              }
+              if(aplayerItem.events.events.pause.every(item => {return item.name !== 'messagePause'})) {
+                aplayerItem.on('pause', function messagePause() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    // 歌曲播放结束也会触发 pause 事件，为了避免错误提示，等待一会儿
+                    if(aplayerItem.paused) {
+                      VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                        icon: 'fal fa-pause light-blue',
+                        transitionIn: 'flipInX',
+                        transitionOut: 'flipOutX'
+                      });
+                    }
+                  }, 100)
+                });
+              }
+            });
+          }, 500)
+        } catch (error) { console.error(error); }
+      
+    }else{
+      volantis.requestAnimationFrame(SetAPlayerPlugin)
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    SetAPlayerPlugin();
+  });
+  volantis.pjax.push(SetAPlayerPlugin);
+</script>
+
+
+
+
+  <script>
+  volantis.layoutHelper("comments",`<div id="valine_container"><i class="fas fa-cog fa-spin fa-fw fa-2x"></i></div>`)
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '/';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign(Object.assign({"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }),pdata.commentConfig))
+    fancybox_valine()
+  }
+  function fancybox_valine() {
+    if(typeof VolantisFancyBox === "undefined") {
+      const checkFancyBox = setInterval(() => {
+        if(typeof VolantisFancyBox === "undefined") return;
+        clearInterval(checkFancyBox);
+        VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+      })
+    } else {
+      VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+    }
+  }
+  volantis.js('https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js').then(pjax_valine)
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+<!-- optional -->
+
+  <script>
+  const SearchServiceDataPathRoot = ("/" || "/").endsWith("/")
+    ? "/" || "/"
+    : "//" || "/";
+  const SearchServiceDataPath = SearchServiceDataPathRoot + "content.json";
+
+  function loadSearchScript() {
+    // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
+    return volantis.js("/js/search/hexo.js?time=1791643020183");
+  }
+
+  function loadSearchService() {
+    loadSearchScript();
+    document.querySelectorAll(".input.u-search-input").forEach((e) => {
+      e.removeEventListener("focus", loadSearchService, false);
+    });
+  }
+
+  // 打开并搜索 字符串 s
+  function OpenSearch(s) {
+    loadSearchScript().then(() => {
+      SearchService.setQueryText(s);
+      SearchService.search();
+    });
+  }
+
+  // 访问含有 ?s=xxx  的链接时打开搜索 // 与搜索引擎 structured data 相关: /scripts/helpers/structured-data/lib/config.js
+  if (window.location.search && /^\?s=/g.test(window.location.search)) {
+    let queryText = decodeURI(window.location.search)
+      .replace(/\ /g, "-")
+      .replace(/^\?s=/g, "");
+    OpenSearch(queryText);
+  }
+
+  // 搜索输入框获取焦点时加载搜索
+  document.querySelectorAll(".input.u-search-input").forEach((e) => {
+    e.addEventListener("focus", loadSearchService, false);
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+
+
+
+  function pjax_highlightjs_copyCode(){
+    if (!(document.querySelector(".highlight .code pre") ||
+      document.querySelector(".article pre code"))) {
+      return;
+    }
+    VolantisApp.utilCopyCode(".highlight .code pre, .article pre code")
+  }
+  volantis.requestAnimationFrame(pjax_highlightjs_copyCode)
+  volantis.pjax.push(pjax_highlightjs_copyCode)
+
+</script>
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI',
+    app_key: '4xKBXGBj6BgecU62vff5rJHs',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'https://kobingogo.github.io' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+  let imgs = ["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp"];
+  let index = 0;
+  let IntervalParallax = null;
+
+  function parallax(){
+    let ParallaxWindow = document.querySelector("#parallax-window");
+    
+    Parallax.window = ParallaxWindow;
+    Parallax.options.fade = 1500;
+    Parallax.cache = 1;
+    next_parallax();
+    Parallax.init();
+    if (imgs.length>1) {
+      IntervalParallax = setInterval(function () {
+        next_parallax();
+      }, '10000');
+    }
+  }
+
+  function next_parallax() {
+    if (typeof Parallax == "undefined") {
+      return
+    }
+    
+      if (!document.querySelector("#full")&&!document.querySelector("#half")) {
+        return
+      }
+    
+    if (imgs.length>=1) {
+      Parallax.options.src = imgs[index % imgs.length];
+      Parallax.start();
+      index++;
+      if (Parallax.cache) {
+        fetch(imgs[index % imgs.length] +"?t=" + new Date().getTime());
+        if (index == imgs.length) {
+          Parallax.cache = 0;
+        }
+      }
+    }
+  }
+  var runningOnBrowser = typeof window !== "undefined";
+  var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+  if (!isBot) {
+    volantis.js('/js/plugins/parallax.js?time=1791643020183').then(()=>{
+      parallax()
+    })
+    volantis.pjax.send(()=>{
+      clearInterval(IntervalParallax)
+    },"clearIntervalParallax");
+    volantis.pjax.push(parallax);
+  }
+</script>
+
+
+
+
+  <script>
+  function load_swiper() {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    volantis.css("/libs/swiper/swiper-bundle.min.css");
+    volantis.js("/libs/swiper/swiper-bundle.min.js").then(() => {
+      pjax_swiper();
+    });
+  }
+
+  load_swiper();
+
+  function pjax_swiper() {
+    volantis.swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      centeredSlides: true,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  }
+
+  volantis.pjax.push(() => {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    if (typeof volantis.swiper === "undefined") {
+      load_swiper();
+    } else {
+      pjax_swiper();
+    }
+  });
+</script>
+
+
+<!-- pjax 标签必须存在于所有页面 否则 pjax error -->
+<pjax>
+
+</pjax>
+
+<script>
+  function listennSidebarTOC() {
+    const navItems = document.querySelectorAll(".toc li");
+    if (!navItems.length) return;
+    const sections = [...navItems].map((element) => {
+      const link = element.querySelector(".toc-link");
+      const target = document.getElementById(
+        decodeURI(link.getAttribute("href")).replace("#", "")
+      );
+      // 解除 a 标签 href 的 锚点定位, a 标签 href 的 锚点定位 会随机启用?? 产生错位???
+      link.setAttribute("onclick","return false;")
+      link.setAttribute("toc-action","toc-"+decodeURI(link.getAttribute("href")).replace("#", ""))
+      link.setAttribute("href","/")
+      // 配置 点击 触发新的锚点定位
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        // 这里的 addTop 是通过错位使得 toc 自动展开.
+        volantis.scroll.to(target,{addTop: 5, observer:false})
+        // Anchor id
+        history.pushState(null, document.title, "#" + target.id);
+      });
+      return target;
+    });
+
+    function activateNavByIndex(target) {
+      if (target.classList.contains("active-current")) return;
+
+      document.querySelectorAll(".toc .active").forEach((element) => {
+        element.classList.remove("active", "active-current");
+      });
+      target.classList.add("active", "active-current");
+      let parent = target.parentNode;
+      while (!parent.matches(".toc")) {
+        if (parent.matches("li")) parent.classList.add("active");
+        parent = parent.parentNode;
+      }
+    }
+
+    function findIndex(entries) {
+      let index = 0;
+      let entry = entries[index];
+      if (entry.boundingClientRect.top > 0) {
+        index = sections.indexOf(entry.target);
+        return index === 0 ? 0 : index - 1;
+      }
+      for (; index < entries.length; index++) {
+        if (entries[index].boundingClientRect.top <= 0) {
+          entry = entries[index];
+        } else {
+          return sections.indexOf(entry.target);
+        }
+      }
+      return sections.indexOf(entry.target);
+    }
+
+    function createIntersectionObserver(marginTop) {
+      marginTop = Math.floor(marginTop + 10000);
+      let intersectionObserver = new IntersectionObserver(
+        (entries, observe) => {
+          let scrollHeight = document.documentElement.scrollHeight;
+          if (scrollHeight > marginTop) {
+            observe.disconnect();
+            createIntersectionObserver(scrollHeight);
+            return;
+          }
+          let index = findIndex(entries);
+          activateNavByIndex(navItems[index]);
+        }, {
+          rootMargin: marginTop + "px 0px -100% 0px",
+          threshold: 0,
+        }
+      );
+      sections.forEach((element) => {
+        element && intersectionObserver.observe(element);
+      });
+    }
+
+    createIntersectionObserver(document.documentElement.scrollHeight);
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+  document.addEventListener("pjax:success", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+</script>
+
+<script>
+  // https://web.dev/content-visibility/
+  // https://www.caniuse.com/?search=content-visibility
+  // https://infrequently.org/2020/12/content-visibility-scroll-fix/
+  // https://infrequently.org/2020/12/resize-resilient-deferred-rendering/
+
+  // 备注 目前已知的问题:
+  // 动态修改导致的内容高度变化(例如评论框异步渲染的外部盒子高度变化) 无法提前获知, 进而导致的首次滚动条跳动无法去除 (wontfix) 事实上不使用 content-visibility 也会有跳动, 不过是比使用 content-visibility 跳动提前
+  // scrollreveal 插件潜在问题 目前尚不明确
+
+  let eqIsh = (a, b, fuzz = 2) => {
+    return Math.abs(a - b) <= fuzz;
+  };
+
+  let rectNotEQ = (a, b) => {
+    return !eqIsh(a.width, b.width) || !eqIsh(a.height, b.height);
+  };
+
+  // Keep a map of elements and the dimensions of
+  // their place-holders, re-setting the element's
+  // intrinsic size when we get updated measurements
+  // from observers.
+  let spaced = new WeakMap();
+
+  // Only call this when known cheap, post layout
+  let reserveSpace = (el, rect = el.getClientBoundingRect()) => {
+    let old = spaced.get(el);
+    // Set intrinsic size to prevent jumping on un-painting:
+    //    https://drafts.csswg.org/css-sizing-4/#intrinsic-size-override
+    if (!old || rectNotEQ(old, rect)) {
+      spaced.set(el, rect);
+      el.style["contain-intrinsic-size"] = `${rect.width}px ${rect.height}px`;
+    }
+  };
+
+  let iObs = new IntersectionObserver(
+    (entries, o) => {
+      entries.forEach((entry) => {
+        // We don't care if the element is intersecting or
+        // has been laid out as our page structure ensures
+        // they'll get the right width.
+        reserveSpace(entry.target, entry.boundingClientRect);
+      });
+    },
+    { rootMargin: "500px 0px 500px 0px" }
+  );
+
+  let rObs = new ResizeObserver((entries, o) => {
+    entries.forEach((entry) => {
+      reserveSpace(entry.target, entry.contentRect);
+    });
+  });
+
+  let resizeResilientDeferredRendering = (Selector) => {
+    let articles = document.querySelectorAll(Selector);
+
+    if (articles.length) {
+      articles.forEach((el) => {
+        iObs.observe(el);
+        rObs.observe(el);
+      });
+
+      // Workaround for Chrome bug, part 2.
+      //
+      // Re-enable browser management of rendering for the
+      // first article after the first paint. Double-rAF
+      // to ensure we get called after a layout.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          articles[0].style["content-visibility"] = "auto";
+        });
+      });
+    }
+  };
+
+  let contentVisibilityScrollFix = () => {
+    if (!("content-visibility" in document.documentElement.style)) {
+      return;
+    }
+    resizeResilientDeferredRendering(".post-story");
+    resizeResilientDeferredRendering("article");
+    resizeResilientDeferredRendering(".post-wrapper");
+  };
+  contentVisibilityScrollFix();
+  volantis.pjax.push(contentVisibilityScrollFix);
+</script>
+
+
+
+  <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"扬舲の博客","url":"https://kobingogo.github.io/","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/","sameAs":["https://github.com/volantis-x"],"description":"前端技术博客"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://kobingogo.github.io/","name":"扬舲の博客"}},{"@type":"ListItem","position":2,"item":{"@id":"https://kobingogo.github.io/categories/ai/","name":"AI"}},{"@type":"ListItem","position":3,"item":{"@id":"https://kobingogo.github.io/minimal-agent-workflow/","name":"一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪"}}]},{"@context":"http://schema.org","@type":"BlogPosting","headline":"一个 agent、一个 diff 工具、自己验收：Jest 作者的极简路线，到底极简在哪","description":"","datePublished":"2026-08-26T20:30:00.000Z","dateModified":"2026-10-10T14:36:38.365Z","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://kobingogo.github.io/minimal-agent-workflow/"},"author":{"@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/"},"publisher":{"@type":"Organization","name":"扬舲の博客","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://kobingogo.github.io/minimal-agent-workflow/","wordCount":0,"articleSection":"AI","keywords":"AI,Agent,AI编程","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+
+
+<!-- more -->
+
+
+
+      
+        <!-- 
+  pjax重载区域接口：
+  1.  <pjax></pjax> 标签 pjax 标签必须存在于所有页面 否则 pjax error
+  2.  script[data-pjax]
+  3.  .pjax-reload script
+  4.  .pjax
+-->
+
+
+
+<script src="/libs/pjax/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox]):not([onclick="return false;"]):not([target="_blank"]):not([target="view_window"]):not([href$=".xml"])',
+        selectors: [
+          "head title",
+          "head meta[name='description']",
+          "head meta[name='keywords']",
+          "head meta[property^='og']",
+          
+          "#l_main",
+          "#pjax-header-nav-list",
+          ".pjax",
+          "pjax", // <pjax></pjax> 标签
+          "script[data-pjax], .pjax-reload script" // script标签添加data-pjax 或 script标签外层添加.pjax-reload 的script代码段重载
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.complete.start();
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+      
+    </div>
+  <!-- Custom Files bodyEnd begin-->
+  
+  <!-- Custom Files bodyEnd end-->
+  </body>
+</html>

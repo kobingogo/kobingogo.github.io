@@ -1,0 +1,4175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head hexo-theme="https://github.com/volantis-x/hexo-theme-volantis/tree/5.0.0-beta.2">
+  <meta name="generator" content="Hexo 6.3.0">
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+  <link rel="canonical" href="https://kobingogo.github.io/agent-dispatch-three-steps/">
+  <!-- 渲染优化 -->
+  <!-- <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin> -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta content="扬舲の博客" name="application-name">
+  <meta content="扬舲の博客" name="apple-mobile-web-app-title">
+  <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <link rel="preload" href="/css/style.css?time=1791643020176" as="style">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+<link rel="preload" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <!-- 页面元数据 -->
+  <title>一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill - 扬舲の博客</title>
+  <meta name="keywords" content="AI,Agent,AI编程,前端 技术 博客">
+  <meta name="description" content="「一个人带一群 agent」系列 · 第 0 篇。五篇各自独立，可以单独读；这篇讲的是最前面那一步：派活。  这篇能拿走的东西，先摆在前面：  一句让 agent 先复述目标的提示词，中英两版 一张「这个活要不要先拷问」的决策表 一张三栏任务卡：完成的定义、证据清单、不做什么 一个把这三步串起来的 skill，SKILL.md 全文，Claude Code 和 Codex 都能装  本来我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill">
+<meta property="og:url" content="https://kobingogo.github.io/agent-dispatch-three-steps/index.html">
+<meta property="og:site_name" content="扬舲の博客">
+<meta property="og:description" content="「一个人带一群 agent」系列 · 第 0 篇。五篇各自独立，可以单独读；这篇讲的是最前面那一步：派活。  这篇能拿走的东西，先摆在前面：  一句让 agent 先复述目标的提示词，中英两版 一张「这个活要不要先拷问」的决策表 一张三栏任务卡：完成的定义、证据清单、不做什么 一个把这三步串起来的 skill，SKILL.md 全文，Claude Code 和 Codex 都能装  本来我">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+<meta property="article:published_time" content="2026-10-09T20:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-10T14:36:38.360Z">
+<meta property="article:author" content="yangling">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="AI编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kobingogo.github.io/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+  <!-- feed -->
+    <link rel="alternate" href="/atom.xml" title="扬舲の博客" type="application/atom+xml">
+  <!-- import meta -->
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml">
+      <meta name="theme-color" content="#ffffff">
+  <!-- link -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <!-- import link -->
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png">
+      <link rel="manifest" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest">
+      <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg" color="#5bbad5">
+      <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico">
+  <style>
+    /* 首屏样式 */
+    #safearea {
+  display: none;
+}
+/* 
+  * Workaround for Chrome bug, part 1
+  * Chunk rendering for all but the first article.
+  * /layout/_partial/scripts/content-visibility-scroll-fix.ejs
+*/
+.post-story + .post-story,
+article + article,
+.post-wrapper + .post-wrapper {
+  content-visibility: auto;
+  contain-intrinsic-size: 10px 500px;
+}
+:root {
+  --color-site-body: #f4f4f4;
+  --color-site-bg: #f4f4f4;
+  --color-site-inner: #fff;
+  --color-site-footer: #666;
+  --color-card: #fff;
+  --color-text: #444;
+  --color-block: #f6f6f6;
+  --color-inlinecode: #c74f00;
+  --color-codeblock: #fff7ea;
+  --color-h1: #3a3a3a;
+  --color-h2: #3a3a3a;
+  --color-h3: #333;
+  --color-h4: #444;
+  --color-h5: #555;
+  --color-h6: #666;
+  --color-p: #444;
+  --color-list: #666;
+  --color-list-hl: #36ac91;
+  --color-meta: #888;
+  --color-read-bkg: #e0d8c8;
+  --color-read-post: #f8f1e2;
+}
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+html {
+  color: var(--color-text);
+  width: 100%;
+  height: 100%;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  font-size: 16px;
+}
+html >::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+html >::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+html >::-webkit-scrollbar-thumb {
+  background: #44d7b6;
+  cursor: pointer;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+html >::-webkit-scrollbar-thumb:hover {
+  background: #ff5722;
+}
+body {
+  background-color: var(--color-site-body);
+  text-rendering: optimizelegibility;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body.modal-active {
+  overflow: hidden;
+}
+@media screen and (max-width: 680px) {
+  body.modal-active {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+a {
+  color: #1b79c4;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+a:hover {
+  color: #ff5722;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+ul,
+ol {
+  padding-left: 0;
+}
+ul li,
+ol li {
+  list-style: none;
+}
+header {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+img {
+  border: 0;
+  background: none;
+  max-width: 100%;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  height: 0;
+  border: 0;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  border-bottom: 1px solid rgba(68,68,68,0.1);
+}
+button,
+input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+button {
+  overflow: visible;
+  text-transform: none;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+@supports (backdrop-filter: blur(20px)) {
+  .blur {
+    background: rgba(255,255,255,0.9) !important;
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.shadow {
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.shadow.floatable {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.shadow.floatable:hover {
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.1), 0 4px 8px 0px rgba(0,0,0,0.1), 0 8px 16px 0px rgba(0,0,0,0.1);
+}
+#l_cover {
+  min-height: 64px;
+}
+.cover-wrapper {
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: 100vh;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  color: var(--color-site-inner);
+  padding: 0 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: -100px;
+}
+.cover-wrapper .cover-body {
+  z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.cover-wrapper#full {
+  height: calc(100vh + 100px);
+  padding-bottom: 100px;
+}
+.cover-wrapper#half {
+  max-height: 640px;
+  min-height: 400px;
+  height: calc(36vh - 64px + 200px);
+}
+.cover-wrapper #scroll-down {
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  bottom: 100px;
+  text-align: center;
+  cursor: pointer;
+}
+.cover-wrapper #scroll-down .scroll-down-effects {
+  color: #fff;
+  font-size: 24px;
+  line-height: 64px;
+  position: absolute;
+  width: 24px;
+  left: calc(50% - 12px);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  animation: scroll-down-effect 1.5s infinite;
+  -webkit-animation: scroll-down-effect 1.5s infinite;
+  -khtml-animation: scroll-down-effect 1.5s infinite;
+  -moz-animation: scroll-down-effect 1.5s infinite;
+  -o-animation: scroll-down-effect 1.5s infinite;
+  -ms-animation: scroll-down-effect 1.5s infinite;
+}
+@-moz-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes scroll-down-effect {
+  0% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+  50% {
+    top: -16px;
+    opacity: 0.4;
+    -webkit-opacity: 0.4;
+    -moz-opacity: 0.4;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.cover-wrapper .cover-body {
+  margin-top: 64px;
+  margin-bottom: 100px;
+}
+.cover-wrapper .cover-body,
+.cover-wrapper .cover-body .top,
+.cover-wrapper .cover-body .bottom {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  max-width: 100%;
+}
+.cover-wrapper .cover-body .bottom {
+  margin-top: 32px;
+}
+.cover-wrapper .cover-body .title {
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+  font-size: 3.125rem;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.cover-wrapper .cover-body .subtitle {
+  font-size: 20px;
+}
+.cover-wrapper .cover-body .logo {
+  max-height: 120px;
+  max-width: calc(100% - 4 * 16px);
+}
+@media screen and (min-height: 1024px) {
+  .cover-wrapper .cover-body .title {
+    font-size: 3rem;
+  }
+  .cover-wrapper .cover-body .subtitle {
+    font-size: 1.05rem;
+  }
+  .cover-wrapper .cover-body .logo {
+    max-height: 150px;
+  }
+}
+.cover-wrapper .cover-body .m_search {
+  position: relative;
+  max-width: calc(100% - 16px);
+  width: 320px;
+  vertical-align: middle;
+}
+.cover-wrapper .cover-body .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  width: 100%;
+}
+.cover-wrapper .cover-body .m_search .icon,
+.cover-wrapper .cover-body .m_search .input {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.cover-wrapper .cover-body .m_search .icon {
+  position: absolute;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  line-height: 2.5rem;
+  width: 32px;
+  top: 0;
+  left: 5px;
+  color: rgba(68,68,68,0.75);
+}
+.cover-wrapper .cover-body .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  height: 2.5rem;
+  width: 100%;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-size: 0.875rem;
+  -webkit-appearance: none;
+  padding-left: 36px;
+  border-radius: 1.4rem;
+  -webkit-border-radius: 1.4rem;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border: none;
+  color: var(--color-text);
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .cover-body .m_search .input {
+    padding-left: 36px;
+  }
+}
+.cover-wrapper .cover-body .m_search .input:hover {
+  background: rgba(255,255,255,0.8);
+}
+.cover-wrapper .cover-body .m_search .input:focus {
+  background: #fff;
+}
+.cover-wrapper .list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -khtml-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -o-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  align-items: stretch;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.cover-wrapper .list-h a {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 0;
+  -ms-flex: 1 0;
+  flex: 1 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  font-weight: 600;
+}
+.cover-wrapper .list-h a img {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  margin: 4px;
+  min-width: 40px;
+  max-width: 44px;
+}
+@media screen and (max-width: 768px) {
+  .cover-wrapper .list-h a img {
+    min-width: 36px;
+    max-width: 40px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper .list-h a img {
+    margin: 2px 4px;
+    min-width: 32px;
+    max-width: 36px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .cover-wrapper .list-h a img {
+    min-width: 28px;
+    max-width: 32px;
+  }
+}
+.cover-wrapper {
+  max-width: 100%;
+}
+.cover-wrapper.search .bottom .menu {
+  margin-top: 16px;
+}
+.cover-wrapper.search .bottom .menu .list-h a {
+  white-space: nowrap;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  align-items: baseline;
+  padding: 2px;
+  margin: 4px;
+  color: var(--color-site-inner);
+  opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -moz-opacity: 0.75;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-bottom: 2px solid transparent;
+}
+.cover-wrapper.search .bottom .menu .list-h a i {
+  margin-right: 4px;
+}
+.cover-wrapper.search .bottom .menu .list-h a p {
+  font-size: 0.9375rem;
+}
+.cover-wrapper.search .bottom .menu .list-h a:hover,
+.cover-wrapper.search .bottom .menu .list-h a.active,
+.cover-wrapper.search .bottom .menu .list-h a:active {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  border-bottom: 2px solid var(--color-site-inner);
+}
+.cover-wrapper.dock .menu,
+.cover-wrapper.featured .menu,
+.cover-wrapper.focus .menu {
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+.cover-wrapper.dock .menu .list-h a,
+.cover-wrapper.featured .menu .list-h a,
+.cover-wrapper.focus .menu .list-h a {
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  line-height: 24px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-bottom: none;
+  text-align: center;
+  align-content: flex-end;
+  color: rgba(68,68,68,0.7);
+  font-size: 1.5rem;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h a,
+  .cover-wrapper.featured .menu .list-h a,
+  .cover-wrapper.focus .menu .list-h a {
+    padding: 12px 8px;
+  }
+}
+.cover-wrapper.dock .menu .list-h a i,
+.cover-wrapper.featured .menu .list-h a i,
+.cover-wrapper.focus .menu .list-h a i {
+  margin: 8px;
+}
+.cover-wrapper.dock .menu .list-h a p,
+.cover-wrapper.featured .menu .list-h a p,
+.cover-wrapper.focus .menu .list-h a p {
+  font-size: 0.875rem;
+}
+.cover-wrapper.dock .menu .list-h a.active,
+.cover-wrapper.featured .menu .list-h a.active,
+.cover-wrapper.focus .menu .list-h a.active {
+  background: var(--color-card);
+  backdrop-filter: none;
+}
+.cover-wrapper.dock .menu .list-h a.active i,
+.cover-wrapper.featured .menu .list-h a.active i,
+.cover-wrapper.focus .menu .list-h a.active i,
+.cover-wrapper.dock .menu .list-h a.active i+p,
+.cover-wrapper.featured .menu .list-h a.active i+p,
+.cover-wrapper.focus .menu .list-h a.active i+p {
+  color: #44d7b6;
+}
+.cover-wrapper.dock .menu .list-h a.active img+p,
+.cover-wrapper.featured .menu .list-h a.active img+p,
+.cover-wrapper.focus .menu .list-h a.active img+p {
+  color: var(--color-text);
+}
+.cover-wrapper.dock .menu .list-h a:hover,
+.cover-wrapper.featured .menu .list-h a:hover,
+.cover-wrapper.focus .menu .list-h a:hover {
+  background: var(--color-card);
+}
+.cover-wrapper.dock .top {
+  margin-bottom: 48px;
+}
+.cover-wrapper.dock .menu {
+  background: rgba(255,255,255,0.5);
+  position: absolute;
+  bottom: 0;
+  max-width: 100%;
+}
+.cover-wrapper.dock .menu .list-h {
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  margin: 4px;
+}
+.cover-wrapper.dock .menu .list-h a+a {
+  margin-left: 4px;
+}
+@media screen and (max-width: 500px) {
+  .cover-wrapper.dock .menu .list-h {
+    overflow-x: scroll;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-track-piece {
+    background: transparent;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb {
+    background: #44d7b6;
+    cursor: pointer;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+  }
+  .cover-wrapper.dock .menu .list-h::-webkit-scrollbar-thumb:hover {
+    background: #ff5722;
+  }
+}
+@supports (backdrop-filter: blur(20px)) {
+  .cover-wrapper.dock .menu {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: saturate(200%) blur(20px);
+  }
+}
+.cover-wrapper #parallax-window {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.parallax-mirror {
+  animation-delay: 0s;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-name: fadeIn;
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-mode: 'dark';
+  }
+  :root:not([color-scheme]) {
+    --color-site-body: #000;
+    --color-read-bkg: #222;
+    --color-read-post: #333;
+    --color-site-bg: #222;
+    --color-site-inner: #eee;
+    --color-site-footer: #aaa;
+    --color-card: #333;
+    --color-text: #eee;
+    --color-block: #3a3a3a;
+    --color-codeblock: #343a3c;
+    --color-inlinecode: #d56d28;
+    --color-h1: #eee;
+    --color-h2: #eee;
+    --color-h3: #ddd;
+    --color-h4: #ddd;
+    --color-h5: #ddd;
+    --color-h6: #ddd;
+    --color-p: #bbb;
+    --color-list: #aaa;
+    --color-list-hl: #69dfc4;
+    --color-meta: #888;
+    --color-link: #888;
+  }
+  :root:not([color-scheme]) img {
+    filter: brightness(70%) !important;
+  }
+  :root:not([color-scheme]) #wrapper .title {
+    color: var(--color-meta) !important;
+  }
+  :root:not([color-scheme]) .l_header ul.nav-list-h>li>a,
+  :root:not([color-scheme]) ul.list-v >li>a {
+    color: var(--color-list) !important;
+  }
+  :root:not([color-scheme]) .blur {
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) .nav-main .u-search-input {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) #l_main .article .prev-next>a:hover {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) .article blockquote {
+    background: var(--color-block) !important;
+  }
+  :root:not([color-scheme]) .article-title a {
+    color: var(--color-h1) !important;
+  }
+  :root:not([color-scheme]) details>summary {
+    color: var(--color-p) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) details {
+    border: 1px solid var(--color-site-bg) !important;
+    background: var(--color-site-bg) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal,
+  :root:not([color-scheme]) #u-search .modal-header,
+  :root:not([color-scheme]) #u-search .modal-body {
+    background: var(--color-card) !important;
+  }
+  :root:not([color-scheme]) #u-search .modal-body .modal-results .result:hover {
+    background: var(--color-block) !important;
+  }
+}
+[color-scheme='dark'] {
+  --color-site-body: #000;
+  --color-read-bkg: #222;
+  --color-read-post: #333;
+  --color-site-bg: #222;
+  --color-site-inner: #eee;
+  --color-site-footer: #aaa;
+  --color-card: #333;
+  --color-text: #eee;
+  --color-block: #3a3a3a;
+  --color-codeblock: #343a3c;
+  --color-inlinecode: #d56d28;
+  --color-h1: #eee;
+  --color-h2: #eee;
+  --color-h3: #ddd;
+  --color-h4: #ddd;
+  --color-h5: #ddd;
+  --color-h6: #ddd;
+  --color-p: #bbb;
+  --color-list: #aaa;
+  --color-list-hl: #69dfc4;
+  --color-meta: #888;
+  --color-link: #888;
+}
+[color-scheme='dark'] img {
+  filter: brightness(70%) !important;
+}
+[color-scheme='dark'] #wrapper .title {
+  color: var(--color-meta) !important;
+}
+[color-scheme='dark'] .l_header ul.nav-list-h>li>a,
+[color-scheme='dark'] ul.list-v >li>a {
+  color: var(--color-list) !important;
+}
+[color-scheme='dark'] .blur {
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] .nav-main .u-search-input {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] #l_main .article .prev-next>a:hover {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] .article blockquote {
+  background: var(--color-block) !important;
+}
+[color-scheme='dark'] .article-title a {
+  color: var(--color-h1) !important;
+}
+[color-scheme='dark'] details>summary {
+  color: var(--color-p) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] details {
+  border: 1px solid var(--color-site-bg) !important;
+  background: var(--color-site-bg) !important;
+}
+[color-scheme='dark'] #u-search .modal,
+[color-scheme='dark'] #u-search .modal-header,
+[color-scheme='dark'] #u-search .modal-body {
+  background: var(--color-card) !important;
+}
+[color-scheme='dark'] #u-search .modal-body .modal-results .result:hover {
+  background: var(--color-block) !important;
+}
+@media screen and (max-width: 500px) {
+  [color-scheme='dark'] .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Dosis';
+  src: url("https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf");
+  font-weight: 'normal';
+  font-style: 'normal';
+  font-display: swap;
+}
+.l_header {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  width: 100%;
+  height: 64px;
+  background: var(--color-card);
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0px rgba(0,0,0,0.1);
+}
+.l_header.auto {
+  transition: opacity 0.4s ease;
+  -webkit-transition: opacity 0.4s ease;
+  -khtml-transition: opacity 0.4s ease;
+  -moz-transition: opacity 0.4s ease;
+  -o-transition: opacity 0.4s ease;
+  -ms-transition: opacity 0.4s ease;
+  visibility: hidden;
+}
+.l_header.auto.show {
+  opacity: 1 !important;
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  visibility: visible;
+}
+.l_header .container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.l_header #wrapper {
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.l_header #wrapper .nav-main,
+.l_header #wrapper .nav-sub {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -khtml-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+  -o-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -khtml-justify-content: space-between;
+  -moz-justify-content: space-between;
+  -o-justify-content: space-between;
+  -ms-justify-content: space-between;
+  align-items: center;
+}
+.l_header #wrapper .nav-main {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.l_header #wrapper.sub .nav-main {
+  transform: translateY(-64px);
+  -webkit-transform: translateY(-64px);
+  -khtml-transform: translateY(-64px);
+  -moz-transform: translateY(-64px);
+  -o-transform: translateY(-64px);
+  -ms-transform: translateY(-64px);
+}
+.l_header #wrapper .nav-sub {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  opacity: 0;
+  -webkit-opacity: 0;
+  -moz-opacity: 0;
+  height: 64px;
+  width: calc(100% - 2 * 16px);
+  position: absolute;
+}
+.l_header #wrapper .nav-sub ::-webkit-scrollbar {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (min-width: 2048px) {
+  .l_header #wrapper .nav-sub {
+    max-width: 55vw;
+    margin: auto;
+  }
+}
+.l_header #wrapper.sub .nav-sub {
+  opacity: 1;
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+}
+.l_header #wrapper .title {
+  position: relative;
+  color: var(--color-text);
+  padding-left: 24px;
+  max-height: 64px;
+}
+.l_header #wrapper .nav-main .title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  line-height: 64px;
+  padding: 0 24px;
+  font-size: 1.25rem;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Helvetica, monospace;
+}
+.l_header #wrapper .nav-main .title img {
+  height: 64px;
+}
+.l_header .nav-sub {
+  max-width: 1080px;
+  margin: auto;
+}
+.l_header .nav-sub .title {
+  font-weight: bold;
+  font-family: Dosis, "PingFang SC", "Microsoft YaHei", Helvetica, Arial, Menlo, Monaco, monospace, sans-serif;
+  line-height: 1.2;
+  max-height: 64px;
+  white-space: normal;
+  flex-shrink: 1;
+}
+.l_header .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  line-height: 64px;
+  align-items: center;
+}
+.l_header .switcher .s-toc {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .l_header .switcher .s-toc {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+  }
+}
+.l_header .switcher >li {
+  height: 48px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  margin: 2px;
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li {
+    margin: 0 1px;
+    height: 48px;
+  }
+}
+.l_header .switcher >li >a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0.85em 1.1em;
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  color: #44d7b6;
+}
+.l_header .switcher >li >a:hover {
+  border: none;
+}
+.l_header .switcher >li >a.active,
+.l_header .switcher >li >a:active {
+  border: none;
+  background: var(--color-site-bg);
+}
+@media screen and (max-width: 500px) {
+  .l_header .switcher >li >a {
+    width: 36px;
+    height: 48px;
+  }
+}
+.l_header .nav-sub .switcher {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+}
+.l_header .m_search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  height: 64px;
+  width: 240px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (max-width: 1024px) {
+  .l_header .m_search {
+    width: 44px;
+    min-width: 44px;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;
+  }
+  .l_header .m_search:hover {
+    width: 240px;
+  }
+  .l_header .m_search:hover input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search:hover .input {
+    width: 100%;
+  }
+  .l_header .m_search:hover .input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search {
+    min-width: 0;
+  }
+  .l_header .m_search input::placeholder {
+    opacity: 1;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+  }
+}
+.l_header .m_search .form {
+  position: relative;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.l_header .m_search .icon {
+  position: absolute;
+  width: 36px;
+  left: 5px;
+  color: var(--color-meta);
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .icon {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+.l_header .m_search .input {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 1.3;
+  width: 100%;
+  color: var(--color-text);
+  background: #fafafa;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding-left: 40px;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border: none;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+@media screen and (min-width: 500px) {
+  .l_header .m_search .input:focus {
+    box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0 4px 8px 0px rgba(0,0,0,0.1);
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .m_search .input {
+    background: var(--color-block);
+    padding-left: 8px;
+    border: none;
+  }
+  .l_header .m_search .input:hover,
+  .l_header .m_search .input:focus {
+    border: none;
+  }
+}
+@media (max-width: 500px) {
+  .l_header .m_search {
+    left: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    background: #fff;
+    transition: all 0.28s ease;
+    -webkit-transition: all 0.28s ease;
+    -khtml-transition: all 0.28s ease;
+    -moz-transition: all 0.28s ease;
+    -o-transition: all 0.28s ease;
+    -ms-transition: all 0.28s ease;
+  }
+  .l_header .m_search .input {
+    border-radius: 32px;
+    -webkit-border-radius: 32px;
+    margin-left: 16px;
+    padding-left: 16px;
+  }
+  .l_header.z_search-open .m_search {
+    width: 100%;
+  }
+  .l_header.z_search-open .m_search .input {
+    width: calc(100% - 120px);
+  }
+}
+ul.m-pc >li>a {
+  color: inherit;
+  border-bottom: 2px solid transparent;
+}
+ul.m-pc >li>a:active,
+ul.m-pc >li>a.active {
+  border-bottom: 2px solid #44d7b6;
+}
+ul.m-pc li:hover >ul.list-v,
+ul.list-v li:hover >ul.list-v {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.nav-list-h {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: -ms-flexbox /* TWEENER - IE 10 */;
+  display: -webkit-flex /* NEW - Chrome */;
+  display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+  display: flex;
+  align-items: stretch;
+}
+ul.nav-list-h>li {
+  position: relative;
+  justify-content: center;
+  -webkit-justify-content: center;
+  -khtml-justify-content: center;
+  -moz-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  height: 100%;
+  line-height: 2.4;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+ul.nav-list-h>li >a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 600;
+}
+ul.list-v {
+  z-index: 1;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: absolute;
+  background: var(--color-card);
+  box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  -webkit-box-shadow: 0 2px 4px 0px rgba(0,0,0,0.08), 0 4px 8px 0px rgba(0,0,0,0.08), 0 8px 16px 0px rgba(0,0,0,0.08);
+  margin-top: -6px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding: 8px 0;
+}
+ul.list-v.show {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+}
+ul.list-v hr {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+ul.list-v >li {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+ul.list-v >li.header {
+  font-size: 0.78125rem;
+  font-weight: bold;
+  line-height: 2em;
+  color: var(--color-meta);
+  margin: 8px 16px 4px;
+}
+ul.list-v >li.header i {
+  margin-right: 8px;
+}
+ul.list-v >li ul {
+  margin-left: 0;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: -40px;
+}
+ul.list-v .aplayer-container {
+  min-height: 64px;
+  padding: 6px 16px;
+}
+ul.list-v >li>a {
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  color: var(--color-list);
+  font-size: 0.875rem;
+  font-weight: bold;
+  line-height: 36px;
+  padding: 0 20px 0 16px;
+  text-overflow: ellipsis;
+  margin: 0 4px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+@media screen and (max-width: 1024px) {
+  ul.list-v >li>a {
+    line-height: 40px;
+  }
+}
+ul.list-v >li>a >i {
+  margin-right: 8px;
+}
+ul.list-v >li>a:active,
+ul.list-v >li>a.active {
+  color: var(--color-list-hl);
+}
+ul.list-v >li>a:hover {
+  color: var(--color-list-hl);
+  background: var(--color-site-bg);
+}
+.l_header .menu >ul>li>a {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: block;
+  padding: 0 8px;
+}
+.l_header .menu >ul>li>a >i {
+  margin-right: 4px;
+}
+.l_header ul.nav-list-h>li {
+  color: var(--color-list);
+  line-height: 64px;
+}
+.l_header ul.nav-list-h>li >a {
+  max-height: 64px;
+  overflow: hidden;
+  color: inherit;
+}
+.l_header ul.nav-list-h>li >a:active,
+.l_header ul.nav-list-h>li >a.active {
+  color: #44d7b6;
+}
+.l_header ul.nav-list-h>li:hover>a {
+  color: var(--color-list-hl);
+}
+.l_header ul.nav-list-h>li i.music {
+  animation: rotate-effect 1.5s linear infinite;
+  -webkit-animation: rotate-effect 1.5s linear infinite;
+  -khtml-animation: rotate-effect 1.5s linear infinite;
+  -moz-animation: rotate-effect 1.5s linear infinite;
+  -o-animation: rotate-effect 1.5s linear infinite;
+  -ms-animation: rotate-effect 1.5s linear infinite;
+}
+@-moz-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@-o-keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+@keyframes rotate-effect {
+  0% {
+    transform: rotate(0);
+    -webkit-transform: rotate(0);
+    -khtml-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    -ms-transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -khtml-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -khtml-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -khtml-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -khtml-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+}
+.menu-phone li ul.list-v {
+  right: calc(100% - 0.5 * 16px);
+}
+.menu-phone li ul.list-v ul {
+  right: calc(100% - 0.5 * 16px);
+}
+#wrapper {
+  max-width: 1080px;
+  margin: auto;
+}
+@media screen and (min-width: 2048px) {
+  #wrapper {
+    max-width: 55vw;
+  }
+}
+#wrapper .menu {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1;
+  -ms-flex: 1 1;
+  flex: 1 1;
+  margin: 0 16px 0 0;
+}
+#wrapper .menu .list-v ul {
+  left: calc(100% - 0.5 * 16px);
+}
+.menu-phone {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  margin-top: 16px;
+  right: 8px;
+  transition: all 0.28s ease;
+  -webkit-transition: all 0.28s ease;
+  -khtml-transition: all 0.28s ease;
+  -moz-transition: all 0.28s ease;
+  -o-transition: all 0.28s ease;
+  -ms-transition: all 0.28s ease;
+}
+.menu-phone ul {
+  right: calc(100% - 0.5 * 16px);
+}
+@media screen and (max-width: 500px) {
+  .menu-phone {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: block;
+  }
+}
+.l_header {
+  max-width: 65vw;
+  left: calc((100% - 65vw) * 0.5);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+@media screen and (max-width: 2048px) {
+  .l_header {
+    max-width: 1112px;
+    left: calc((100% - 1112px) * 0.5);
+  }
+}
+@media screen and (max-width: 1112px) {
+  .l_header {
+    left: 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    max-width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .l_header .container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .l_header #wrapper .nav-main .title {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .l_header #wrapper .nav-sub {
+    width: 100%;
+  }
+  .l_header #wrapper .nav-sub .title {
+    overflow-y: scroll;
+    margin-top: 2px;
+    padding: 8px 16px;
+  }
+  .l_header #wrapper .switcher {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: -ms-flexbox /* TWEENER - IE 10 */;
+    display: -webkit-flex /* NEW - Chrome */;
+    display: flex /* NEW, Spec - Opera 12.1, Firefox 20+ */;
+    display: flex;
+    margin-right: 8px;
+  }
+  .l_header .menu {
+    display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+    display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+    display: none;
+  }
+}
+@media screen and (max-width: 500px) {
+  .list-v li {
+    max-width: 270px;
+  }
+}
+#u-search {
+  display: -webkit-box /* OLD - iOS 6-, Safari 3.1-6 */;
+  display: -moz-box /* OLD - Firefox 19- (buggy but mostly works) */;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 60px 20px;
+  z-index: 1001;
+}
+@media screen and (max-width: 680px) {
+  #u-search {
+    padding: 0px;
+  }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 500px) {
+  .l_header .m_search {
+    background: var(--color-site-bg) !important;
+  }
+}
+
+  </style>
+  <link rel="stylesheet" href="/css/style.css?time=1791643020176" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css?time=1791643020176"></noscript>
+    <script>
+      let userColorScheme=localStorage.getItem("color-scheme")
+      if(userColorScheme){
+        document.documentElement.setAttribute("color-scheme", userColorScheme);
+      }
+    </script>
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+    '.kill-t{'+
+      'font-size: 2rem;'+
+    '}'+
+    '.kill-c{'+
+      'font-size: 1.2rem;'+
+    '}'+
+		'#l_header,#l_body{'+
+			'display: none;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        `<span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br/>`+
+        `<span class="kill-c">微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</span><br/>`+
+        `<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>`+
+    '</div>');
+</script>
+
+
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+    .kill-t{
+      font-size: 2rem;
+    }
+    .kill-c{
+      font-size: 1.2rem;
+    }
+		#l_header,#l_body{
+			display: none;
+		}
+	</style>
+    <div class="kill-noscript">
+        <span class="kill-t"><b>抱歉，您的浏览器无法访问本站</b></span><br>
+        <span class="kill-c">本页面需要浏览器支持（启用）JavaScript</span><br>
+        <a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
+
+
+  <script>
+  /************这个文件存放不需要重载的全局变量和全局函数*********/
+  window.volantis = {}; // volantis 全局变量
+  volantis.WEBCONFIG = {"title":"扬舲の博客","subtitle":"","description":"前端技术博客","author":"yangling","language":"zh-CN","timezone":"","url":"https://kobingogo.github.io","root":"/","permalink":":title/","permalink_defaults":null,"pretty_urls":{"trailing_index":true,"trailing_html":true},"source_dir":"source","public_dir":"public","tag_dir":"tags","archive_dir":"archives","category_dir":"categories","code_dir":"downloads/code","i18n_dir":":lang","skip_render":["README.md","**/*.html","manifest.json","start","CNAME","robots.txt","assets/*"],"new_post_name":":year-:month-:day-:title.md","default_layout":"post","titlecase":false,"external_link":{"enable":true,"field":"site","exclude":""},"filename_case":1,"render_drafts":false,"post_asset_folder":false,"relative_link":false,"future":false,"highlight":{"enable":true,"auto_detect":false,"line_number":true,"tab_replace":"    ","wrap":true,"exclude_languages":[],"language_attr":false,"hljs":false,"first_line_number":"always1"},"prismjs":{"enable":false,"preprocess":true,"line_number":true,"tab_replace":""},"default_category":"uncategorized","category_map":null,"tag_map":null,"date_format":"YYYY-MM-DD","time_format":"HH:mm:ss","updated_option":false,"per_page":10,"pagination_dir":"page","theme":"volantis","server":{"port":4000,"log":false,"compress":false,"header":true,"cache":false},"deploy":{"type":"git","repo":"git@github.com:kobingogo/kobingogo.github.io.git","branch":"master"},"ignore":null,"meta_generator":false,"keywords":"前端 技术 博客","favicon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","auto_spacing":true,"index_generator":{"per_page":10,"order_by":"-date","path":""},"include":null,"exclude":null,"import":{"meta":["<meta name=\"msapplication-TileColor\" content=\"#ffffff\">","<meta name=\"msapplication-config\" content=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/browserconfig.xml\">","<meta name=\"theme-color\" content=\"#ffffff\">"],"link":["<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-32x32.png\">","<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon-16x16.png\">","<link rel=\"manifest\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/site.webmanifest\">","<link rel=\"mask-icon\" href=\"https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/favicon/safari-pinned-tab.svg\" color=\"#5bbad5\">","<link rel=\"shortcut icon\" href=\"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico\">"]},"sitemap":{"path":"sitemap.xml","tag":false,"category":false},"neat_enable":true,"nofollow":{"enable":true,"exclude":["xaoxuu.com","volantis.js.org","volantis-x.js.org","blog.mhuig.top","colsrch.cn","inkss.cn","vlts.hin.cool"]},"autoprefixer":{"exclude":["*.min.css"]},"marked":{"gfm":true,"pedantic":false,"breaks":true,"smartLists":true,"smartypants":false,"modifyAnchors":0,"autolink":true,"mangle":true,"sanitizeUrl":false,"dompurify":false,"headerIds":true,"anchorAlias":false,"lazyload":false,"prependRoot":false,"postAsset":false,"external_link":{"enable":true,"exclude":[],"nofollow":true},"descriptionLists":true},"jsonContent":{"ignore":{"paths":["v4/","v3/","v2/","test/","news/"],"tags":[]}},"theme_config":{"use_cdn":false,"navbar":{"logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"scheme":"search","display":{"home":true,"archive":true,"others":false},"logo":null,"title":"扬舲の博客","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}]},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"line_style":"solid","author":true,"readmore":"auto"},"body":{"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"updated":{"title":"本页文档最后更新于："}}}},"comments":{"service":"valine","giscus":{"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"disqus":{"shortname":"volantis","path":"/"},"valine":{"appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","path":"/"},"utterances":{"repo":"volantis-x/community","issue-number":115},"beaudar":{"repo":"volantis-x/community","issue-number":115}},"sidebar":{"for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}]},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qrcode":{"class":"qrcode","display":["desktop"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"height":null,"fancybox":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"site_footer":{"layout":["aplayer","social","copyright"],"copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"br":"<br>"},"tag_plugins":{"note":{"iconfont":"Font Awesome 5 Pro"}},"plugins":{"clipboard":{"enable":true},"fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","parallax":{"enable":true},"aplayer":{"enable":true,"autoplay":false,"volume":0.4,"order":"random","id":5062959861},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"}},"darkmode":{"enable":true},"gitter":{"room":"hexo-theme-volantis/community"}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"custom_css":{"cursor":{"enable":true},"font_smoothing":true,"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"]},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"}}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"icon":"fad fa-print TURQUOISE"},"darkmode":{"icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"icon":"fad fa-book-open EMERALD"},"help":{"icon":"fad fa-question EMERALD"},"examples":{"icon":"fad fa-rss PETERRIVE"},"contributors":{"icon":"fad fa-fan fa-spin AMETHYST"},"source_docs":{"icon":"fad fa-code-branch WETASPHALT"},"source_theme":{"icon":"fad fa-file-code CONCRETE"}}},"archive_generator":{"per_page":10,"yearly":true,"monthly":true,"daily":false},"category_generator":{"per_page":10},"feed":{"type":"atom","limit":20,"hub":"","content":true,"content_limit":140,"content_limit_delim":"","order_by":"-date","autodiscovery":true,"template":"","path":"atom.xml"},"tag_generator":{"per_page":10}};
+  volantis.THEMECONFIG = {"default":{"avatar":"/media/placeholder/avatar/round/3442075.svg","link":"/media/placeholder/link/8f277b4ee0ecd.svg","cover":"/media/placeholder/cover/76b86c0226ffd.svg","image":"/media/placeholder/image/2659360.svg"},"info":{"theme_name":"Volantis","theme_version":"5.0.0-beta.2","theme_docs":"https://volantis.js.org/","theme_repo":"https://github.com/volantis-x/hexo-theme-volantis"},"cdn":{"enable":false,"prefix":null,"set":{"js":{"app":null},"css":{"style":null}},"map":{"js":{"app":"/js/app.js?time=1791643020176","sites":"/js/plugins/sites.js?time=1791643020176","friends":"/js/plugins/friends.js?time=1791643020176","parallax":"/js/plugins/parallax.js?time=1791643020176","rightMenu":"/js/plugins/rightMenu.js?time=1791643020176","contributors":"/js/plugins/contributors.js?time=1791643020176","message":"/js/thirdparty/message.js?time=1791643020176","valine":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","search":"/js/search/hexo.js?time=1791643020176"},"css":{"style":"/css/style.css?time=1791643020176","message":"/css/message.css?time=1791643020176"}}},"replace":["https://npm.elemecdn.com/ => https://npm.elemecdn.com/"],"scroll_smooth":true,"navbar":{"visiable":"auto","logo":{"img":null,"icon":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico","title":"扬舲の博客"},"menu":[{"name":"博客","icon":"fas fa-rss","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"归档","icon":"fas fa-archive","url":"archives/"}],"search":"Search..."},"cover":{"height_scheme":"full","layout_scheme":"dock","display":{"home":true,"archive":true,"others":false},"background":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture","logo":null,"title":"扬舲の博客","subtitle":"","search":true,"features":[{"name":"博客","icon":"fas fa-book","url":"/"},{"name":"分类","icon":"fas fa-folder-open","url":"categories/"},{"name":"标签","icon":"fas fa-tags","url":"tags/"},{"name":"鸣谢","icon":"fas fa-handshake","url":"https://volantis.js.org/contributors/"}],"scheme":"search"},"pages":{"friends":{"layout_scheme":"traditional"}},"article":{"preview":{"scheme":"landscape","pin_icon":"https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4cc.svg","auto_title":true,"auto_excerpt":true,"hide_excerpt":false,"line_style":"solid","author":true,"readmore":"auto"},"body":{"top_meta":["author","category","date","counter"],"footer_widget":{"references":{"title":"参考资料","icon":"fas fa-quote-left"},"related_posts":{"enable":false,"title":"相关文章","icon":"fas fa-bookmark","max_count":5,"placeholder_img":"https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"},"copyright":{"enable":true,"permalink":"本文永久链接是：","content":["博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议","permalink"]},"donate":{"enable":false,"images":["/media/org.volantis/blog/qrcode/github@volantis.png","/media/org.volantis/blog/qrcode/github@volantis.png"]}},"bottom_meta":["updated","tags","share"],"meta_library":{"author":{"avatar":"https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png","name":"扬舲","url":"https://github.com/kobingogo"},"date":{"icon":"fas fa-calendar-alt","title":"发布于：","format":"ll"},"updated":{"icon":"fas fa-edit","title":"本页文档最后更新于：","format":"ll"},"category":{"icon":"fas fa-folder-open"},"counter":{"icon":"fas fa-eye","unit":"次浏览"},"valinecount":{"icon":"fas fa-comment-dots","desc":""},"walinecount":{"icon":"fas fa-comment-dots","desc":""},"wordcount":{"icon_wordcount":"fas fa-keyboard","icon_duration":"fas fa-hourglass-half"},"tags":{"icon":"fas fa-hashtag"},"share":[{"id":"qq","img":"/media/org.volantis/logo/128/qq.png"},{"id":"qzone","img":"/media/org.volantis/logo/128/qzone.png"},{"id":"weibo","img":"/media/org.volantis/logo/128/weibo.png"},{"id":null,"img":null},{"id":null,"img":null}]}}},"comments":{"title":"<i class='fas fa-comments'></i> 评论","subtitle":null,"service":"valine","artalk":{"js":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.js","css":"https://npm.elemecdn.com/artalk@2.1.3/dist/Artalk.css","server":"http://127.0.0.1:8080/api","path":null,"placeholder":"来啊，快活啊 ( ゜- ゜)","noComment":"快来成为第一个评论的人吧~","pagination":{"readMore":true,"autoLoad":false,"pageSize":10}},"giscus":{"theme":{"light":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/light.css","dark":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/css/giscus/dark.css"},"repo":"volantis-x/hexo-theme-volantis","repo-id":"MDEwOlJlcG9zaXRvcnkxMDgwNzM2MzQ=","mapping":"number","term":"539","reactions-enabled":"1","emit-metadata":"0"},"beaudar":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"branch":"main","position":"top","order":"desc","theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"utterances":{"repo":"volantis-x/community","issue-term":"pathname","issue-number":115,"theme":{"light":"github-light","dark":"github-dark"},"label":"✨💬✨"},"valine":{"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false},"minivaline":{"js":"https://npm.elemecdn.com/minivaline@latest","path":null,"placeholder":"快来评论吧~","serverURL":"https://hello.com"},"disqus":{"shortname":"volantis","autoload":false,"path":"/"},"disqusjs":{"path":null,"js":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqus.js","css":"https://npm.elemecdn.com/disqusjs@1.3/dist/disqusjs.css"},"gitalk":{"js":"https://npm.elemecdn.com/gitalk@1/dist/gitalk.min.js","clientID":null,"clientSecret":null,"repo":null,"owner":null,"admin":null,"path":null},"vssue":{"js":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.github.min.js","css":"https://cdn.jsdelivr.net/gh/meteorlxy/vssue@1.4.4/packages/vssue/dist/vssue.min.css","vue":"https://cdn.jsdelivr.net/gh/vuejs/vue@2.6.11/dist/vue.runtime.min.js","owner":null,"repo":null,"clientId":null,"clientSecret":null},"livere":{"uid":null},"isso":{"url":"https://example.com/(path/)","src":"https://example.com/(path/)js/embed.min.js","css":null,"gravatar":null},"hashover":{"src":"https://example.com/(path/)comments.php"},"twikoo":{"js":"https://npm.elemecdn.com/twikoo@latest","path":null,"envId":"xxxxxxxxxxxxxxx","placeholder":null},"waline":{"js":"https://npm.elemecdn.com/@waline/client/dist/Waline.min.js","path":null,"placeholder":"快来评论吧~","imageHosting":"https://7bu.top/api/upload","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"serverURL":"xxxxxxxxxxxxxxx","avatar":"robohash","avatarCDN":null,"pageSize":10,"lang":"zh-CN","visitor":true}},"sidebar":{"position":"right","for_page":["blogger","category","tagcloud","qrcode"],"for_post":["toc"],"widget_library":{"blogger":{"class":"blogger","display":["desktop","mobile"],"avatar":"http://p1.music.126.net/HmHpUuB1NMfAH9r0oVrgHg==/2929098977342512.jpg?param=180y180","shape":"circle","url":"/","title":null,"subtitle":null,"jinrishici":true,"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"id":"blogger"},"toc":{"class":"toc","display":["desktop","mobile"],"header":{"icon":"fas fa-list","title":"本文目录"},"list_number":false,"min_depth":2,"max_depth":5,"id":"toc"},"music":{"class":"music","display":["desktop","mobile"],"pjaxReload":false},"category":{"class":"category","display":["desktop"],"header":{"icon":"fas fa-folder-open","title":"文章分类","url":"/blog/categories/"},"id":"category"},"tagcloud":{"class":"tagcloud","display":["desktop","mobile"],"header":{"icon":"fas fa-tags","title":"热门标签","url":"/blog/tags/"},"min_font":14,"max_font":24,"color":true,"start_color":"#999","end_color":"#555","id":"tagcloud"},"qrcode":{"class":"qrcode","display":["desktop"],"height":null,"images":["https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/blog_qrcode.png"],"header":{"icon":"fas fa-mobile","title":"手机观看"},"fancybox":null,"id":"qrcode"},"webinfo":{"class":"webinfo","display":["desktop"],"header":{"icon":"fas fa-award","title":"站点信息"},"type":{"article":{"enable":true,"text":"文章数目：","unit":"篇"},"runtime":{"enable":true,"data":"2020/01/01","text":"已运行时间：","unit":"天"},"wordcount":{"enable":true,"text":"本站总字数：","unit":"字"},"visitcounter":{"service":"leancloud","siteuv":{"enable":true,"text":"本站访客数：","unit":"人"},"sitepv":{"enable":true,"text":"本站总访问量：","unit":"次"}},"lastupd":{"enable":true,"friendlyShow":true,"text":"最后活动时间：","unit":"日"}}},"lastupdate":{"class":"lastupdate","display":["desktop","mobile"],"header":{"icon":"fas fa-clock WISTERIA","title":"最近更新"}},"post":{"class":"text","display":["desktop","mobile"],"header":{"icon":"fas fa-plus","title":"社区活动123","url":"/contributors/"},"content":["**如何让自己的文章收录到这里？**<br>官方网站是开源的，只要您的文章与 Hexo 博客搭建相关，就可以自助进行收录，详细的操作步骤请见：「[**发布与分享文章**](/contributors/#发布与分享文章)」。"]},"guide":{"class":"grid","display":["desktop","mobile"],"header":{"icon":"fas fa-map-signs","title":"分类导航"},"fixed":true,"rows":[{"name":"常见问题","icon":"fas fa-question-circle","url":"/faqs/"},{"name":"示例博客","icon":"fas fa-play-circle","url":"/examples/"},{"name":"特别感谢","icon":"fas fa-handshake","url":"/contributors/"},{"name":"测试博文","icon":"fas fa-file-alt","url":"/archives/"},{"name":"主题源码","icon":"fas fa-file-code","url":"https://github.com/volantis-x/hexo-theme-volantis/","rel":"external nofollow noopener noreferrer","target":"_blank"},{"name":"更新日志","icon":"fas fa-tags","url":"https://github.com/volantis-x/hexo-theme-volantis/releases/","rel":"external nofollow noopener noreferrer","target":"_blank"}]},"qgroup":{"class":"text","display":["desktop","moblie"],"header":{"icon":"fab fa-qq","title":"加入 QQ 群"},"content":["如果你在使用中遇到问题，请到 [Github Issues](https://github.com/volantis-x/hexo-theme-volantis/issues) 或者 [留言板](/faqs/#comments) 进行反馈，你也可以加入 **QQ 群**，验证码：vlts-2021<br>[![](https://bu.dusays.com/2021/09/24/ae832f0aadee8.png)](https://qm.qq.com/cgi-bin/qm/qr?k=FpexWW5GCLWOM3jF3LG-YWfllXuv7cMs&jump_from=webapi)"]},"help":{"class":"page","display":["desktop","mobile"],"header":{"icon":"fas fa-headset","title":"帮助"},"pid":"faq","content":"excerpt"},"news":{"class":"list","display":["desktop","mobile"],"header":{"icon":"fas fa-exclamation-triangle","title":"近期公告"},"rows":[{"name":"关于主题与文档的更新","icon":"fas fa-info-circle","url":"https://github.com/volantis-x/hexo-theme-volantis/issues/215"},{"name":"升级小助手","icon":"fas fa-angle-double-up","url":"/v3/getting-started/#升级小助手"}]},"docs-v2":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v2"}},"docs-v3":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v3"}},"docs-v4":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-list-alt","title":"文档导航 v4"}},"docs-latest":{"class":"group","display":["desktop","mobile"],"header":{"icon":"fad fa-book","title":"文档导航 v5.0"}},"docs-volantis-latest":{"class":"group","display":["desktop","mobile"],"seo_title":"Volantis","header":{"icon":"fa fa-book","title":"文档导航 v5.0"}}}},"tag_plugins":{"note":{"icon":"\\f054","color":"","iconfont":"Font Awesome 5 Pro"},"checkbox":{"interactive":false,"color":""},"link":{"placeholder":"/media/org.volantis/logo/256/safari.png"}},"site_footer":{"layout":["aplayer","social","copyright"],"social":[{"icon":"fas fa-rss","url":"atom.xml"},{"icon":"fas fa-envelope","url":"mailto:yangling7212@gmail.com"},{"icon":"fab fa-github","url":"https://github.com/kobingogo"},{"icon":"fas fa-headphones-alt","url":"https://music.163.com/#/user/home?id=31684329"}],"source":"https://github.com/volantis-x/volantis-docs/","analytics":"<span id=\"lc-sv\">本站总访问量为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 次</span> <span id=\"lc-uv\">访客数为 <span id='number'><i class=\"fas fa-circle-notch fa-spin fa-fw\" aria-hidden=\"true\"></i></span> 人</span>\n","copyright":"[Copyright© All Rights Reserved. kobin 浙ICP备20008569号](http://beian.miit.gov.cn/)","br":"<br>"},"plugins":{"globalJquery":false,"jquery":"/libs/jquery/dist/jquery.min.js","fontawesome":"https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css","katex":{"js":"/libs/katex/katex.min.js","css":"/libs/katex/katex.min.css","render":"/libs/katex/contrib/auto-render.min.js"},"mathjax":"/libs/mathjax/es5/tex-mml-chtml.js","markdown":"/libs/github-markdown-css/github-markdown.css","marked":"/libs/marked/marked.min.js","hlsjs":"/libs/hls.js/dist/hls.min.js","fancybox":{"css":"/libs/@fancyapps/ui/dist/fancybox.css","js":"/libs/@fancyapps/ui/dist/fancybox.umd.js"},"sitesjs":{"enable":true},"friendsjs":{"enable":true},"contributorsjs":{"enable":true},"preload":{"enable":true,"service":"flying_pages","instant_page":"/libs/instant_page/instant_page.js","flying_pages":"/libs/flying-pages/flying-pages.min.js"},"lazyload":{"enable":true,"js":"/libs/vanilla-lazyload/dist/lazyload.min.js","onlypost":false,"loadingImg":null,"blurIn":true},"code_highlight":"highlightjs","highlightjs":{"copy_code":true},"prismjs":{"copy_code":true,"js":["https://npm.elemecdn.com/prismjs/components/prism-core.min.js","https://npm.elemecdn.com/prismjs/plugins/autoloader/prism-autoloader.min.js","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.min.js"],"css":["https://npm.elemecdn.com/prismjs/themes/prism-dark.css","https://npm.elemecdn.com/prismjs/plugins/line-numbers/prism-line-numbers.css"]},"scrollreveal":{"enable":null,"js":"/libs/scrollreveal/dist/scrollreveal.min.js","distance":"32px","duration":800,"interval":20,"scale":1},"wordcount":{"enable":null},"nodewaves":{"enable":null,"css":"/libs/node-waves/dist/waves.min.css","js":"/libs/node-waves/dist/waves.min.js"},"fontawesome_animation":{"enable":null,"css":"/libs/font-awesome-animation/font-awesome-animation.min.css"},"comment_typing":{"enable":null,"js":"/libs/comment_typing/comment_typing.js"},"parallax":{"enable":true,"position":"cover","shuffle":true,"duration":10000,"fade":1500,"images":["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp"]},"aplayer":{"enable":true,"js":{"aplayer":"/libs/aplayer/dist/APlayer.min.js","meting":"/libs/meting/dist/Meting.min.js"},"css":"/libs/aplayer/dist/APlayer.min.css","server":"netease","type":"playlist","id":5062959861,"fixed":false,"theme":"#1BCDFC","autoplay":false,"order":"random","loop":"all","volume":0.4,"list_max_height":"320px","list_folded":true,"autoHide":true},"pjax":{"js":"/libs/pjax/pjax.min.js","enable":true,"cover":true,"timeout":5000,"cacheBust":false,"animation":false,"nprogress":"/libs/nprogress/nprogress.js","banUrl":null},"darkmode":{"enable":true},"killOldVersionsOfIE":{"enable":true},"killNoScript":{"enable":true},"artitalk":{"js":"https://npm.elemecdn.com/artitalk","appId":"ogP8qj3veMh0LFpFWMPOyF0X-MdYXbMMI","appKey":"nHXLd3N3Jgh460t2iRQKWAtr"},"bbtalk":{"js":"https://npm.elemecdn.com/bbtalk@0.1.5/dist/bbtalk.min.js","appId":"0KzOX4vC7Jsk6vzUGNeEiUaI-gzGzoHsz","appKey":"HwCiWuxfpvKiLm4teCUgTIba","serverURLs":"https://bbapi.heson10.com"},"hpp":{"hpp_talk":{"css":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk.css","js":"https://cdn.jsdelivr.net/gh/HexoPlusPlus/HexoPlusPlus@latest/talk_user.js","limit":10,"start":0}},"fcircle":{"api":"","max_number":20,"add_number":10,"opentype":"_blank","nofollow":true,"imgError":"https://cdn.jsdelivr.net/gh/Zfour/Butterfly-friend-poor-html/friendcircle/404.png"},"message":{"enable":true,"icon":{"default":"fal fa-info-circle light-blue","quection":"fal fa-question-circle light-blue"},"time":{"default":5000,"quection":20000},"position":"topRight","transitionIn":"bounceInLeft","transitionOut":"fadeOutRight","titleColor":"var(--color-text)","messageColor":"var(--color-text)","backgroundColor":"var(--color-card)","zindex":2147483647,"copyright":{"enable":false,"title":"知识共享许可协议","message":"请遵守 CC BY-NC-SA 4.0 协议。","icon":"fab fa-creative-commons light-blue"},"aplayer":{"enable":true,"play":"fal fa-play light-blue","pause":"fal fa-pause light-blue","error":"fal fa-exclamation-square red"},"rightmenu":{"enable":true,"notice":true}},"tag_plugin_load_on_demand":{"enable":null,"plugins":["note","btns","p","gallery"]},"chat_service":null,"tidio":{"id":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"},"gitter":{"room":"hexo-theme-volantis/community"},"swiper":{"enable":true,"css":"/libs/swiper/swiper-bundle.min.css","js":"/libs/swiper/swiper-bundle.min.js"},"clipboard":{"enable":true}},"rightmenu":{"enable":true,"faicon":"fad PETERRIVE","layout":["home","hr","print","source_theme","darkmode","reading","music"],"print":{"name":"打印页面","icon":"fad fa-print TURQUOISE","defaultStyles":true},"darkmode":{"name":"暗黑模式","icon":"fad fa-eclipse-alt WISTERIA"},"reading":{"name":"阅读模式","icon":"fad fa-book-open EMERALD"},"customPicUrl":{"enable":false,"old":null,"new":null},"music":{"alwaysShow":true},"help":{"name":"常见问题","icon":"fad fa-question EMERALD","url":"https://volantis.js.org/faqs/"},"examples":{"name":"示例博客","icon":"fad fa-rss PETERRIVE","url":"https://volantis.js.org/examples/"},"contributors":{"name":"加入社区","icon":"fad fa-fan fa-spin AMETHYST","url":"https://volantis.js.org/contributors/"},"source_docs":{"name":"本站源码","icon":"fad fa-code-branch WETASPHALT","url":"https://github.com/volantis-x/volantis-docs/"},"source_theme":{"name":"主题源码","icon":"fad fa-file-code CONCRETE","url":"https://github.com/volantis-x/hexo-theme-volantis/"}},"search":{"enable":true,"service":"hexo","js":null},"color_scheme":{"common":{"theme":"#44D7B6","link":"#1b79c4","button":"#44D7B6","hover":"#ff5722","inner":"#fff","selection":"alpha(#2196f3, 0.2)"},"light":{"site_bg":"#f4f4f4","site_inner":"#fff","site_footer":"#666","card":"#fff","text":"#444","block":"#f6f6f6","codeblock":"#FFF7EA","inlinecode":"#c74f00","h1":"#3a3a3a","h2":"#3a3a3a","h3":"#333","h4":"#444","h5":"#555","h6":"#666","p":"#444","list":"#666","list_hl":"mix($color-theme, #000, 80)","meta":"#888"},"dark":{"site_bg":"#222","site_inner":"#eee","site_footer":"#aaa","card":"#333","text":"#eee","block":"#3a3a3a","codeblock":"#343a3c","inlinecode":"#D56D28","h1":"#eee","h2":"#eee","h3":"#ddd","h4":"#ddd","h5":"#ddd","h6":"#ddd","p":"#bbb","list":"#aaa","list_hl":"mix($color-theme, #fff, 80)","meta":"#888","brightness":"70%"}},"custom_css":{"cursor":{"enable":true,"text":"/media/cursor/text.png","pointer":"/media/cursor/pointer.png","default":"/media/cursor/left_ptr.png","not-allowed":"/media/cursor/circle.png","zoom-out":"/media/cursor/zoom-out.png","zoom-in":"/media/cursor/zoom-in.png","grab":"/media/cursor/openhand.png"},"font_smoothing":true,"max_width":"1080px","scrollbar":{"size":"4px","border":"2px"},"navbar":{"height":"64px","width":"auto","effect":["shadow","blur"]},"sidebar":{"effect":["shadow"]},"body":{"effect":["shadow"],"highlight":{"language":true,"grayscale":false},"text_align":{"h1":"left","h2":"left","h3":"left","h4":"left","p":"justify"}},"gap":{"h2":"48px","h3":"24px","h4":"16px","p":"1em","line_height":1.6},"border_radius":{"card":"8px","codeblock":"4px","searchbar":"8px","button":"4px"},"fontsize":{"root":"16px","h1":"1.5rem","h2":"1.5rem","h3":"1.25rem","h4":"1.125rem","h5":"1rem","h6":"1rem","list":".9375rem","meta":".875rem","code":".8125rem","footnote":".78125rem"},"fontfamily":{"logofont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"bodyfont":{"fontfamily":"Dosis, \"PingFang SC\", \"Microsoft YaHei\", Helvetica, Arial","name":"Dosis","url":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-fonts@20.5.30/Dosis/Dosis-Medium.ttf","weight":"normal","style":"normal"},"codefont":{"fontfamily":"Menlo, UbuntuMono, Monaco"}}},"analytics":{"busuanzi":null,"leancloud":{"app_id":"GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI","app_key":"4xKBXGBj6BgecU62vff5rJHs","custom_api_server":null}},"seo":{"use_tags_as_keywords":true,"use_excerpt_as_description":true,"robots":{"home_first_page":"index,follow","home_other_pages":"noindex,follow","archive":"noindex,follow","category":"noindex,follow","tag":"noindex,follow"}},"open_graph":{"image":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","twitter_card":"summary"},"structured_data":{"enable":true,"data":{"person":{"sns":["https://github.com/volantis-x"]},"logo":{"path":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}},"use_cdn":false,"custom":{},"injects":{"first":[],"style":[],"dark":[],"darkVar":[],"head":[{"layout":"inject/head/custom.ejs","order":0}],"header":[{"layout":"inject/header/custom.ejs","order":0}],"side":[{"layout":"inject/side/custom.ejs","order":0}],"topMeta":[{"layout":"inject/topMeta/custom.ejs","order":0}],"bottomMeta":[{"layout":"inject/bottomMeta/custom.ejs","order":0}],"footer":[{"layout":"inject/footer/custom.ejs","order":0}],"postEnd":[{"layout":"inject/postEnd/custom.ejs","order":0}],"bodyEnd":[{"layout":"inject/bodyEnd/custom.ejs","order":0}]},"cdnCtrl":{"prefix":"https://npm.elemecdn.com/hexo-theme-volantis@5.0.0-beta.2/source"},"pjax_cover":{"enableCover":true,"frontMatterCover":"none","coverWrapperDisplay":"none","scrollDownDisplay":"none","headerShow":"show"}};
+  volantis.LASTUPDATE = new Date('Sat Oct 10 2026 14:37:00 GMT+0000 (Coordinated Universal Time)');
+  volantis.dom = {}; // 页面Dom see: /source/js/app.js etc.
+  /******************** volantis.EventListener ********************************/
+  // 事件监听器 see: /source/js/app.js
+  volantis.EventListener = {}
+  // 这里存放pjax切换页面时将被移除的事件监听器
+  volantis.EventListener.list = []
+  //构造方法
+  function volantisEventListener(type, f, ele) {
+    this.type = type
+    this.f = f
+    this.ele = ele
+  }
+  // 移除事件监听器
+  volantis.EventListener.remove = () => {
+    volantis.EventListener.list.forEach(function (i) {
+      i.ele.removeEventListener(i.type, i.f, false)
+    })
+    volantis.EventListener.list = []
+  }
+  /******************** volantis.dom.$ ********************************/
+  // 注：这里没有选择器，也没有forEach一次只处理一个dom，这里重新封装主题常用的dom方法，返回的是dom对象，对象包含了以下方法，同时保留dom的原生API
+  function volantisDom(ele) {
+    if (!ele) ele = document.createElement("div")
+    this.ele = ele;
+    // ==============================================================
+    this.ele.find = (c) => {
+      let q = this.ele.querySelector(c)
+      if (q)
+        return new volantisDom(q)
+    }
+    // ==============================================================
+    this.ele.hasClass = (c) => {
+      return this.ele.className.match(new RegExp('(\\s|^)' + c + '(\\s|$)'));
+    }
+    this.ele.addClass = (c) => {
+      this.ele.classList.add(c);
+      return this.ele
+    }
+    this.ele.removeClass = (c) => {
+      this.ele.classList.remove(c);
+      return this.ele
+    }
+    this.ele.toggleClass = (c) => {
+      if (this.ele.hasClass(c)) {
+        this.ele.removeClass(c)
+      } else {
+        this.ele.addClass(c)
+      }
+      return this.ele
+    }
+    // ==============================================================
+    // 参数 r 为 true 表示pjax切换页面时事件监听器将被移除，false不移除
+    this.ele.on = (c, f, r = 1) => {
+      this.ele.addEventListener(c, f, false)
+      if (r) {
+        volantis.EventListener.list.push(new volantisEventListener(c, f, this.ele))
+      }
+      return this.ele
+    }
+    this.ele.click = (f, r) => {
+      this.ele.on("click", f, r)
+      return this.ele
+    }
+    this.ele.scroll = (f, r) => {
+      this.ele.on("scroll", f, r)
+      return this.ele
+    }
+    // ==============================================================
+    this.ele.html = (c) => {
+      // if(c=== undefined){
+      //   return this.ele.innerHTML
+      // }else{
+      this.ele.innerHTML = c
+      return this.ele
+      // }
+    }
+    // ==============================================================
+    this.ele.hide = (c) => {
+      this.ele.style.display = "none"
+      return this.ele
+    }
+    this.ele.show = (c) => {
+      this.ele.style.display = "block"
+      return this.ele
+    }
+    // ==============================================================
+    return this.ele
+  }
+  volantis.dom.$ = (ele) => {
+    return !!ele ? new volantisDom(ele) : null;
+  }
+  /******************** RunItem ********************************/
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = ()=>{
+          volantis.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) =>{
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index,1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+  /******************** Pjax ********************************/
+  // /layout/_plugins/pjax/index.ejs
+  // volantis.pjax.send(callBack[,"callBackName"]) 传入pjax:send回调函数
+  // volantis.pjax.push(callBack[,"callBackName"]) 传入pjax:complete回调函数
+  // volantis.pjax.error(callBack[,"callBackName"]) 传入pjax:error回调函数
+  volantis.pjax = {};
+  volantis.pjax.method = {
+    complete: new RunItem(),
+    error: new RunItem(),
+    send: new RunItem(),
+  };
+  volantis.pjax = {
+    ...volantis.pjax,
+    push: volantis.pjax.method.complete.push,
+    error: volantis.pjax.method.error.push,
+    send: volantis.pjax.method.send.push,
+  };
+  /********************  Dark Mode  ********************************/
+  // /layout/_partial/scripts/darkmode.ejs
+  // volantis.dark.mode 当前模式 dark or light
+  // volantis.dark.toggle() 暗黑模式触发器
+  // volantis.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  volantis.dark = {};
+  volantis.dark.method = {
+    toggle: new RunItem(),
+  };
+  volantis.dark = {
+    ...volantis.dark,
+    push: volantis.dark.method.toggle.push,
+  };
+  /********************  Message  ********************************/
+  // VolantisApp.message
+  /********************  isMobile  ********************************/
+  // /source/js/app.js
+  // volantis.isMobile
+  // volantis.isMobileOld
+  /********************脚本动态加载函数********************************/
+  // volantis.js(src, cb)  cb 可以传入onload回调函数 或者 JSON对象 例如: volantis.js("src", ()=>{}) 或 volantis.js("src", {defer:true,onload:()=>{}})
+  // volantis.css(src)
+
+  // 返回Promise对象，如下方法同步加载资源，这利于处理文件资源之间的依赖关系，例如：APlayer 需要在 MetingJS 之前加载
+  // (async () => {
+  //     await volantis.js("...theme.plugins.aplayer.js.aplayer...")
+  //     await volantis.js("...theme.plugins.aplayer.js.meting...")
+  // })();
+
+  // 已经加入了setTimeout
+  volantis.js = (src, cb) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+  volantis.css = (src) => {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  }
+  /********************按需加载的插件********************************/
+  // volantis.import.jQuery().then(()=>{})
+  volantis.import = {
+    jQuery: () => {
+      if (typeof jQuery == "undefined") {
+        return volantis.js("/libs/jquery/dist/jquery.min.js")
+      } else {
+        return new Promise(resolve => {
+          resolve()
+        });
+      }
+    }
+  }
+  /********************** requestAnimationFrame ********************************/
+  // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+  // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+  volantis.requestAnimationFrame = (fn)=>{
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+    }
+    window.requestAnimationFrame(fn)
+  }
+  /************************ layoutHelper *****************************************/
+  volantis.layoutHelper = (helper, html, opt)=>{
+    opt = Object.assign({clean:false, pjax:true}, opt)
+    function myhelper(helper, html, clean) {
+      volantis.tempDiv = document.createElement("div");
+      volantis.tempDiv.innerHTML = html;
+      let layoutHelper = document.querySelector("#layoutHelper-"+helper)
+      if (layoutHelper) {
+        if (clean) {
+          layoutHelper.innerHTML = ""
+        }
+        layoutHelper.append(volantis.tempDiv);
+      }
+    }
+    myhelper(helper, html, opt.clean)
+    if (opt.pjax) {
+      volantis.pjax.push(()=>{
+        myhelper(helper, html, opt.clean)
+      },"layoutHelper-"+helper)
+    }
+  }
+  /****************************** 滚动事件处理 ****************************************/
+  volantis.scroll = {
+    engine: new RunItem(),
+    unengine: new RunItem(),
+  };
+  volantis.scroll = {
+    ...volantis.scroll,
+    push: volantis.scroll.engine.push,
+  };
+  // 滚动条距离顶部的距离
+  volantis.scroll.getScrollTop = () =>{
+    let scrollPos;
+    if (window.pageYOffset) {
+      scrollPos = window.pageYOffset;
+    } else if (document.compatMode && document.compatMode != 'BackCompat') {
+      scrollPos = document.documentElement.scrollTop;
+    } else if (document.body) {
+      scrollPos = document.body.scrollTop;
+    }
+    return scrollPos;
+  }
+  // 使用 requestAnimationFrame 处理滚动事件
+  // `volantis.scroll.del` 中存储了一个数值, 该数值检测一定时间间隔内滚动条滚动的位移, 数值的检测频率是浏览器的刷新频率. 数值为正数时, 表示向下滚动. 数值为负数时, 表示向上滚动.
+  volantis.scroll.handleScrollEvents = () => {
+    volantis.scroll.lastScrollTop = volantis.scroll.getScrollTop()
+    function loop() {
+      const scrollTop = volantis.scroll.getScrollTop();
+      if (volantis.scroll.lastScrollTop !== scrollTop) {
+        volantis.scroll.del = scrollTop - volantis.scroll.lastScrollTop;
+        volantis.scroll.lastScrollTop = scrollTop;
+        // if (volantis.scroll.del > 0) {
+        //   console.log("向下滚动");
+        // } else {
+        //   console.log("向上滚动");
+        // }
+        volantis.scroll.engine.start();
+      }else{
+        volantis.scroll.unengine.start();
+      }
+      volantis.requestAnimationFrame(loop)
+    }
+    volantis.requestAnimationFrame(loop)
+  }
+  volantis.scroll.handleScrollEvents()
+  // 触发页面滚动至目标元素位置
+  volantis.scroll.to = (ele, option = {}) =>{
+    // 默认配置
+    opt = {
+      top: ele.getBoundingClientRect().top + document.documentElement.scrollTop,
+      behavior: "smooth"
+    }
+    // 定义配置
+    if ("top" in option) {
+      opt.top = option.top
+    }
+    if ("behavior" in option) {
+      opt.behavior = option.behavior
+    }
+    if ("addTop" in option) {
+      opt.top += option.addTop
+    }
+    if (!("observerDic" in option)) {
+      option.observerDic = 25
+    }
+    // 滚动
+    window.scrollTo(opt);
+    // 监视器
+    // 监视并矫正元素滚动到指定位置 
+    // 目前用于处理 toc 部分 lazyload 引起的 cls 导致的定位失败问题
+    if (option.observer) {
+      volantis.scroll.unengine.push(()=>{
+        let me = ele.getBoundingClientRect().top
+        if(!(me >= -option.observerDic && me <= option.observerDic)){
+          volantis.scroll.to(ele, option)
+        }else{
+          volantis.scroll.unengine.remove("unengineObserver")
+        }
+      },"unengineObserver")
+    }
+  }
+  /******************************************************************************/
+  /******************************************************************************/
+</script>
+  <!-- Custom Files head begin-->
+  
+  <!-- Custom Files head end-->
+</head>
+  <body itemscope itemtype="http://schema.org/WebPage">
+    <header itemscope itemtype="http://schema.org/WPHeader" id="l_header" class="l_header auto shadow blur show" style="opacity: 0">
+  <div class="container">
+  <div id="wrapper">
+    <div class="nav-sub">
+      <p class="title"></p>
+      <ul class="switcher nav-list-h m-phone" id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href="/" onclick="return false;" title="comment"></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href="/" onclick="return false;" title="toc"></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href="/">
+          
+          
+            <i class="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-favicon.ico"></i>
+          
+          
+            扬舲の博客
+          
+        </a>
+      
+
+			<div class="menu navigation">
+				<ul class="nav-list-h m-pc">
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+      
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search...">
+        </form>
+      </div>
+      
+
+			<ul class="switcher nav-list-h m-phone">
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href="/" onclick="return false;" title="search"></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href="/" onclick="return false;" title="menu"></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/" title="博客" active-action="action-home">
+                  <i class="fas fa-rss fa-fw"></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/categories/" title="分类" active-action="action-categories">
+                  <i class="fas fa-folder-open fa-fw"></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/tags/" title="标签" active-action="action-tags">
+                  <i class="fas fa-tags fa-fw"></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href="/archives/" title="归档" active-action="action-archives">
+                  <i class="fas fa-archive fa-fw"></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+
+      <!-- Custom Files header begin -->
+      
+      <!-- Custom Files header end -->
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+      <!-- see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs -->
+      <div id="none" class="cover-wrapper post dock" style="display: none;">
+        
+  <div id="parallax-window"></div>
+
+<div class="cover-body">
+  <div class="top">
+    
+    
+      <p class="title">扬舲の博客</p>
+    
+    
+  </div>
+  <div class="bottom">
+    <div class="menu navigation">
+      <div class="list-h">
+        
+          
+            <a href="/" active-action="action-home">
+              <i class="fas fa-book fa-fw"></i><p>博客</p>
+            </a>
+          
+            <a href="/categories/" active-action="action-categories">
+              <i class="fas fa-folder-open fa-fw"></i><p>分类</p>
+            </a>
+          
+            <a href="/tags/" active-action="action-tags">
+              <i class="fas fa-tags fa-fw"></i><p>标签</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://volantis.js.org/contributors/" active-action="action-https:volantisjsorgcontributors">
+              <i class="fas fa-handshake fa-fw"></i><p>鸣谢</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+      </div>
+    
+  
+</div>
+
+      <div id="safearea">
+        <div class="body-wrapper">
+          
+<div id="l_main" class>
+  <article itemscope itemtype="http://schema.org/Article" class="article post white-box reveal md shadow article-type-post" id="post" itemprop="blogPost">
+  <link itemprop="mainEntityOfPage" href="https://kobingogo.github.io/agent-dispatch-three-steps/">
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="扬舲の博客">
+  </span>
+  <span hidden itemprop="post" itemscope itemtype="http://schema.org/Post">
+    <meta itemprop="name" content="扬舲の博客">
+    <meta itemprop="description" content="前端技术博客">
+  </span>
+  
+
+
+  
+    <span hidden>
+      <meta itemprop="image" content="/media/org.volantis/blog/favicon/android-chrome-192x192.png">
+    </span>
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title" itemprop="name headline">
+        一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill
+      </h1>
+      <div class="new-meta-box">
+        
+          
+            
+<div class="new-meta-item author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <a itemprop="url" class="author" target="_blank" href="https://github.com/kobingogo" rel="external nofollow noopener noreferrer">
+    <img itemprop="image" src="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/jiangawait/CDN/images/ylblog-logo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+    <p itemprop="name">扬舲</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item category">
+    <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+    <a class="category-link" href="/categories/ai/">AI</a>
+    
+      <span hidden itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/categories/ai/" itemprop="url"><span itemprop="name">AI</span></a>
+      </span>
+    
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date" itemprop="dateCreated datePublished" datetime="2026-10-09T20:30:00+00:00">
+  <a class="notlink">
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2026年10月9日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class="notlink">
+      
+      <div id="lc-pv" data-title="一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill" data-path="/agent-dispatch-three-steps/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id="number"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+        <!-- Custom Files topMeta begin-->
+        
+        <!-- Custom Files topMeta end-->
+      </div>
+    
+  </div>
+
+
+  <div id="layoutHelper-page-plugins"></div>
+  <div id="post-body" itemprop="articleBody">
+    <p><img src="/images/agent-dispatch/cover.jpg" class="lazyload" data-srcset="/images/agent-dispatch/cover.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="派活只有三步"></p>
+<!--
+备选标题（不进正文）：
+1. 一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill（推荐）
+2. 派活给 agent 的第一句，不是「帮我做」，是「你先复述一遍」（附中英提示词 + skill）
+3. 一句被收藏 1.1 万次的提示词：一个人派活给 agent 的 3 步法（附任务卡模板）
+4. 不读代码的人怎么派活：复述、拷问、验收单，3 步 + 1 张任务卡 + 1 个 skill
+5. 一个人带一群 agent · 第 0 篇：派活就三步，复述、拷问、验收单（附模板和 skill 全文）
+-->
+
+<blockquote>
+<p>「一个人带一群 agent」系列 · 第 0 篇。五篇各自独立，可以单独读；这篇讲的是最前面那一步：派活。</p>
+</blockquote>
+<p>这篇能拿走的东西，先摆在前面：</p>
+<ul>
+<li>一句让 agent 先复述目标的提示词，中英两版</li>
+<li>一张「这个活要不要先拷问」的决策表</li>
+<li>一张三栏任务卡：完成的定义、证据清单、不做什么</li>
+<li>一个把这三步串起来的 skill，SKILL.md 全文，Claude Code 和 Codex 都能装</li>
+</ul>
+<p>本来我想拿一个翻车现场开头。就是那种你说「帮我做个 XX」，agent 吭哧半小时，交回来一个能跑、但根本不是你要的东西。</p>
+<p>说实话，点染的记录里，我找不到一次这么干净的翻车。</p>
+<p>不是因为我的 agent 多聪明。是因为点染最近两轮大改，动手之前都先有一份只写方案、不碰代码的文件。前一份的开头就写着：仅为方案，本次没有改代码、没有部署、没有合并。</p>
+<p>而那份方案里最值钱的一句，恰恰证明了我当初的需求是歪的。</p>
+<p>那一轮我对生图页提了几条意见，其中一条大意是：「质量」这个选项看不懂。要是那天我直接说一句「把质量改清楚点」，它多半会去改文案、加个问号提示，然后跟我说做完了。</p>
+<p>方案里写的是另一回事：「质量」不是画质开关，是一个藏起来的「分辨率加费用」开关。分辨率选自动的时候，选「高」会把像素悄悄抬到 4K 档，1:1 的图直接变成 2880×2880，费用和耗时都可能跟着翻几倍。</p>
+<p>对，我以为是文案问题，其实是参数问题。</p>
+<p>这件事让我想明白一个顺序：<strong>派活的第一步，是让它先把你要的东西说一遍。</strong></p>
+<p>先交代一下我是谁。我叫 kobin，X 上叫 <a href="https://x.com/KobinFlow" target="_blank" rel="external nofollow noopener noreferrer">@KobinFlow</a>，浙大计算机出身，在互联网干了十年左右。现在一个人做产品，主力是「点染 Dianran」，一个节点式的 AI 创作画布；另一个是「Mood3D」，一个 Web3D 展品库。侧栏里挂着 30 个 bot，日常在 Claude Code、Codex、Cursor、Grok Build、Grok Bot、OpenCode、WorkBuddy 之间来回切。</p>
+<p>我也还在摸索，下面这三步，是我现在派活时真的在用的。</p>
+<h2 id="第一步：先让它复述，再让它动手"><a href="#第一步：先让它复述，再让它动手" class="headerlink" title="第一步：先让它复述，再让它动手"></a>第一步：先让它复述，再让它动手</h2><div class="story post-story"><p>9 月 29 日，poteto（Lauren Tan）在 X 上发了一条很短的帖子，说这是她最近最常用的提示词之一：</p>
+<blockquote>
+<p>restate in your own words what you think my goals are and what the problem i&#39;m trying to solve is</p>
+</blockquote>
+<p>翻译一下：用你自己的话，复述一遍你认为我的目标是什么、我想解决的问题是什么。</p>
+<p>就这一句。截至 10 月初，这条帖子 1.3 万赞、1.1 万次收藏、71 万次浏览（<a href="https://x.com/poteto/status/2104744961904394699" target="_blank" rel="external nofollow noopener noreferrer">原帖</a>）。</p>
+<p><img src="/images/agent-dispatch/shot-poteto.png" class="lazyload" data-srcset="/images/agent-dispatch/shot-poteto.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="poteto 的原帖：「restate in your own words…」"></p>
+<p>收藏数快追上点赞数了。你品，你细品。</p>
+<p>我一开始也觉得，这不就是「请确认需求」吗，有什么好收藏的。后来想了想，区别在「用你自己的话」这几个字。</p>
+<p>你让它确认，它会说「好的，明白」。你让它复述，它就得把脑子里那个版本掏出来摆在桌上。哪里理解歪了，一眼就看得见。</p>
+<p>还有一个小地方，我读了好几遍才注意到：她让 agent 复述的是两样东西，目标和问题。目标是「我想要什么」，问题是「我为什么想要」。</p>
+<p>很多时候目标说对了，问题说歪了。你要一个导出按钮，它复述成「用户需要导出数据」，听着没毛病；可你真正的问题是「客户每周找我要一次报表，我烦了」，那最好的解法可能是定时发邮件，根本不是按钮。</p>
+<p>打个比方，这就像装修开工前，师傅拿着图纸跟你对一遍：这面墙拆，那面墙留，插座挪到这儿。你说的是「客厅弄敞亮点」，他听成的可能是「把承重墙打掉」。不对一遍，你是在交钥匙那天才发现的。</p>
+<p><img src="/images/agent-dispatch/fig-1.jpg" class="lazyload" data-srcset="/images/agent-dispatch/fig-1.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="派活前先对图纸：机器把任务复述成一张列着编号假设的卡片，人用红铅笔划掉猜错的那条"></p>
+<p>我现在给自己定的规矩是：复述要包含四样东西。目标是什么，这次不做什么，它在猜的地方有哪些，它觉得这个活有多大。</p>
+<p>第三样最要紧。「猜的地方」一条条编号列出来，我只需要划掉错的那几条，比我从头写需求省事得多。</p>
+<p>我拿「质量看不懂」那条意见做个示意。下面不是当时的原话，是我按这四样东西重新摆了一遍：</p>
+<ul>
+<li>只有一句「把质量改清楚点」：它最顺手的做法，是改文案、加提示，改动小，交得快。</li>
+<li>先复述：目标是让用户选质量时知道自己在选什么；问题是选完之后结果和费用对不上预期。光是把「问题」这一栏写出来，它就得回头去查「选了高之后到底发生了什么」。</li>
+<li>猜的地方：「我假设质量只影响画质」。这一条只要被我划掉，或者被它自己查代码推翻，后面的活就整个换了方向。</li>
+</ul>
+<p>你会发现，复述不是一句客套话。它逼着 agent 把「我以为」写成能被推翻的句子。</p>
+<p>点染那一轮里，还有个细节我挺喜欢。新的交互方案里专门写了一句：旧审计方案针对的是较早的版本，里面「没有返回入口」「质量偷偷联动 4K」这些问题，不能直接当作当前现状。</p>
+<p>你看，它复述的不只是我的目标，还有「现在到底是什么样」。我的意见是基于旧版本提的，代码早就往前走了一截。</p>
+<p><strong>复述闸</strong>，我给这一步起的名字。闸不开，活不派。</p>
+</div><h2 id="第二步：按改动大小，决定要不要拷问"><a href="#第二步：按改动大小，决定要不要拷问" class="headerlink" title="第二步：按改动大小，决定要不要拷问"></a>第二步：按改动大小，决定要不要拷问</h2><div class="story post-story"><p>复述完，下一个问题是：要不要再往深里问？</p>
+<p>这个我参考的是 Matt Pocock 10 月 8 日那条帖子。他手里有两个 skill：<code>/grill-with-docs</code> 让 agent 反过来拷问你，把计划问透再动手；<code>/wayfinder</code> 是活太大、一个会话装不下的时候，把它画成一张地图，拆成一张张决策工单（<a href="https://x.com/mattpocockuk/status/2108216899439894574" target="_blank" rel="external nofollow noopener noreferrer">原帖</a>、<a href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md" target="_blank" rel="external nofollow noopener noreferrer">skill 说明</a>）。</p>
+<p><img src="/images/agent-dispatch/shot-matt.png" class="lazyload" data-srcset="/images/agent-dispatch/shot-matt.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Matt Pocock 的原帖：小改动别拷问，中等以上先 /grill-with-docs，失控了再 /wayfinder"></p>
+<p>他的建议就三句。diff 很小，别拷问，直接写。预计中等以上，先拷问。拷问着拷问着规划失控了，再说一句「把它画成地图」。</p>
+<p>我判断大小，也不靠感觉，就问自己三个问题：会动几个文件？里面有没有一个我得拍板的产品决定？改坏了，回滚要多久？</p>
+<p>三个都是「少、没有、几秒钟」，那就是小活。只要有一个答案让我犹豫，就按中等处理。</p>
+<p><img src="/images/agent-dispatch/fig-2.jpg" class="lazyload" data-srcset="/images/agent-dispatch/fig-2.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="按尺寸分拣：小活直接做，中等的先一问一答，大的才摊成地图拆成工单"></p>
+<p>最后还有一条我特别认同：永远不要一上来就画地图。你可能刚开始拷问，就发现解法比你想的简单得多，那张地图和那堆工单就全白做了。</p>
+<p>截至 10 月初，这条帖子 1925 赞、1713 次收藏。中文区我只看到一条转述。</p>
+<p>我拿点染自己的三件事对了一下，刚好一档一个。</p>
+<p>小改动。点染的提交记录里有一条就叫「使用点染图标」。换个图标，改一行文案，这种活复述都嫌多，任务卡写三五行就够了。</p>
+<p>中等改动。点染 phase6 那一轮要把首页和工作台的输入框统一起来，动的文件不少，还藏着产品决定。开工前先有了一份交互方案，然后任务书里单独有一节，叫「老板拍板（绑定）」。</p>
+<p>等等，严格讲，这不算 Matt 那种一问一答的拷问。它更像是一份方案把要我拍板的问题全摆出来，我一条条回。</p>
+<p>那一节一共四条。两条是我定死的：首要服务快速出图；视频 4K 只有模型能力表声明支持时才显示。另外两条，费用怎么显示、送入画布默认带什么，我写的是「由你决定」，但要求它把决定和理由写进进度文件。</p>
+<p>后来它真的写了。费用那条的结论是：当前渠道配置里没有可匹配的单价，所以只显示「费用由所选渠道计费」，不展示金额，固定倍率和伪精确的耗时一并删掉。</p>
+<p>失控的改动。前面说的那份审计方案，就是一张地图。它把问题拆成 P0、P1、P2 三档，一共 19 张工单，按一个前端粗估，加起来二三十个人日。phase5 那一轮照着单子，做掉了 P0 和 P1 的 13 张。</p>
+<p>这张地图后来还救过一次场。那一轮先是 Grok Build 做到一半额度用完，报了 402；换 Codex，又碰上登录失效。最后是第三个 agent 接手，照着同一张单子，从断掉的那张工单接着往下做。</p>
+<p><img src="/images/agent-dispatch/fig-4.jpg" class="lazyload" data-srcset="/images/agent-dispatch/fig-4.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="任务卡存在柜子里，不在机器里：一台停摆、一台被锁，第三台取出同一张工单接着做"></p>
+<p>要是当时只有一段聊天记录，换人就等于从头再讲一遍。</p>
+<p>有意思的是下一轮。phase6 的方案里写着：本轮无需重新安排换肤、导航改版或重建能力表。地图画过一次，下一轮反而主动把范围收窄了。这就是 Matt 说的那个陷阱的反面。</p>
+<p><strong>按尺寸派活</strong>，说白了就一句：拷问是有成本的，花在值得的地方。</p>
+</div><h2 id="第三步：验收单，人自己写"><a href="#第三步：验收单，人自己写" class="headerlink" title="第三步：验收单，人自己写"></a>第三步：验收单，人自己写</h2><div class="story post-story"><p>前两步解决的是「做对的东西」。第三步解决的是「怎么算做完」。</p>
+<p>这一步我是被 Kun Chen 那条帖子说服的。他 10 月 8 日在 X 上发了一个实验：在 deepswe 评测集上，禁止 Sonnet 5.5 high 自己写任何测试，成功率反而略高一点（他自己注明统计上不显著），花的时间和 token 更少（这一项显著）（<a href="https://x.com/kunchenguid/status/2108030810691629403" target="_blank" rel="external nofollow noopener noreferrer">原帖</a>）。</p>
+<p><img src="/images/agent-dispatch/shot-kunchen.png" class="lazyload" data-srcset="/images/agent-dispatch/shot-kunchen.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Kun Chen 的原帖：禁止 agent 自己写测试，成功率 65.3% 对 66.2%，差异不显著"></p>
+<p>更狠的在后面。允许写测试的那组，写出来的测试 65% 是单元测试、35% 是集成测试，两类都没带来任何提升。他又随机挑了 44 个任务，连已有的测试都不让跑，成功率还是没变。</p>
+<p>截至 10 月初，这条帖子 2790 赞、2835 次收藏、460 条回复，是三条里吵得最凶的。</p>
+<p>他给的解释我觉得才是重点：实现和测试，都只是 agent 对你意图的一次解读。测试不会比实现本身更准。</p>
+<p>我自己就撞上过这个。个人站上那个「假完成闸门」的小 demo，产品工程做完后自己跑测试，9 个全绿。交给 Eval验收，只给了「有条件过」：部分完成、工具失败、超时、空输出，这几种假完成，它自己写的测试一个都没覆盖到。</p>
+<p>它没偷懒。它只是没想到。它想不到的东西，它写的测试也想不到。</p>
+<p>点染 phase6 的验收脚本，同样是 Codex 自己写的。但任务书最后那一段「完成时输出」，要它交什么、每项打勾还是打叉、截图放哪，是我这边定的。</p>
+<p>这里得说清楚：那份任务书的字是 Grok Bot 帮我敲的。可里面每一条标着「绑定」的，都是我拍的板。</p>
+<p>所以我现在派活，任务卡分三栏。完成的定义，我写，或者至少我逐条确认过。证据清单，它交。不做什么，我们俩一起写。</p>
+<p>完成的定义怎么写，我自己也是踩出来的。我的习惯是，每一条都写成一个别人能当场看见的行为，而不是一个形容词。</p>
+<p>「拦截假完成要可靠」，这句没法验。改成「agent 只做了一半就报完成，闸门要拦住，并在页面上写明缺了哪一项」，就能验了。Eval验收后来让补的那几种情况，换成我来写，大概就是这个样子：一条情况一行，写清楚输入是什么、期望看到什么。</p>
+<p>Kun Chen 在帖子最后也提了一句类似的猜想：如果我们觉得用测试用例比用需求更能说清意图，那就由我们自己来描述这些用例。我现在就是这么干的，只不过我描述，它实现，它不准改我写的那几行。</p>
+<p>这一栏跟 <a href="https://kobingogo.github.io/trust-agent-code-without-reading/">#436 那篇</a>讲的证据链是接着的。证据链管的是「你拿什么证明」，验收单管的是「证明什么」。后者要是交给 agent 自己定，前者再完整也只是在证明它自己的理解。</p>
+<p>这也是 #436 里说的「验收权分离」落到派活这一步的样子：干活的不定标准，定标准的不干活。</p>
+<p>试菜的人，得是点菜的那个人。</p>
+<p><img src="/images/agent-dispatch/fig-3.jpg" class="lazyload" data-srcset="/images/agent-dispatch/fig-3.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="试菜的人得是点菜的人：机器自带打满勾的卡片没人看，人只按自己手写的单子试菜打勾"></p>
+<p><strong>验收单不外包。</strong></p>
+</div><h2 id="顺手：把停止条件也写进卡里"><a href="#顺手：把停止条件也写进卡里" class="headerlink" title="顺手：把停止条件也写进卡里"></a>顺手：把停止条件也写进卡里</h2><div class="story post-story"><p>任务卡上我还会多留一栏，叫「出现这些情况就停下来问我」。</p>
+<p>最常写的就三条：同一步失败两次；要动「硬性约束」里列的东西；发现复述时的某条假设是错的。</p>
+<p>第三条是这篇独有的。复述时它说「我假设视频也要支持 4K」，我没划掉；干到一半它发现模型根本不支持，这时候它该停下来问我，而不是自己挑一个方案接着写。</p>
+<p>停止条件为什么值得单独写一栏，我在 <a href="https://kobingogo.github.io/agent-stop-conditions/">#437 那篇</a>拆得比较细，这里就不展开了。</p>
+</div><h2 id="反方意见：这三步也可能是白折腾"><a href="#反方意见：这三步也可能是白折腾" class="headerlink" title="反方意见：这三步也可能是白折腾"></a>反方意见：这三步也可能是白折腾</h2><div class="story post-story"><p>说了半天好话，冷水我自己先泼。</p>
+<p>第一盆来自 Kun Chen 自己。成功率那个提升，他明说了统计上不显著；只测了 Sonnet 5.5 high 一个模型、一个评测集；e2e 测试他压根没测到，agent 全程只写了 17 个 e2e，单元和集成测试写了 3000 多个。至于「人来描述测试用例会不会更好」，他原话是：我怀疑能，但还没证明。</p>
+<p>也就是说，「验收单人来写」这一条，我是押在一个还没被证明的方向上。</p>
+<p>第二盆来自一篇卡内基梅隆的论文 <a href="https://arxiv.org/abs/2502.13069" target="_blank" rel="external nofollow noopener noreferrer">Ambig-SWE</a>。他们把 SWE-Bench Verified 的 issue 故意删成模糊版，让 agent 可以去问一个模拟用户。结论一半是好消息：允许交互时，模糊任务上的表现比不交互最多高 74%。</p>
+<p><img src="/images/agent-dispatch/shot-ambig-swe.png" class="lazyload" data-srcset="/images/agent-dispatch/shot-ambig-swe.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Ambig-SWE 论文页（arXiv 2502.13069）"></p>
+<p>另一半就没那么好听了。交互提高了成功率，但没省步数，Claude Sonnet 4 平均从 65 步涨到 75 步。不明确要求的话，模型几乎从不主动提问；就算要求了，大多数模型也分不清哪个任务说清楚了、哪个没说清楚。论文还承认，模拟用户可能比真人更配合。</p>
+<p>还有一个细节挺扎心。Qwen 3 Coder 平均每次问 6 个问题，Claude Sonnet 4 只问 4 个，两者最后解决的比例差不多。问得多，不等于问得好，多出来的那几个，全是用户的负担。</p>
+<p>简单说：拷问能救回不少，但不是免费的，问得好不好还得看模型，看你答得上来答不上来。</p>
+<p>我自己再补一盆，没有数据，纯是体感：复述也会变成走过场。模型很会说你爱听的话，复述得越漂亮，我越容易点头放行。所以我现在只盯「猜的地方」那一栏，前面的漂亮话一律跳过。</p>
+<p>第三盆是 Matt 自己提醒过的：小改动拷问，纯属浪费。一个改文案的活，你让它复述、拷问、写验收单，三步走完，自己动手早就改好了。</p>
+<p>所以我的边界是这么划的。</p>
+<p>适合走完三步的：动了好几个文件，里面藏着产品决定，返工成本高，你又不打算逐行看 diff。</p>
+<p>可以只走第一步的：小而确定的活。复述一句，对上了就开干。</p>
+<p>三步都不适合的：你自己还没想清楚要什么的探索期。这时候别急着写验收单，先让它快速出两个原型，看着原型再说话。</p>
+<p>还有一个硬前提：你得真的会看那张验收单。写完不看，跟没写一样。</p>
+</div><h2 id="拿走就能用：任务卡、提示词、决策表和-skill"><a href="#拿走就能用：任务卡、提示词、决策表和-skill" class="headerlink" title="拿走就能用：任务卡、提示词、决策表和 skill"></a>拿走就能用：任务卡、提示词、决策表和 skill</h2><div class="story post-story"><p>乱糟糟说了这么多，落到手上就是下面几样。改改路径就能用。</p>
+<p>用法很简单：小活只用复述那段提示词；中等的活，复述完接着贴拷问那段，问完了再填任务卡；大活先拷问，问不完了再让它按 skill 里的规矩画地图。决策表拿不准的时候对一眼就行。</p>
+<p>先是任务卡。我放在仓库的 <code>docs/tasks/&lt;名字&gt;/TASK.md</code>，不放在聊天里：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># &lt;任务名&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="section">## 目标（复述确认后的版本）</span></span><br><span class="line"><span class="bullet">-</span> </span><br><span class="line"></span><br><span class="line"><span class="section">## 完成的定义（人写；agent 只能提草稿，标「草稿」）</span></span><br><span class="line"><span class="bullet">-</span> [ ] </span><br><span class="line"><span class="bullet">-</span> [ ] </span><br><span class="line"></span><br><span class="line"><span class="section">## 证据清单（agent 交）</span></span><br><span class="line"><span class="bullet">-</span> 跑过的命令 + 关键输出</span><br><span class="line"><span class="bullet">-</span> 截图 / 产物路径 / 预览链接</span><br><span class="line"><span class="bullet">-</span> 没能验证的项，以及原因</span><br><span class="line"></span><br><span class="line"><span class="section">## 不做什么</span></span><br><span class="line"><span class="bullet">-</span> </span><br><span class="line"></span><br><span class="line"><span class="section">## 硬性约束</span></span><br><span class="line"><span class="bullet">-</span> 不合并 main，不 force push</span><br><span class="line"><span class="bullet">-</span> </span><br><span class="line"></span><br><span class="line"><span class="section">## 出现这些情况就停下来问我</span></span><br><span class="line"><span class="bullet">-</span> 同一步失败两次</span><br><span class="line"><span class="bullet">-</span> 要动「硬性约束」里的东西</span><br><span class="line"><span class="bullet">-</span> 复述时的某条假设被证明是错的</span><br><span class="line"></span><br><span class="line"><span class="section">## 决策记录</span></span><br><span class="line"><span class="bullet">-</span> 日期 / 决定 / 谁拍的板 / 理由</span><br></pre></td></tr></table></figure>
+
+<p>复述提示词，中英两版。英文那句是 poteto 原句，后面三条是我自己加的：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Before you write any code, restate in your own words what you think my goals are</span><br><span class="line">and what the problem I&#x27;m trying to solve is. Then list:</span><br><span class="line">1. what you will NOT do in this task,</span><br><span class="line">2. every assumption you are making, numbered,</span><br><span class="line">3. how big you think this change is (tiny / medium / large) and why.</span><br><span class="line">Stop and wait for my confirmation.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">先别写代码。用你自己的话复述一遍：你认为我的目标是什么、我想解决的问题是什么。</span><br><span class="line">然后列出：</span><br><span class="line">1. 这次你不打算做的事；</span><br><span class="line">2. 你在猜的地方，逐条编号；</span><br><span class="line">3. 你觉得这个改动有多大（小 / 中 / 大），一句话说理由。</span><br><span class="line">写完停下，等我确认。</span><br></pre></td></tr></table></figure>
+
+<p>拷问提示词。几条规矩里，「先翻代码，只问翻不到的」来自 Ambig-SWE 的发现：问题越具体、越是用户答得上来的，越管用。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Grill me on this plan before you build it. Rules:</span><br><span class="line">- Explore the codebase first; only ask what you cannot find out yourself.</span><br><span class="line">- One question at a time. For each, give your recommended answer and why.</span><br><span class="line">- Ask about behavior, constraints and trade-offs, not implementation details.</span><br><span class="line">- Never answer your own questions for me.</span><br><span class="line">- Stop after every assumption is confirmed or struck, or after 10 questions,</span><br><span class="line">  then summarize the decisions.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">动手之前，先拷问我。规则：</span><br><span class="line">- 先翻代码，只问你自己查不到的。</span><br><span class="line">- 一次只问一个问题，每个问题附上你推荐的答案和理由。</span><br><span class="line">- 问行为、约束和取舍，不问实现细节。</span><br><span class="line">- 不准替我回答你自己的问题。</span><br><span class="line">- 所有假设都确认或划掉了，或者问满 10 个，就停下，把结论汇总给我。</span><br></pre></td></tr></table></figure>
+
+<p>「要不要拷问」决策表：</p>
+<table>
+<thead>
+<tr>
+<th>改动大小</th>
+<th>信号</th>
+<th>流程</th>
+<th>我的例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小</td>
+<td>一个文件、几行；好回滚；里面没有产品决定</td>
+<td>复述一句，任务卡三五行，直接写</td>
+<td>点染「使用点染图标」</td>
+</tr>
+<tr>
+<td>中</td>
+<td>好几个文件；至少一个产品或交互决定；碰到存储或数据</td>
+<td>复述 → 拷问 → 完整任务卡</td>
+<td>phase6 统一输入框，任务书里单列「老板拍板」</td>
+</tr>
+<tr>
+<td>大</td>
+<td>一个会话装不下；越问问题越多</td>
+<td>先拷问；规划失控了才画地图拆工单，别一上来就画</td>
+<td>审计方案拆成 P0/P1/P2 共 19 张工单</td>
+</tr>
+</tbody></table>
+<p>最后是那个 skill。存成 <code>.claude/skills/dispatch-task/SKILL.md</code> 给 Claude Code 用；Codex 读的是仓库里的 <code>.agents/skills/dispatch-task/SKILL.md</code>，或者个人目录下的 <code>~/.agents/skills/</code>（<a href="https://developers.openai.com/codex/skills" target="_blank" rel="external nofollow noopener noreferrer">Codex 官方说明</a>）。正文我写成英文，两边的模型读起来都稳一点：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: dispatch-task</span><br><span class="line">description: &gt;-</span><br><span class="line">  Use when the user hands you a new coding task, feature, fix or refactor and wants it</span><br><span class="line">  done right the first time (&quot;帮我做&quot;, &quot;派个活&quot;, &quot;implement&quot;, &quot;build&quot;, &quot;fix&quot;). Before writing</span><br><span class="line">  code: restate the goal, size the change, grill only when the change is medium or large,</span><br><span class="line"><span class="section">  and get a task card whose acceptance section is written or confirmed by the human.</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># dispatch-task：复述 → 定尺寸 → 验收单</span></span><br><span class="line"></span><br><span class="line">You are receiving a task from a human who will NOT read every line of your diff.</span><br><span class="line">Your job in this skill is to make sure you build the right thing, and that &quot;done&quot;</span><br><span class="line">is defined by the human, not by you.</span><br><span class="line"></span><br><span class="line"><span class="section">## Step 1 — Restate (always)</span></span><br><span class="line"></span><br><span class="line">Before touching any file, reply with:</span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> <span class="strong">**Goal**</span>: in your own words, what the user wants and the problem they are trying to solve.</span><br><span class="line"><span class="bullet">2.</span> <span class="strong">**Not doing**</span>: what you will deliberately leave out.</span><br><span class="line"><span class="bullet">3.</span> <span class="strong">**Assumptions**</span>: every guess you are making, numbered, so the user can strike them.</span><br><span class="line"><span class="bullet">4.</span> <span class="strong">**Size guess**</span>: tiny / medium / large (see Step 2), with one line of reasoning.</span><br><span class="line"></span><br><span class="line">Then STOP and wait. Do not start until the user confirms or corrects the restatement.</span><br><span class="line">If the user corrects you, restate again in one short paragraph.</span><br><span class="line"></span><br><span class="line"><span class="section">## Step 2 — Size the change, pick the flow</span></span><br><span class="line"></span><br><span class="line">| Size | Signal | Flow |</span><br><span class="line">|---|---|---|</span><br><span class="line">| tiny | one file or a few lines; easy to revert; no product decision inside | Skip grilling. Write the task card (Step 3) in 3–5 lines and do it. |</span><br><span class="line">| medium | several files, or at least one product/UX decision, or touches data/storage | Grill first (below), then write the full task card. |</span><br><span class="line">| large | more than one session can hold; many open decisions; you keep finding new questions | Grill first. Only if planning gets out of hand, turn it into a map (below). Never start with a map. |</span><br><span class="line"></span><br><span class="line"><span class="section">### Grilling rules (medium and large)</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> Explore the codebase first. Ask only what you cannot find out yourself.</span><br><span class="line"><span class="bullet">-</span> Ask ONE question at a time. For each question give your recommended answer and why.</span><br><span class="line"><span class="bullet">-</span> Ask about behavior, constraints and trade-offs the user can actually answer, not implementation details.</span><br><span class="line"><span class="bullet">-</span> Never answer your own questions on the user&#x27;s behalf.</span><br><span class="line"><span class="bullet">-</span> Stop grilling when every assumption from Step 1 is confirmed or struck, or after 10 questions; then summarize the decisions.</span><br><span class="line"></span><br><span class="line"><span class="section">### Map (only when grilling gets out of hand)</span></span><br><span class="line"></span><br><span class="line">Write <span class="code">`docs/tasks/&lt;slug&gt;/MAP.md`</span>: the destination in one sentence, then tickets grouped by</span><br><span class="line">priority (P0 = fixes misleading or blocking behavior; P1 = main flow; P2 = polish). Each ticket</span><br><span class="line">has: id, one-line goal, files likely touched, open decision (if any), and whether it needs the</span><br><span class="line">human (HITL) or not (AFK). Work tickets one at a time. Re-check the map after every ticket;</span><br><span class="line">delete tickets that turned out unnecessary.</span><br><span class="line"></span><br><span class="line"><span class="section">## Step 3 — Task card (written into the repo, not just the chat)</span></span><br><span class="line"></span><br><span class="line">Create or update <span class="code">`docs/tasks/&lt;slug&gt;/TASK.md`</span> with this structure:</span><br><span class="line"></span><br><span class="line"><span class="code">```markdown</span></span><br><span class="line"><span class="code"># &lt;title&gt;</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Goal (confirmed restatement)</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Definition of done            &lt;!-- HUMAN-OWNED --&gt;</span></span><br><span class="line"><span class="code">- [ ] ...</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Evidence I must hand back</span></span><br><span class="line"><span class="code">- commands run + key output lines</span></span><br><span class="line"><span class="code">- screenshots / file paths / URLs</span></span><br><span class="line"><span class="code">- what I could NOT verify, and why</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Not doing</span></span><br><span class="line"><span class="code">- ...</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Hard constraints</span></span><br><span class="line"><span class="code">- ...</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Stop and ask me if</span></span><br><span class="line"><span class="code">- ...</span></span><br><span class="line"><span class="code">- the same step fails twice</span></span><br><span class="line"><span class="code">- I need to change anything listed under Hard constraints</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">## Decisions log</span></span><br><span class="line"><span class="code">- &lt;date&gt; &lt;decision&gt; — &lt;who decided&gt; — &lt;why&gt;</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Rules for the <span class="strong">**Definition of done**</span> section:</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> It belongs to the human. You may propose items, but mark each one <span class="code">`(draft)`</span>.</span><br><span class="line"><span class="bullet">-</span> Do not begin implementation until the human has removed <span class="code">`(draft)`</span> or rewritten the list.</span><br><span class="line"><span class="bullet">-</span> Never edit this section after work starts. If you think it is wrong, stop and say so.</span><br><span class="line"><span class="bullet">-</span> Tests you write yourself are evidence, not the definition of done. When the human describes</span><br><span class="line">  a test case in their own words, implement exactly that case and name it in your report.</span><br><span class="line"></span><br><span class="line"><span class="section">## Step 4 — Report</span></span><br><span class="line"></span><br><span class="line">When you stop, reply in this order:</span><br><span class="line"></span><br><span class="line"><span class="bullet">1.</span> Each Definition-of-done item: ✅ / ❌ / ⚠️ with the evidence path.</span><br><span class="line"><span class="bullet">2.</span> Anything under &quot;Stop and ask me if&quot; that happened.</span><br><span class="line"><span class="bullet">3.</span> What is unverified and needs the human (real accounts, real devices, money, taste).</span><br><span class="line"><span class="bullet">4.</span> Update the Decisions log in TASK.md before you finish.</span><br><span class="line"></span><br><span class="line">Do not say &quot;done&quot; if any item is ❌ or ⚠️. Say &quot;partially done&quot; and list what is left.</span><br></pre></td></tr></table></figure>
+
+<p>装好以后，派活时说一句「用 dispatch-task 派这个活」，或者直接描述任务，它会先停在复述那一步等你。</p>
+<p>这个 skill 里有几处是我刻意的。完成的定义那一栏标成人的地盘，agent 只能提草稿，开工以后不准改；拷问最多 10 个问题，问满就收；地图只在拷问失控时才画，每做完一张工单回头看一眼，用不着的就删。</p>
+<p>还有一处我刻意没写：它该用什么框架、怎么拆函数。那些是它的活，我不管。这个 skill 只管两件事，做对的东西，以及谁说了算「做完了」。</p>
+</div><h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><div class="story post-story"><p>问：任务很小，也要写任务卡吗？</p>
+<p>要写，但三五行就够：目标一句，完成的定义一两条，不做什么一条。真正花时间的是拷问那一步，小活直接跳过。</p>
+<p>问：Claude 号被封了，活会不会断？</p>
+<p>这两周中文区聊得最多的就是 Claude 封号，我看到不少人的痛点不在号本身，在于需求和进度全在那个号的聊天记录里。我自己的做法是，任务卡、决策记录、进度文件全都写进仓库，不留在某个 agent 的聊天记录里。号没了，换 Codex 或者别的 agent 打开同一个仓库，读一遍 <code>TASK.md</code> 就能接着干。点染那一轮 Grok Build 额度用完、Codex 又登录失效，最后换人接手也没丢活，靠的就是这些文件。</p>
+<p>问：它复述得头头是道，交回来还是不对，怎么办？</p>
+<p>我也碰到过。多半是复述里的「假设」那一栏写得太虚。让它把每条假设写成能被一句话推翻的样子，比如「我假设视频也要支持 4K」，而不是「我会兼顾各种情况」。</p>
+<p>问：验收单我不会写，或者没时间写？</p>
+<p>那就让它先写草稿，你只做一件事：逐条看，删掉、改掉、补上。看不懂的那条，就是你还没想清楚的地方，先别派。</p>
+<p>草稿里的每一条，它都得标上「草稿」两个字。我划过、改过，才把这两个字删掉。skill 里也是这么写的：这两个字没删之前，它不准动手。</p>
+</div><h2 id="系列导航"><a href="#系列导航" class="headerlink" title="系列导航"></a>系列导航</h2><div class="story post-story"><p>这是第 0 篇，讲派活。后面四篇，各管活交出去之后的一段：</p>
+<ul>
+<li><a href="https://kobingogo.github.io/trust-agent-code-without-reading/">我不再逐行看 agent 写的代码了，所以得先想清楚：凭什么信它</a>：不读每一行，靠什么相信它，讲证据链。</li>
+<li><a href="https://kobingogo.github.io/agent-stop-conditions/">我不再琢磨 prompt 了，我在写「什么时候停」</a>：循环什么时候该停，停止条件和外置刹车怎么写。</li>
+<li><a href="https://kobingogo.github.io/where-agent-rules-live/">规矩放在哪一层</a>：同一条规矩，放在对话、AGENTS.md、lint、测试还是记忆里。</li>
+<li><a href="https://kobingogo.github.io/minimal-agent-workflow/">一个 agent、一个 diff 工具、自己验收</a>：拿 Jest 作者的极简路线，对一下我这支 30 个 bot 的舰队。</li>
+</ul>
+<p>回头看，这三步一点都不高级。复述、问清楚、写好验收单，跟带一个新同事差不多。</p>
+<p>我自己也还没做到每次都走完。但每次偷懒跳过的那一步，后来大概率都得还。</p>
+<p>说到底，agent 越能干，派活这一步越不能省。它干得快，跑偏了也跑得快；你省下的那几分钟，最后都会变成验收时的半小时。</p>
+<p>如果你也刚开始带 agent，先从那一句复述开始就好，别的慢慢加。我们一起慢慢摸。</p>
+</div><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><div class="story post-story"><ul>
+<li><a href="https://x.com/poteto/status/2104744961904394699" target="_blank" rel="external nofollow noopener noreferrer">poteto：restate in your own words…（2026-09-29）</a></li>
+<li><a href="https://x.com/mattpocockuk/status/2108216899439894574" target="_blank" rel="external nofollow noopener noreferrer">Matt Pocock：Should you /grill-with-docs, /wayfinder, or just one shot the code?（2026-10-08）</a></li>
+<li><a href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md" target="_blank" rel="external nofollow noopener noreferrer">mattpocock/skills：grill-with-docs 说明</a></li>
+<li><a href="https://github.com/mattpocock/skills/blob/HEAD/skills/engineering/wayfinder/SKILL.md" target="_blank" rel="external nofollow noopener noreferrer">mattpocock/skills：wayfinder SKILL.md</a></li>
+<li><a href="https://x.com/kunchenguid/status/2108030810691629403" target="_blank" rel="external nofollow noopener noreferrer">Kun Chen：AI-written unit tests and integration tests are empirically proven to be unhelpful（2026-10-08）</a></li>
+<li><a href="https://arxiv.org/abs/2502.13069" target="_blank" rel="external nofollow noopener noreferrer">Vijayvargiya 等《Ambig-SWE: Interactive Agents to Overcome Underspecificity in Software Engineering》</a></li>
+<li><a href="https://developers.openai.com/codex/skills" target="_blank" rel="external nofollow noopener noreferrer">OpenAI：Codex Agent Skills</a></li>
+</ul>
+
+</div>
+  </div>
+  
+  
+    
+    <div class="footer">
+      
+      
+      
+        <div class="copyright">
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href="https://kobingogo.github.io/agent-dispatch-three-steps/">https://kobingogo.github.io/agent-dispatch-three-steps/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class="article-meta" id="bottom">
+    <div class="new-meta-box">
+      
+        
+          <div class="new-meta-item date" itemprop="dateModified" datetime="2026-10-10T14:36:38+00:00">
+  <a class="notlink">
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>本页文档最后更新于：2026年10月10日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ai/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>AI</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/agent/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Agent</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/ai%E7%BC%96%E7%A8%8B/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>AI编程</p></a></div>
+  <span hidden itemprop="keywords">AI Agent AI编程</span>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title rel="external nofollow noopener noreferrer" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://kobingogo.github.io/agent-dispatch-three-steps/&title=一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/qq.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qq.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title rel="external nofollow noopener noreferrer" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://kobingogo.github.io/agent-dispatch-three-steps/&title=一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/qzone.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/qzone.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title rel="external nofollow noopener noreferrer" target="_blank" href="http://service.weibo.com/share/share.php?url=https://kobingogo.github.io/agent-dispatch-three-steps/&title=一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill - 扬舲の博客&summary=">
+          
+            <img src="/media/org.volantis/logo/128/weibo.png" class="lazyload" data-srcset="/media/org.volantis/logo/128/weibo.png" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+    <!-- Custom Files bottomMeta begin -->
+    
+    <!-- Custom Files bottomMeta end -->
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+      
+        <a class="next" href="/applied-ai-doesnt-work/">
+          <p class="title">和 300 多位高管聊完，他说企业 AI 大多只是让烂流程跑得更快<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class="content">
+作者：jin kobin（@KobinFlow）本文为对原文的摘译、点评与改写。原文：vas（@vasuman）《Applied AI Doesn&#39;t Work》，https://x....</p>
+        </a>
+      
+    </div>
+  
+  <!-- Custom Files postEnd begin-->
+  
+  <!-- Custom Files postEnd end-->
+</article>
+
+
+  
+
+  
+  <article class="post white-box reveal shadow" id="comments">
+    <span hidden>
+      <meta itemprop="discussionUrl" content="/agent-dispatch-three-steps/index.html#comments">
+    </span>
+    <p ct><i class="fas fa-comments"></i> 评论</p>
+    
+    
+    <div id="layoutHelper-comments"></div>
+
+  </article>
+  
+
+
+
+
+
+</div>
+<aside id="l_side" itemscope itemtype="http://schema.org/WPSideBar">
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile pjax" id="toc-div">
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class="name">本文目录</span>
+    
+  </header>
+
+
+    <div class="content">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%85%88%E8%AE%A9%E5%AE%83%E5%A4%8D%E8%BF%B0%EF%BC%8C%E5%86%8D%E8%AE%A9%E5%AE%83%E5%8A%A8%E6%89%8B"><span class="toc-text">第一步：先让它复述，再让它动手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%8C%89%E6%94%B9%E5%8A%A8%E5%A4%A7%E5%B0%8F%EF%BC%8C%E5%86%B3%E5%AE%9A%E8%A6%81%E4%B8%8D%E8%A6%81%E6%8B%B7%E9%97%AE"><span class="toc-text">第二步：按改动大小，决定要不要拷问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E9%AA%8C%E6%94%B6%E5%8D%95%EF%BC%8C%E4%BA%BA%E8%87%AA%E5%B7%B1%E5%86%99"><span class="toc-text">第三步：验收单，人自己写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%BA%E6%89%8B%EF%BC%9A%E6%8A%8A%E5%81%9C%E6%AD%A2%E6%9D%A1%E4%BB%B6%E4%B9%9F%E5%86%99%E8%BF%9B%E5%8D%A1%E9%87%8C"><span class="toc-text">顺手：把停止条件也写进卡里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E6%96%B9%E6%84%8F%E8%A7%81%EF%BC%9A%E8%BF%99%E4%B8%89%E6%AD%A5%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E7%99%BD%E6%8A%98%E8%85%BE"><span class="toc-text">反方意见：这三步也可能是白折腾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E8%B5%B0%E5%B0%B1%E8%83%BD%E7%94%A8%EF%BC%9A%E4%BB%BB%E5%8A%A1%E5%8D%A1%E3%80%81%E6%8F%90%E7%A4%BA%E8%AF%8D%E3%80%81%E5%86%B3%E7%AD%96%E8%A1%A8%E5%92%8C-skill"><span class="toc-text">拿走就能用：任务卡、提示词、决策表和 skill</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-text">常见问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E5%88%97%E5%AF%BC%E8%88%AA"><span class="toc-text">系列导航</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </section>
+
+  
+
+
+<!-- 没有 pjax 占位会报错 万恶的 pjax -->
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+  <div class="pjax">
+    <!-- pjax占位 -->
+  </div>
+
+
+  <!-- Custom Files side begin -->
+  
+  <!-- Custom Files side end -->
+</aside>
+
+
+
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<pjax>
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  pdata.commentConfig={};
+  //  see: /layout/_partial/scripts/_ctrl/coverCtrl.ejs
+  
+    // header
+    var l_header=document.getElementById("l_header");
+    
+    l_header.classList.add("show");
+    
+    
+      // cover
+      var cover_wrapper=document.querySelector('#l_cover .cover-wrapper');
+      var scroll_down=document.getElementById('scroll-down');
+      cover_wrapper.id="none";
+      cover_wrapper.style.display="none";
+      scroll_down.style.display="none";
+    
+  
+</script>
+</pjax>
+        </div>
+        
+  
+  <footer class="footer clearfix" itemscope itemtype="http://schema.org/WPFooter">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js theme="#1BCDFC" autoplay="false" volume="0.4" loop="all" order="random" fixed="false" list-max-height="320px" server="netease" type="playlist" id="5062959861" list-folded="true">
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper" itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          
+            
+              <a href="/atom.xml" class="social fas fa-rss flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="mailto:yangling7212@gmail.com" class="social fas fa-envelope flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://github.com/kobingogo" class="social fab fa-github flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+            
+              <a href="https://music.163.com/#/user/home?id=31684329" class="social fas fa-headphones-alt flat-btn" target="_blank" rel="external nofollow noopener noreferrer" itemprop="url">
+                
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div class="copyright">
+        <p><a href="http://beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">Copyright© All Rights Reserved. kobin 浙ICP备20008569号</a></p>
+
+        </div>
+      
+    
+    <!-- Custom Files footer begin-->
+    
+    <!-- Custom Files footer end-->
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="/" onclick="return false;" title="top"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+  /******************** volantis.dom ********************************/
+  // 页面选择器 将dom对象缓存起来 see: /source/js/app.js etc.
+  volantis.dom.bodyAnchor = volantis.dom.$(document.getElementById("safearea")); // 页面主体
+  volantis.dom.topBtn = volantis.dom.$(document.getElementById('s-top')); // 向上
+  volantis.dom.wrapper = volantis.dom.$(document.getElementById('wrapper')); // 整个导航栏
+  volantis.dom.coverAnchor = volantis.dom.$(document.querySelector('#l_cover .cover-wrapper')); // 1个
+  volantis.dom.switcher = volantis.dom.$(document.querySelector('#l_header .switcher .s-search')); // 搜索按钮   移动端 1个
+  volantis.dom.header = volantis.dom.$(document.getElementById('l_header')); // 移动端导航栏
+  volantis.dom.search = volantis.dom.$(document.querySelector('#l_header .m_search')); // 搜索框 桌面端 移动端 1个
+  volantis.dom.mPhoneList = volantis.dom.$(document.querySelectorAll('#l_header .m-phone .list-v')); //  手机端 子菜单 多个
+</script>
+
+<script>
+  
+  volantis.css("https://cdn.jsdelivr.net/gh/inkss/fontawesome@5.15.3/css/all.min.css");
+  
+  
+  
+</script>
+
+<!-- required -->
+
+
+<!-- internal -->
+
+<script src="/js/app.js?time=1791643020176.js"></script>
+
+
+
+  
+  
+  
+  <div id="rightmenu-wrapper">
+    <ul class="list-v rightmenu" id="rightmenu-content">
+      <li class="navigation menuNavigation-Content">
+        <a class="nav icon-only fix-cursor-default" onclick="history.back()"><i class="fad PETERRIVE fa-arrow-left fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="history.forward()"><i class="fad PETERRIVE fa-arrow-right fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" onclick="window.location.reload()"><i class="fad PETERRIVE fa-redo fa-fw"></i></a>
+        <a class="nav icon-only fix-cursor-default" href="/"><i class="fad PETERRIVE fa-home fa-fw"></i></a>
+      </li>
+      <li class="option menuOption-Content">
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyText">
+          
+          <i class="fad PETERRIVE fa-copy fa-fw"></i> 复制文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyPaste">
+          
+          <i class="fad PETERRIVE fa-paste fa-fw mR12"></i> 粘贴文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySelect">
+          
+          <i class="fad PETERRIVE fa-object-ungroup fa-fw mR12"></i> 全选文本
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyCut">
+          
+          <i class="fad PETERRIVE fa-cut fa-fw mR12"></i> 剪切文本
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="searchWord">
+          
+          <i class="fad PETERRIVE fa-search fa-fw"></i> 站内搜索
+        </span>
+        
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="openTab">
+          
+          <i class="fad PETERRIVE fa-external-link-square-alt fa-fw mR12"></i> 在新标签页打开
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copySrc">
+          
+          <i class="fad PETERRIVE fa-image fa-fw mR12"></i> 复制图片地址
+        </span>
+        <span class="vlts-menu opt fix-cursor-default menu-Option" data-fn-type="copyImg">
+          
+          <i class="fad PETERRIVE fa-images fa-fw mR12"></i> 复制图片文件
+        </span>
+      </li>
+      
+        
+      
+        
+          <hr class="menuLoad-Content">
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="printHtml">
+              <i class="fad fa-print TURQUOISE fa-fw "></i> 打印页面
+            </span>
+          </li>  
+        
+      
+        
+          
+    <li class="menuLoad-Content">
+      <a class="vlts-menu fix-cursor-default" href="https://github.com/volantis-x/hexo-theme-volantis/" id="https:githubcomvolantis-xhexo-theme-volantis" rel="external nofollow noopener noreferrer" target="_blank">
+        <i class="fad fa-file-code CONCRETE fa-fw"></i> 主题源码
+      </a>
+    </li>
+  
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default toggle-mode-btn" id="menuDarkBtn">
+              <i class="fad fa-eclipse-alt WISTERIA fa-fw "></i> 暗黑模式
+            </span>
+          </li>
+        
+      
+        
+          <li class="option menuOption-Content">
+            <span class="vlts-menu opt fix-cursor-default" id="readingModel">
+              <i class="fad fa-book-open EMERALD fa-fw "></i> 阅读模式
+            </span>
+          </li>  
+        
+      
+        
+          <div id="menuMusic">
+            <li class="music name menuOption-Content">
+              <p class="nav music-title fix-cursor-default"></p>
+            </li>
+            <li class="music ctrl">
+              <a class="nav icon-only backward fix-cursor-default" onclick="RightMenuAplayer.aplayerBackward()"><i class="fad PETERRIVE fa-step-backward fa-fw "></i></a>
+              <a class="nav icon-only toggle fix-cursor-default" onclick="RightMenuAplayer.aplayerToggle()"><i class="fad PETERRIVE fa-play fa-fw "></i></a>
+              <a class="nav icon-only forward fix-cursor-default" onclick="RightMenuAplayer.aplayerForward()"><i class="fad PETERRIVE fa-step-forward fa-fw "></i></a>
+            </li>
+            <li class="music volume">
+              <div class="nav volume">
+                <div class="aplayer-volume-bar-wrap">
+                  <div class="aplayer-volume-bar fix-cursor-pointer">
+                    <div class="aplayer-volume"></div>
+                    <i class="left fad PETERRIVE fa-volume-off fa-fw"></i>
+                    <i class="right fad PETERRIVE fa-volume-up fa-fw"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </div>
+        
+      
+    </ul>
+  </div>
+  <script>volantis.js('/js/plugins/rightMenu.js?time=1791643020176')</script>
+
+
+
+<!-- rightmenu要在darkmode之前（ToggleButton） darkmode要在comments之前（volantis.dark.push）-->
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "color-scheme";
+const rootElementDarkModeAttributeName = "color-scheme";
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+  getCustomDarkMode();
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+/**
+ * get target mode
+ */
+ const getCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  if(currentSetting=="dark"){
+    volantis.dark.mode="light";
+  }else{
+    volantis.dark.mode="dark";
+  }
+  // console.log(volantis.dark.mode)
+};
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+/**
+ * 暗黑模式触发器
+ */
+volantis.dark.toggle=()=>{
+  const mode = toggleCustomDarkMode();
+  applyCustomDarkModeSettings(mode);
+  // 使用 volantis.dark.push 方法传入volantis.dark.toggle回调函数 参见layout/_partial/scripts/global.ejs
+  volantis.dark.method.toggle.start();
+}
+/**
+ * bind event for toggle button
+ */
+
+function bindToggleButton() {
+  var btn= document.querySelectorAll("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn")
+  btn.forEach(function (e) {
+    volantis.dom.$(e).on('click',volantis.dark.toggle);
+  })
+}
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", ()=>{
+  volantis.requestAnimationFrame(bindToggleButton)
+});
+volantis.pjax.push(bindToggleButton);
+
+const darkModelListeners={
+  dark:(mediaQueryList )=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "dark";
+    }
+    volantis.dark.method.toggle.start();
+  },
+  light:(mediaQueryList)=>{
+    if(mediaQueryList.matches){
+      volantis.dark.mode = "light";
+    }
+    volantis.dark.method.toggle.start();
+  }
+}
+window.matchMedia('(prefers-color-scheme: dark)').addListener(darkModelListeners.dark)
+window.matchMedia('(prefers-color-scheme: light)').addListener(darkModelListeners.light)
+</script>
+
+
+
+
+<script>
+  function loadIssuesJS() {
+    
+      const sites_api = document.getElementById('sites-api');
+      if (sites_api != undefined && typeof SitesJS === 'undefined') {
+        volantis.js("/js/plugins/sites.js?time=1791643020176")
+      }
+    
+    
+      const friends_api = document.getElementById('friends-api');
+      if (friends_api != undefined && typeof FriendsJS === 'undefined') {
+        volantis.js("/js/plugins/friends.js?time=1791643020176")
+      }
+    
+    
+      const contributors_api = document.getElementById('contributors-api');
+      if (contributors_api != undefined && typeof ContributorsJS === 'undefined') {
+        volantis.js("/js/plugins/contributors.js?time=1791643020176")
+      }
+    
+  };
+  loadIssuesJS()
+  volantis.pjax.push(()=>{
+    loadIssuesJS();
+  })
+
+</script>
+
+
+
+
+  <script defer src="/libs/vanilla-lazyload/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: ["#"],
+	maxRPS: 6,
+	hoverDelay: 0
+  };
+</script>
+<script defer src="/libs/flying-pages/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+  <script>
+  volantis.css("/libs/aplayer/dist/APlayer.min.css");
+  (async () => {
+    // APlayer 需要在  MetingJS 之前加载
+    await volantis.js("/libs/aplayer/dist/APlayer.min.js")
+    await volantis.js("/libs/meting/dist/Meting.min.js")
+  
+    // 右键 music 需要在 APlayer  MetingJS 之后加载
+    await volantis.js('/js/plugins/aplayer.js?time=1791643020178')
+  
+  })();
+
+  function SetAPlayerPlugin(){
+    let Metings = document.querySelectorAll('meting-js');
+    if (Metings.length === 0) {return;};
+    if (Metings[0].aplayer && Metings[0].aplayer.on) {
+      // improve the accessibility https://web.dev/button-name/
+      document.querySelectorAll(".aplayer-icon-menu").forEach(e=>{
+        e.setAttribute("aria-label","Aplayer Menu")
+      })
+      // message see: /layout/_plugins/message/script.ejs
+      
+        try {
+          setTimeout(() => {
+            Metings.forEach((item, index) => {
+              const aplayerItem = item.aplayer; if(!aplayerItem) return;
+              const rightAplayerCheck = volantis.THEMECONFIG.rightmenu.layout.includes('music') 
+                && item.meta.id === volantis.THEMECONFIG.plugins.aplayer.id;
+              if(rightAplayerCheck) RightMenuAplayer.checkAPlayer();
+              if(aplayerItem.events.events.play.every(item => {return item.name !== 'messagePlay'})) {
+                aplayerItem.on('play', function messagePlay() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                      icon: 'fal fa-play light-blue',
+                      transitionIn: 'flipInX',
+                      transitionOut: 'flipOutX'
+                    });
+                  }, 100)
+                });
+              }
+              if(aplayerItem.events.events.pause.every(item => {return item.name !== 'messagePause'})) {
+                aplayerItem.on('pause', function messagePause() {
+                  let index = aplayerItem.list.index;
+                  let title = aplayerItem.list.audios[index].title;
+                  let artist = aplayerItem.list.audios[index].artist;
+                  setTimeout(() => {
+                    // 歌曲播放结束也会触发 pause 事件，为了避免错误提示，等待一会儿
+                    if(aplayerItem.paused) {
+                      VolantisApp.message('音乐通知', title + ' - ' + artist, {
+                        icon: 'fal fa-pause light-blue',
+                        transitionIn: 'flipInX',
+                        transitionOut: 'flipOutX'
+                      });
+                    }
+                  }, 100)
+                });
+              }
+            });
+          }, 500)
+        } catch (error) { console.error(error); }
+      
+    }else{
+      volantis.requestAnimationFrame(SetAPlayerPlugin)
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    SetAPlayerPlugin();
+  });
+  volantis.pjax.push(SetAPlayerPlugin);
+</script>
+
+
+
+
+  <script>
+  volantis.layoutHelper("comments",`<div id="valine_container"><i class="fas fa-cog fa-spin fa-fw fa-2x"></i></div>`)
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '/';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+    var valine = new Valine();
+    valine.init(Object.assign(Object.assign({"js":"https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js","emojiCDN":"https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/","path":"/","placeholder":"快来评论吧~","appId":"5sFYD7w0OI6I1UaD3iifvim1-gzGzoHsz","appKey":"bnpoUc3tr7wSd41wVcrc6Uzr","meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }),pdata.commentConfig))
+    fancybox_valine()
+  }
+  function fancybox_valine() {
+    if(typeof VolantisFancyBox === "undefined") {
+      const checkFancyBox = setInterval(() => {
+        if(typeof VolantisFancyBox === "undefined") return;
+        clearInterval(checkFancyBox);
+        VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+      })
+    } else {
+      VolantisFancyBox.bind('#valine_container .vcontent img:not(.vemoji)');
+    }
+  }
+  volantis.js('https://npm.elemecdn.com/valine@1.4/dist/Valine.min.js').then(pjax_valine)
+  volantis.pjax.push(pjax_valine);
+</script>
+
+
+
+
+
+<!-- optional -->
+
+  <script>
+  const SearchServiceDataPathRoot = ("/" || "/").endsWith("/")
+    ? "/" || "/"
+    : "//" || "/";
+  const SearchServiceDataPath = SearchServiceDataPathRoot + "content.json";
+
+  function loadSearchScript() {
+    // see: layout/_partial/scripts/_ctrl/cdnCtrl.ejs
+    return volantis.js("/js/search/hexo.js?time=1791643020176");
+  }
+
+  function loadSearchService() {
+    loadSearchScript();
+    document.querySelectorAll(".input.u-search-input").forEach((e) => {
+      e.removeEventListener("focus", loadSearchService, false);
+    });
+  }
+
+  // 打开并搜索 字符串 s
+  function OpenSearch(s) {
+    loadSearchScript().then(() => {
+      SearchService.setQueryText(s);
+      SearchService.search();
+    });
+  }
+
+  // 访问含有 ?s=xxx  的链接时打开搜索 // 与搜索引擎 structured data 相关: /scripts/helpers/structured-data/lib/config.js
+  if (window.location.search && /^\?s=/g.test(window.location.search)) {
+    let queryText = decodeURI(window.location.search)
+      .replace(/\ /g, "-")
+      .replace(/^\?s=/g, "");
+    OpenSearch(queryText);
+  }
+
+  // 搜索输入框获取焦点时加载搜索
+  document.querySelectorAll(".input.u-search-input").forEach((e) => {
+    e.addEventListener("focus", loadSearchService, false);
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+
+
+
+  function pjax_highlightjs_copyCode(){
+    if (!(document.querySelector(".highlight .code pre") ||
+      document.querySelector(".article pre code"))) {
+      return;
+    }
+    VolantisApp.utilCopyCode(".highlight .code pre, .article pre code")
+  }
+  volantis.requestAnimationFrame(pjax_highlightjs_copyCode)
+  volantis.pjax.push(pjax_highlightjs_copyCode)
+
+</script>
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'GCYDRKI6XRkyC7EuEhJv90ia-MdYXbMMI',
+    app_key: '4xKBXGBj6BgecU62vff5rJHs',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'https://kobingogo.github.io' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'https://kobingogo.github.io' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+
+
+
+
+  <script>
+  let imgs = ["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/034.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/033.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/054.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/016.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/039.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/052.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/019.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/035.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/012.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/038.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/002.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/056.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/025.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/051.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/005.webp","https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/042.webp"];
+  let index = 0;
+  let IntervalParallax = null;
+
+  function parallax(){
+    let ParallaxWindow = document.querySelector("#parallax-window");
+    
+    Parallax.window = ParallaxWindow;
+    Parallax.options.fade = 1500;
+    Parallax.cache = 1;
+    next_parallax();
+    Parallax.init();
+    if (imgs.length>1) {
+      IntervalParallax = setInterval(function () {
+        next_parallax();
+      }, '10000');
+    }
+  }
+
+  function next_parallax() {
+    if (typeof Parallax == "undefined") {
+      return
+    }
+    
+      if (!document.querySelector("#full")&&!document.querySelector("#half")) {
+        return
+      }
+    
+    if (imgs.length>=1) {
+      Parallax.options.src = imgs[index % imgs.length];
+      Parallax.start();
+      index++;
+      if (Parallax.cache) {
+        fetch(imgs[index % imgs.length] +"?t=" + new Date().getTime());
+        if (index == imgs.length) {
+          Parallax.cache = 0;
+        }
+      }
+    }
+  }
+  var runningOnBrowser = typeof window !== "undefined";
+  var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+  if (!isBot) {
+    volantis.js('/js/plugins/parallax.js?time=1791643020176').then(()=>{
+      parallax()
+    })
+    volantis.pjax.send(()=>{
+      clearInterval(IntervalParallax)
+    },"clearIntervalParallax");
+    volantis.pjax.push(parallax);
+  }
+</script>
+
+
+
+
+  <script>
+  function load_swiper() {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    volantis.css("/libs/swiper/swiper-bundle.min.css");
+    volantis.js("/libs/swiper/swiper-bundle.min.js").then(() => {
+      pjax_swiper();
+    });
+  }
+
+  load_swiper();
+
+  function pjax_swiper() {
+    volantis.swiper = new Swiper('.swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      centeredSlides: true,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  }
+
+  volantis.pjax.push(() => {
+    if (!document.querySelectorAll(".swiper-container")[0]) return;
+    if (typeof volantis.swiper === "undefined") {
+      load_swiper();
+    } else {
+      pjax_swiper();
+    }
+  });
+</script>
+
+
+<!-- pjax 标签必须存在于所有页面 否则 pjax error -->
+<pjax>
+
+</pjax>
+
+<script>
+  function listennSidebarTOC() {
+    const navItems = document.querySelectorAll(".toc li");
+    if (!navItems.length) return;
+    const sections = [...navItems].map((element) => {
+      const link = element.querySelector(".toc-link");
+      const target = document.getElementById(
+        decodeURI(link.getAttribute("href")).replace("#", "")
+      );
+      // 解除 a 标签 href 的 锚点定位, a 标签 href 的 锚点定位 会随机启用?? 产生错位???
+      link.setAttribute("onclick","return false;")
+      link.setAttribute("toc-action","toc-"+decodeURI(link.getAttribute("href")).replace("#", ""))
+      link.setAttribute("href","/")
+      // 配置 点击 触发新的锚点定位
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        // 这里的 addTop 是通过错位使得 toc 自动展开.
+        volantis.scroll.to(target,{addTop: 5, observer:false})
+        // Anchor id
+        history.pushState(null, document.title, "#" + target.id);
+      });
+      return target;
+    });
+
+    function activateNavByIndex(target) {
+      if (target.classList.contains("active-current")) return;
+
+      document.querySelectorAll(".toc .active").forEach((element) => {
+        element.classList.remove("active", "active-current");
+      });
+      target.classList.add("active", "active-current");
+      let parent = target.parentNode;
+      while (!parent.matches(".toc")) {
+        if (parent.matches("li")) parent.classList.add("active");
+        parent = parent.parentNode;
+      }
+    }
+
+    function findIndex(entries) {
+      let index = 0;
+      let entry = entries[index];
+      if (entry.boundingClientRect.top > 0) {
+        index = sections.indexOf(entry.target);
+        return index === 0 ? 0 : index - 1;
+      }
+      for (; index < entries.length; index++) {
+        if (entries[index].boundingClientRect.top <= 0) {
+          entry = entries[index];
+        } else {
+          return sections.indexOf(entry.target);
+        }
+      }
+      return sections.indexOf(entry.target);
+    }
+
+    function createIntersectionObserver(marginTop) {
+      marginTop = Math.floor(marginTop + 10000);
+      let intersectionObserver = new IntersectionObserver(
+        (entries, observe) => {
+          let scrollHeight = document.documentElement.scrollHeight;
+          if (scrollHeight > marginTop) {
+            observe.disconnect();
+            createIntersectionObserver(scrollHeight);
+            return;
+          }
+          let index = findIndex(entries);
+          activateNavByIndex(navItems[index]);
+        }, {
+          rootMargin: marginTop + "px 0px -100% 0px",
+          threshold: 0,
+        }
+      );
+      sections.forEach((element) => {
+        element && intersectionObserver.observe(element);
+      });
+    }
+
+    createIntersectionObserver(document.documentElement.scrollHeight);
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+  document.addEventListener("pjax:success", ()=>{
+    volantis.requestAnimationFrame(listennSidebarTOC)
+  });
+</script>
+
+<script>
+  // https://web.dev/content-visibility/
+  // https://www.caniuse.com/?search=content-visibility
+  // https://infrequently.org/2020/12/content-visibility-scroll-fix/
+  // https://infrequently.org/2020/12/resize-resilient-deferred-rendering/
+
+  // 备注 目前已知的问题:
+  // 动态修改导致的内容高度变化(例如评论框异步渲染的外部盒子高度变化) 无法提前获知, 进而导致的首次滚动条跳动无法去除 (wontfix) 事实上不使用 content-visibility 也会有跳动, 不过是比使用 content-visibility 跳动提前
+  // scrollreveal 插件潜在问题 目前尚不明确
+
+  let eqIsh = (a, b, fuzz = 2) => {
+    return Math.abs(a - b) <= fuzz;
+  };
+
+  let rectNotEQ = (a, b) => {
+    return !eqIsh(a.width, b.width) || !eqIsh(a.height, b.height);
+  };
+
+  // Keep a map of elements and the dimensions of
+  // their place-holders, re-setting the element's
+  // intrinsic size when we get updated measurements
+  // from observers.
+  let spaced = new WeakMap();
+
+  // Only call this when known cheap, post layout
+  let reserveSpace = (el, rect = el.getClientBoundingRect()) => {
+    let old = spaced.get(el);
+    // Set intrinsic size to prevent jumping on un-painting:
+    //    https://drafts.csswg.org/css-sizing-4/#intrinsic-size-override
+    if (!old || rectNotEQ(old, rect)) {
+      spaced.set(el, rect);
+      el.style["contain-intrinsic-size"] = `${rect.width}px ${rect.height}px`;
+    }
+  };
+
+  let iObs = new IntersectionObserver(
+    (entries, o) => {
+      entries.forEach((entry) => {
+        // We don't care if the element is intersecting or
+        // has been laid out as our page structure ensures
+        // they'll get the right width.
+        reserveSpace(entry.target, entry.boundingClientRect);
+      });
+    },
+    { rootMargin: "500px 0px 500px 0px" }
+  );
+
+  let rObs = new ResizeObserver((entries, o) => {
+    entries.forEach((entry) => {
+      reserveSpace(entry.target, entry.contentRect);
+    });
+  });
+
+  let resizeResilientDeferredRendering = (Selector) => {
+    let articles = document.querySelectorAll(Selector);
+
+    if (articles.length) {
+      articles.forEach((el) => {
+        iObs.observe(el);
+        rObs.observe(el);
+      });
+
+      // Workaround for Chrome bug, part 2.
+      //
+      // Re-enable browser management of rendering for the
+      // first article after the first paint. Double-rAF
+      // to ensure we get called after a layout.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          articles[0].style["content-visibility"] = "auto";
+        });
+      });
+    }
+  };
+
+  let contentVisibilityScrollFix = () => {
+    if (!("content-visibility" in document.documentElement.style)) {
+      return;
+    }
+    resizeResilientDeferredRendering(".post-story");
+    resizeResilientDeferredRendering("article");
+    resizeResilientDeferredRendering(".post-wrapper");
+  };
+  contentVisibilityScrollFix();
+  volantis.pjax.push(contentVisibilityScrollFix);
+</script>
+
+
+
+  <script type="application/ld+json">[{"@context":"http://schema.org","@type":"Organization","name":"扬舲の博客","url":"https://kobingogo.github.io/","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},{"@context":"http://schema.org","@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/","sameAs":["https://github.com/volantis-x"],"description":"前端技术博客"},{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https://kobingogo.github.io/","name":"扬舲の博客"}},{"@type":"ListItem","position":2,"item":{"@id":"https://kobingogo.github.io/categories/ai/","name":"AI"}},{"@type":"ListItem","position":3,"item":{"@id":"https://kobingogo.github.io/agent-dispatch-three-steps/","name":"一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill"}}]},{"@context":"http://schema.org","@type":"BlogPosting","headline":"一个人带 30 个 bot：派活给 agent 只有三步，附任务卡模板和一个能直接装的 skill","description":"","datePublished":"2026-10-09T20:30:00.000Z","dateModified":"2026-10-10T14:36:38.360Z","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https://kobingogo.github.io/agent-dispatch-three-steps/"},"author":{"@type":"Person","name":"yangling","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png"},"url":"https://kobingogo.github.io/"},"publisher":{"@type":"Organization","name":"扬舲の博客","logo":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}},"url":"https://kobingogo.github.io/agent-dispatch-three-steps/","wordCount":0,"articleSection":"AI","keywords":"AI,Agent,AI编程","image":{"@type":"ImageObject","url":"/media/org.volantis/blog/favicon/android-chrome-192x192.png","width":192,"height":192}}]</script>
+
+
+<!-- more -->
+
+
+
+      
+        <!-- 
+  pjax重载区域接口：
+  1.  <pjax></pjax> 标签 pjax 标签必须存在于所有页面 否则 pjax error
+  2.  script[data-pjax]
+  3.  .pjax-reload script
+  4.  .pjax
+-->
+
+
+
+<script src="/libs/pjax/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox]):not([onclick="return false;"]):not([target="_blank"]):not([target="view_window"]):not([href$=".xml"])',
+        selectors: [
+          "head title",
+          "head meta[name='description']",
+          "head meta[name='keywords']",
+          "head meta[property^='og']",
+          
+          "#l_main",
+          "#pjax-header-nav-list",
+          ".pjax",
+          "pjax", // <pjax></pjax> 标签
+          "script[data-pjax], .pjax-reload script" // script标签添加data-pjax 或 script标签外层添加.pjax-reload 的script代码段重载
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.send.start();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.complete.start();
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+      volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+      
+    </div>
+  <!-- Custom Files bodyEnd begin-->
+  
+  <!-- Custom Files bodyEnd end-->
+  </body>
+</html>

@@ -147,11 +147,10 @@ button {
   -webkit-appearance: button;
   cursor: pointer;
 }
-@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+@supports (backdrop-filter: blur(20px)) {
   .blur {
     background: rgba(255,255,255,0.9) !important;
-    -webkit-backdrop-filter: saturate(200%) blur(20px);
-            backdrop-filter: saturate(200%) blur(20px);
+    backdrop-filter: saturate(200%) blur(20px);
   }
 }
 .shadow {
@@ -354,8 +353,7 @@ button {
   border-radius: 1.4rem;
   -webkit-border-radius: 1.4rem;
   background: rgba(255,255,255,0.6);
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: none;
   color: var(--color-text);
 }
@@ -498,8 +496,7 @@ button {
 .cover-wrapper.featured .menu .list-h a.active,
 .cover-wrapper.focus .menu .list-h a.active {
   background: var(--color-card);
-  -webkit-backdrop-filter: none;
-          backdrop-filter: none;
+  backdrop-filter: none;
 }
 .cover-wrapper.dock .menu .list-h a.active i,
 .cover-wrapper.featured .menu .list-h a.active i,
@@ -561,11 +558,10 @@ button {
     background: #ff5722;
   }
 }
-@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(20px))) {
+@supports (backdrop-filter: blur(20px)) {
   .cover-wrapper.dock .menu {
     background: rgba(255,255,255,0.5);
-    -webkit-backdrop-filter: saturate(200%) blur(20px);
-            backdrop-filter: saturate(200%) blur(20px);
+    backdrop-filter: saturate(200%) blur(20px);
   }
 }
 .cover-wrapper #parallax-window {

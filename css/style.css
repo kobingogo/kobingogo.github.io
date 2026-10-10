@@ -745,8 +745,7 @@ article#tag .all-tags ul li span:before {
   margin-top: 64px;
 }
 .article .widget-blur {
-  -webkit-backdrop-filter: none;
-          backdrop-filter: none;
+  backdrop-filter: none;
 }
 .md .footer {
   margin-top: 64px;
@@ -2725,8 +2724,7 @@ img.lazyload:not(.placeholder).loaded {
     -webkit-box-shadow: none;
     background: transparent !important;
     margin-top: 32px;
-    -webkit-backdrop-filter: none;
-            backdrop-filter: none;
+    backdrop-filter: none;
     color: var(--color-site-inner);
   }
 }
